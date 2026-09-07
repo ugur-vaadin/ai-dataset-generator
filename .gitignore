@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.DS_Store
+out/*/db/
+.idea/
+.env
+.env.*
+node_modules/
+package-lock.json
+docs/video/captures/
+docs/video/build/
+docs/video/*.mp4
+docs/video/*.srt
+docs/video/build*/
+out/
+node_modules/
+!.env.example

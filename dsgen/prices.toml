@@ -1,0 +1,36 @@
+# List prices used by `estimate` and by the usage log. Checked 2026-09-07; verify before quoting.
+# Sources: Anthropic first-party API rates (claude-api reference); image prices from third-party comparison pages
+# (docs/image-providers.md). Batch APIs halve token prices.
+checked = "2026-09-07"
+
+[llm]
+# USD per 1M tokens, input / output
+"claude-haiku-4-5" = { input = 1.0, output = 5.0 }
+"claude-sonnet-5" = { input = 2.0, output = 10.0 }
+"claude-opus-5" = { input = 5.0, output = 25.0 }
+
+[image]
+# USD per 1024-class image
+"google/imagen-4.0-fast" = 0.02
+"google/imagen-4.0-generate-001" = 0.04
+"openai/gpt-image-1-mini" = 0.005
+"openai/gpt-image-1" = 0.04
+# OpenAI prices by output tokens (~$32-40 per 1M image-output tokens, checked 2026-09-07 on the pricing page);
+# a 1024x1024 image is ~272 tokens at low, ~1,056 at medium, ~4,160 at high quality. Per-image figures below are
+# derived from that; confirm with OpenAI's image cost calculator before quoting.
+"openai/gpt-image-1.5/low" = 0.011
+"openai/gpt-image-1.5/medium" = 0.04
+"openai/gpt-image-1.5/high" = 0.17
+"openai/gpt-image-2/medium" = 0.05
+"placeholder" = 0.0
+
+[assumptions]
+# tokens per item when an LLM writes text assets item by item, on top of the measured output size
+prompt_tokens_per_item = 150
+context_tokens_per_item = 60
+# when an LLM writes templates that code expands
+templates_per_column = 50
+template_prompt_tokens = 400
+# documents (e-mails, letters): prompt overhead per document
+prompt_tokens_per_document = 600
+chars_per_token = 4

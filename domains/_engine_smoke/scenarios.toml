@@ -1,0 +1,19 @@
+[scenarios]
+anchors_group = "demo"
+[[scenario]]
+key = "A1"
+title = "Ensured order"
+expect = [
+  { kind = "sql_one", name = "ensured order exists", sql = "SELECT COUNT(*) FROM orders WHERE id = {order_id}" },
+  { kind = "sql_one", name = "it has five lines", sql = "SELECT CASE WHEN COUNT(*) = 5 THEN 1 ELSE 0 END FROM order_lines WHERE order_id = {order_id}" },
+  { kind = "sql_one", name = "two pallets", sql = "SELECT CASE WHEN MAX(pallet_number) = 2 THEN 1 ELSE 0 END FROM order_lines WHERE order_id = {order_id}" },
+  { kind = "sql_one", name = "shipped the day before Tuesday", sql = "SELECT COUNT(*) FROM orders WHERE id = {order_id} AND date(shipped_at) = date('{tuesday}', '-1 day')" },
+]
+
+[[scenario]]
+key = "outage"
+title = "Outage week"
+expect = [
+  { kind = "sql_one", name = "outage week is visibly late (> 60% of dispatches)", sql = "SELECT CASE WHEN AVG(date(shipped_at) > promised_ship_date) > 0.6 THEN 1 ELSE 0 END FROM orders WHERE promised_ship_date BETWEEN '{outage_start}' AND '{outage_end}'" },
+  { kind = "sql_one", name = "normal weeks are mostly on time (< 25% late)", sql = "SELECT CASE WHEN AVG(date(shipped_at) > promised_ship_date) < 0.25 THEN 1 ELSE 0 END FROM orders WHERE promised_ship_date NOT BETWEEN '{outage_start}' AND '{outage_end}'" },
+]

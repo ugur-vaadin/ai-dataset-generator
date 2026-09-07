@@ -1,0 +1,154 @@
+# Fjordhem — declarative flow.
+[dates]
+cold_start = "date:last_weekday_before(as_of, Monday) - 14 days"
+cold_end = "date:dates.cold_start + 6 days"
+
+[[bands.work_orders]]
+max_age = 2
+statuses = { NEW = 35, ASSIGNED = 45, SCHEDULED = 20 }
+[[bands.work_orders]]
+max_age = 10
+statuses = { ASSIGNED = 15, SCHEDULED = 25, IN_PROGRESS = 25, DONE = 35 }
+[[bands.work_orders]]
+max_age = 40
+statuses = { SCHEDULED = 5, IN_PROGRESS = 10, DONE = 80, CANCELLED = 5 }
+[[bands.work_orders]]
+statuses = { DONE = 94, CANCELLED = 6 }
+
+[entity.staff]
+rows_from = { pool = "staff.list", columns = ["username", "full_name", "role"] }
+
+[entity.contractors]
+rows_from = { pool = "contractors.list", columns = ["name", "trade", "city", "country", "hourly_rate", "typical_response_hours"] }
+
+[entity.buildings]
+count = "cfg:volume.buildings"
+[entity.buildings.fields]
+country = "weighted:country_weights"
+city = "pool:cities[country]"
+name = "template:{_street} {_no}"
+_street = "pool:streets[country]"
+_no = "int:1..120"
+code = "key:B-{seq:03}"
+building_type = "weighted:building.types"
+built_year = "int:1935..2019"
+manager_id = "int:4..6"
+
+[entity.units]
+per = { parent = "buildings", count = "cfg:volume.units_per_building" }
+[entity.units.fields]
+building_id = "copy:parent.id"
+floor = "int:0..7"
+unit_number = "template:{floor}{_letter}"
+_letter = "choice:A|B|C|D|E"
+unit_type = "if:parent.building_type == RESIDENTIAL then APARTMENT else weighted:unit.types"
+size_sqm = "if:unit_type == APARTMENT then int:32..140 else int:20..400"
+occupied = "bool:0.93"
+
+[entity.tenants]
+per = { parent = "units", when = "parent.occupied == true" }
+[entity.tenants.fields]
+unit_id = "copy:parent.id"
+_country = "copy:parent.building_id->buildings.country"
+first_name = "pool:first_names[_country]"
+last_name = "pool:last_names[_country]"
+email = "template:{first_name|ascii}.{last_name|ascii}{id}@example.org"
+phone = "rand:phone_patterns[_country]"
+language = "lookup:language_by_country[_country]"
+lease_start = "date:as_of - 30..2500 days"
+portal_account = "bool:0.7"
+
+[entity.fault_reports]
+per = { day = "history", count = "cfg:volume.faults_per_month / 30", pick = "units", pick_where = "occupied == true", seasonality = "faults.month_volume" }
+[[entity.fault_reports.burst]]
+from = "copy:dates.cold_start"
+to = "copy:dates.cold_end"
+factor = "cfg:rates.cold_snap_factor"
+prob = 0.85
+set = { category = "HEATING" }
+[entity.fault_reports.fields]
+unit_id = "copy:parent.id"
+tenant_id = "pick:tenants where unit_id == row.unit_id"
+category = "weighted:faults.categories"
+urgency = "if:category == HEATING and day in dates.cold_start..dates.cold_end then EMERGENCY else lookup:faults.urgency_by_category[category]"
+channel = "if:tenant_id == null then PHONE else weighted:faults.channels"
+reported_at = "ts:day @ 7..21"
+_pii = "bool:cfg.pii.free_text_share"
+description = "if:_pii == true and tenant_id != null then template:{_desc} Please call {tenant_id->tenants.first_name} {tenant_id->tenants.last_name} on {tenant_id->tenants.phone} before coming. else copy:_desc"
+_desc = "lookup:faults.descriptions[category]"
+report_number = "key:FR-{reported_at|year}-{seq:05}"
+
+[entity.work_orders]
+per = { parent = "fault_reports", share = "cfg:rates.work_order_share" }
+drop_when = "created_at > as_of"
+[entity.work_orders.fields]
+fault_report_id = "copy:parent.id"
+building_id = "copy:parent.unit_id->units.building_id"
+_trade = "lookup:faults.trade_by_category[parent.category]"
+_country = "copy:building_id->buildings.country"
+created_at = "ts:parent.reported_at + 0..6 hours"
+priority = "lookup:priority.by_urgency[parent.urgency]"
+_window = "lookup:priority.window_hours[priority]"
+due_at = "ts:created_at + {_window} hours"
+status = "status_by_age:created_at using bands.work_orders"
+contractor_id = "if:status == NEW then null else pick:contractors where trade == row._trade"
+_slow = "if:contractor_id->contractors.name == cfg.rates.slow_contractor then true else false"
+_started_at = "if:status in [IN_PROGRESS, DONE] then if:_slow == true then ts:created_at + 48..120 hours | clamp else ts:created_at + 2..30 hours | clamp else null"
+completed_at = "if:status == DONE then if:_slow == true then ts:_started_at + 24..96 hours | clamp else ts:_started_at + 1..24 hours | clamp else null"
+cost_estimate = "money:faults.cost_by_category[parent.category]"
+cost_actual = "if:status == DONE then calc:round({cost_estimate} * 0.85 + {cost_estimate} * 0.3 * {_r}, 2) else null"
+_r = "float:0..1"
+created_by = "choice:2|3"
+work_order_number = "key:WO-{created_at|year}-{seq:05}"
+
+[entity.work_order_events]
+per = { parent = "work_orders" }
+[entity.work_order_events.fields]
+work_order_id = "copy:parent.id"
+note = ""
+[[entity.work_order_events.variants]]
+when = "true"
+fields = { event_type = "CREATED", event_time = "copy:parent.created_at" }
+[[entity.work_order_events.variants]]
+when = "parent.contractor_id != null"
+fields = { event_type = "ASSIGNED", event_time = "ts:parent.created_at + 0..8 hours | clamp", note = "template:Assigned to {parent.contractor_id->contractors.name}" }
+[[entity.work_order_events.variants]]
+when = "parent.status in [SCHEDULED, IN_PROGRESS, DONE]"
+fields = { event_type = "SCHEDULED", event_time = "ts:parent.created_at + 1..30 hours | clamp" }
+[[entity.work_order_events.variants]]
+when = "parent._started_at != null"
+fields = { event_type = "STARTED", event_time = "copy:parent._started_at" }
+[[entity.work_order_events.variants]]
+when = "parent.completed_at != null"
+fields = { event_type = "COMPLETED", event_time = "copy:parent.completed_at" }
+[[entity.work_order_events.variants]]
+when = "parent.status == CANCELLED"
+fields = { event_type = "CANCELLED", event_time = "ts:parent.created_at + 1..5 days | clamp", note = "Tenant withdrew the report" }
+
+# ---- anchors
+[[anchor]]
+group = "demo"
+key = "T1_ceiling_leak"
+pre = { tuesday = "date:last_weekday_before(as_of, Tuesday)" }
+[anchor.pick]
+entity = "tenants"
+where = "language == 'nb' and portal_account == false"
+[anchor.pick.none_of]
+entity = "fault_reports"
+link = "tenant_id"
+where = "reported_at >= anchor.tuesday - 30 days"
+[anchor.fields]
+tenant_id = "copy:pick.id"
+tenant = "template:{pick.first_name} {pick.last_name}"
+email = "copy:pick.email"
+phone = "copy:pick.phone"
+unit_id = "copy:pick.unit_id"
+unit_number = "copy:pick.unit_id->units.unit_number"
+building_id = "copy:pick.unit_id->units.building_id"
+building = "copy:pick.unit_id->units.building_id->buildings.name"
+city = "copy:pick.unit_id->units.building_id->buildings.city"
+
+[[anchor]]
+group = "demo"
+key = "D1_cold_snap"
+fields = { cold_start = "copy:dates.cold_start", cold_end = "copy:dates.cold_end", slow_contractor = "copy:cfg.rates.slow_contractor" }

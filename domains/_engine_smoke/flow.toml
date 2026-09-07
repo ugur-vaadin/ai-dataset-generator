@@ -1,0 +1,80 @@
+[dates]
+outage_start = "date:last_weekday_before(as_of, Monday) - 21 days"
+outage_end = "date:dates.outage_start + 6 days"
+
+[entity.customers]
+count = "cfg:volume.customers"
+[entity.customers.fields]
+name = "template:{_f} {_l}"
+_f = "pool:first"
+_l = "pool:last"
+weight = "pareto:1.3 max 40"
+[entity.customers.after]
+orders_total = "sum:orders.total_net"
+order_count = "count:orders"
+
+[entity.products]
+count = "cfg:volume.products"
+[entity.products.fields]
+category = "weighted:categories"
+sku = "key:{category}-{seq:04}"
+ean = "template:{_ean12|ean13}"
+_ean12 = "template:640202{id|pad6}"
+name = "template:{_f|title} {category|lower} {id}"
+_f = "pool:first"
+_base = "money:price_range[category]"
+
+[entity.price_history]
+per = { parent = "products", count = "1..3" }
+[entity.price_history.fields]
+product_id = "copy:parent.id"
+valid_from = "if:prev == null then date:history_start - 200..400 days else date:prev.valid_to + 1 days"
+valid_to = "if:seq_in_parent == sibling_count then null else date:valid_from + 90..180 days"
+list_price = "if:prev == null then copy:parent._base else calc:round({prev.list_price} * 1.04, 2)"
+
+[entity.orders]
+per = { day = "history", count = "cfg:volume.orders_per_month / 30", pick = "customers", pick_where = "weight > 0", pick_weight = "weight", seasonality = "month_volume" }
+[entity.orders.fields]
+customer_id = "copy:parent.id"
+placed_at = "ts:day @ 8..17"
+promised_ship_date = "date:placed_at + 1..3 business_days"
+_delay = "if:promised_ship_date in dates.outage_start..dates.outage_end then int:3..6 else if:_late == true then int:1..4 else 0"
+_late = "bool:0.12"
+shipped_at = "ts:promised_ship_date + {_delay} days | weekday | clamp"
+order_number = "key:SO-{placed_at|year}-{seq:06}"
+[entity.orders.after]
+total_net = "sum:order_lines.line_total"
+line_count = "count:order_lines"
+pallet_count = "max:order_lines.pallet_number"
+
+[entity.order_lines]
+per = { parent = "orders", count = "1..6" }
+[entity.order_lines.fields]
+order_id = "copy:parent.id"
+line_number = "seq_in_parent"
+product_id = "pick:products where category == TENTS"
+quantity = "int:1..12"
+unit_price = "copy:product_id->products._base"
+line_total = "calc:{quantity} * {unit_price}"
+pallet_number = "calc:1 + ({seq_in_parent} - 1) // 3"
+
+# anchor: a customer's order that must exist, delivered on the last Tuesday, with exactly 5 lines on 2 pallets
+[[anchor]]
+group = "demo"
+key = "A1"
+pre = { tuesday = "date:last_weekday_before(as_of, Tuesday)" }
+[anchor.ensure]
+entity = "orders"
+always = true
+parent_pick = "customers where weight > 1"
+fields = { placed_at = "ts:anchor.tuesday - 6 days @ 9..11", promised_ship_date = "date:anchor.tuesday - 1 days", shipped_at = "ts:anchor.tuesday - 1 days @ 10..12" }
+children = [ { entity = "order_lines", count = 5, fields = { quantity = "24" } } ]
+[anchor.fields]
+order_id = "copy:pick.id"
+order_number = "copy:pick.order_number"
+customer = "copy:pick.customer_id->customers.name"
+
+[[anchor]]
+group = "demo"
+key = "outage"
+fields = { outage_start = "copy:dates.outage_start", outage_end = "copy:dates.outage_end" }

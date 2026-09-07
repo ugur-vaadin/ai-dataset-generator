@@ -1,0 +1,107 @@
+# Name pools for Nordic Supply. Generated from the original Python constants; edit freely.
+# Country codes: FI SE NO DK DE EE. Keep lists non-empty; order matters for reproducibility.
+
+[first_names]
+FI = ["Aino", "Eero", "Helmi", "Juhani", "Kaisa", "Lauri", "Maija", "Mikko", "Noora", "Olli", "Pekka", "Sanna", "Tuomas", "Venla", "Ville", "Anni", "Jari", "Katri", "Matti", "Riikka", "Antti", "Elina", "Jukka", "Laura", "Timo"]
+SE = ["Anders", "Astrid", "Björn", "Ebba", "Erik", "Frida", "Gustav", "Hanna", "Johan", "Karin", "Lars", "Linnea", "Magnus", "Maja", "Nils", "Sara", "Sofia", "Oskar", "Elin", "Per", "Mattias", "Emma", "Henrik", "Lovisa", "Ulf"]
+NO = ["Ingrid", "Kristian", "Marit", "Ole", "Sigrid", "Torbjørn", "Eirik", "Solveig", "Håkon", "Kari", "Mathias", "Nora", "Sindre", "Tone", "Vegard", "Anette", "Bjørn", "Hege", "Jørgen", "Silje"]
+DK = ["Mette", "Søren", "Freja", "Mads", "Lærke", "Rasmus", "Signe", "Niels", "Ida", "Jonas", "Camilla", "Frederik", "Louise", "Morten", "Pernille"]
+DE = ["Anna", "Jonas", "Lena", "Lukas", "Katharina", "Felix", "Julia", "Tobias", "Petra", "Markus"]
+EE = ["Kristjan", "Liis", "Mart", "Kadri", "Tanel", "Maarja", "Priit", "Triin"]
+
+[last_names]
+FI = ["Virtanen", "Korhonen", "Mäkinen", "Nieminen", "Hämäläinen", "Laine", "Heikkinen", "Koskinen", "Järvinen", "Lehtonen", "Salminen", "Rantanen", "Saarinen", "Aho", "Lehto", "Kallio", "Niemi", "Salo"]
+SE = ["Andersson", "Johansson", "Karlsson", "Nilsson", "Eriksson", "Larsson", "Olsson", "Persson", "Svensson", "Gustafsson", "Lindberg", "Bergström", "Lundqvist", "Åberg", "Holm", "Strand"]
+NO = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Pedersen", "Nilsen", "Kristiansen", "Karlsen", "Berg", "Haugen", "Bakke", "Dahl", "Nygaard", "Moen"]
+DK = ["Nielsen", "Jensen", "Christensen", "Sørensen", "Rasmussen", "Jørgensen", "Madsen", "Poulsen", "Thomsen", "Kjær"]
+DE = ["Schmidt", "Müller", "Weber", "Fischer", "Koch", "Wagner", "Becker", "Hoffmann"]
+EE = ["Tamm", "Saar", "Sepp", "Mägi", "Kask", "Kukk", "Rebane", "Ilves"]
+
+[cities]
+FI = [["Helsinki", "00100"], ["Espoo", "02100"], ["Tampere", "33100"], ["Turku", "20100"], ["Oulu", "90100"], ["Jyväskylä", "40100"], ["Kuopio", "70100"], ["Lahti", "15100"], ["Rovaniemi", "96100"], ["Vaasa", "65100"], ["Joensuu", "80100"], ["Kuusamo", "93600"], ["Kittilä", "99100"], ["Seinäjoki", "60100"], ["Hämeenlinna", "13100"], ["Kokkola", "67100"]]
+SE = [["Stockholm", "111 20"], ["Göteborg", "411 04"], ["Malmö", "211 20"], ["Uppsala", "753 10"], ["Umeå", "903 26"], ["Luleå", "972 31"], ["Kiruna", "981 31"], ["Östersund", "831 30"], ["Åre", "837 52"], ["Linköping", "582 22"], ["Örebro", "702 11"], ["Sundsvall", "852 30"], ["Karlstad", "652 24"], ["Gävle", "803 20"], ["Falun", "791 71"]]
+NO = [["Oslo", "0150"], ["Bergen", "5003"], ["Trondheim", "7010"], ["Stavanger", "4006"], ["Tromsø", "9008"], ["Bodø", "8006"], ["Lillehammer", "2609"], ["Kristiansand", "4610"], ["Ålesund", "6002"], ["Drammen", "3015"], ["Hamar", "2317"], ["Alta", "9510"]]
+DK = [["Copenhagen", "1050"], ["Aarhus", "8000"], ["Odense", "5000"], ["Aalborg", "9000"], ["Esbjerg", "6700"], ["Kolding", "6000"], ["Roskilde", "4000"]]
+DE = [["Hamburg", "20095"], ["Berlin", "10115"], ["Munich", "80331"], ["Kiel", "24103"], ["Flensburg", "24937"]]
+EE = [["Tallinn", "10111"], ["Tartu", "51003"], ["Pärnu", "80010"]]
+# cities: [city, postal code] pairs per country
+
+[streets]
+FI = ["Mannerheimintie", "Hämeenkatu", "Kauppakatu", "Keskuskatu", "Rantatie", "Teollisuustie", "Yliopistonkatu", "Asemakatu", "Torikatu", "Puistokatu"]
+SE = ["Storgatan", "Kungsgatan", "Drottninggatan", "Industrivägen", "Järnvägsgatan", "Hamngatan", "Skolgatan", "Fjällvägen", "Norra Esplanaden"]
+NO = ["Storgata", "Kirkegata", "Torggata", "Industriveien", "Strandveien", "Fjellveien", "Havnegata", "Skoleveien"]
+DK = ["Hovedgaden", "Vestergade", "Østergade", "Nørregade", "Industrivej", "Havnevej", "Skolevej"]
+DE = ["Hauptstraße", "Bahnhofstraße", "Hafenstraße", "Bergweg", "Am Markt"]
+EE = ["Narva mnt", "Pärnu mnt", "Tartu mnt", "Sadama tn", "Kooli tn"]
+
+[country_names]
+FI = "Finland"
+SE = "Sweden"
+NO = "Norway"
+DK = "Denmark"
+DE = "Germany"
+EE = "Estonia"
+
+[legal_form]
+FI = "Oy"
+SE = "AB"
+NO = "AS"
+DK = "ApS"
+DE = "GmbH"
+EE = "OÜ"
+
+[transit_days]
+FI = [1, 2]
+SE = [1, 3]
+NO = [2, 4]
+DK = [2, 3]
+DE = [3, 5]
+EE = [2, 4]
+# transit_days: [min, max] calendar days from our warehouses
+
+[hubs]
+FI = "Vantaa hub"
+SE = "Örebro terminal"
+NO = "Alnabru terminal, Oslo"
+DK = "Taulov terminal"
+DE = "Hamburg hub"
+EE = "Tallinn terminal"
+
+[customers]
+independent_words = ["Fjäll", "Tunturi", "Vidde", "Nordlys", "Peak", "Trail", "Summit", "Ridge", "Polar", "Arctic", "Fjord", "Lake", "Forest", "Metsä", "Skog", "Vinter", "Aurora", "Compass", "Basecamp", "Hiker's", "Kayak", "Erä", "Kalotti", "Ruska", "Lumi", "Kaamos", "Vaara", "Saana", "Halti", "Kebne", "Sarek", "Abisko", "Lyngen"]
+independent_suffix = ["Sport", "Outdoor", "Sports", "Urheilu", "Fritid", "Friluft", "Outfitters", "Trekking", "Adventure", "Camping", "Sport & Fritid", "Retki", "Turutstyr"]
+segments = ["INDEPENDENT", "ONLINE", "DEPARTMENT_STORE", "RENTAL_OUTFITTER", "CLUB_OR_SCHOOL"]
+segment_weights = [58, 16, 8, 12, 6]
+contact_roles = ["Store Manager", "Purchasing", "Owner", "Warehouse", "Assistant Manager", "Buyer", "Accounts Payable"]
+
+# Stores the case 2 e-mails come from. Created first, stable ids 1..n.
+
+[[anchor_store]]
+chain = "Retkiaitta"
+country = "FI"
+city = "Tampere"
+
+[[anchor_store]]
+chain = "Fjällbutiken"
+country = "SE"
+city = "Kiruna"
+
+[[anchor_store]]
+chain = "Trailhead"
+country = "SE"
+city = "Umeå"
+
+[[anchor_store]]
+chain = "Nordkapp Sports"
+country = "NO"
+city = "Tromsø"
+
+[[anchor_store]]
+chain = "Sportmagasinet"
+country = "DK"
+city = "Aarhus"
+
+[[anchor_store]]
+chain = "Kompassi Sport"
+country = "FI"
+city = "Rovaniemi"

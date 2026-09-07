@@ -1,0 +1,15 @@
+[generation]
+as_of = "2026-09-07"
+seed = 20260907
+scale = 1.0
+months = 12
+[volume]
+buildings = 60
+units_per_building = "18..35"
+faults_per_month = 320
+[rates]
+work_order_share = 0.9
+cold_snap_factor = 3.0
+slow_contractor = "Rørlegger Hansen AS"
+[pii]
+free_text_share = 0.08

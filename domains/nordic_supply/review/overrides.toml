@@ -1,0 +1,22 @@
+# Answers to the review queue (out/nordic_supply/REVIEW.md). Applied deterministically at the end of every
+# generation, before files are written; `approve` only records that a human looked at the item.
+#   id      as in the queue: doc:<path> | anchor:<group>.<key> | row:<table>.<business key>.<column> | template:<table>.<column>:<sig>
+#   action  approve | reject (blank the field) | replace (set `value`)
+# Ids of rows and anchors are stable for a given config, seed and as-of; regenerating with another date
+# changes them, template ids do not.
+
+[[override]]
+id = "doc:emails/01-damaged-pallet-retkiaitta-tampere.eml"
+action = "approve"
+note = "Reviewed 2026-09-07 (author). Finnish sign-off 'Terveisin' is correct."
+
+[[override]]
+id = "anchor:case2.A1_damaged_pallet"
+action = "approve"
+note = "Matches the business-case document's example."
+
+[[override]]
+id = "template:claim_lines.issue_note:dd23b695"
+action = "replace"
+value = "Product surface scratched"
+note = "Example of a template replacement: every row that carried 'Product scratched' now carries this text."

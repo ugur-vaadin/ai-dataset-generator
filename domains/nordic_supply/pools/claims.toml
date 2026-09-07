@@ -1,0 +1,15 @@
+# Claim vocabularies for Nordic Supply. Generated from the original Python constants; edit freely.
+
+[claims]
+types = ["DAMAGED", "MISSING_ITEMS", "WRONG_ITEM", "LATE_DELIVERY", "QUALITY_DEFECT", "PRICING_DISPUTE", "RETURN_REQUEST"]
+type_weights = [25, 20, 14, 14, 15, 8, 4]
+defects = ["zip slider broke after a few uses", "seam tape peeling on the inside", "buckle cracked in the cold", "sole separating from the upper", "colour bleeding after first wash", "valve leaks, mat deflates overnight", "pole segment split at the joint", "stitching failed on the shoulder strap"]
+
+[claims.resolution_for]
+DAMAGED = ["REPLACEMENT", "REPLACEMENT", "CREDIT"]
+MISSING_ITEMS = ["REDELIVERY", "REDELIVERY", "CREDIT"]
+WRONG_ITEM = ["REPLACEMENT", "REPLACEMENT", "CREDIT"]
+LATE_DELIVERY = ["CREDIT"]
+QUALITY_DEFECT = ["REPLACEMENT", "CREDIT", "REPAIR"]
+PRICING_DISPUTE = ["CREDIT"]
+RETURN_REQUEST = ["RETURN_AUTHORISATION"]

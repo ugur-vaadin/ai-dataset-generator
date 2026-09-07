@@ -1,0 +1,9 @@
+[generation]
+as_of = "2026-09-07"
+seed = 7
+scale = 1.0
+months = 6
+[volume]
+customers = 300
+products = 120
+orders_per_month = 400

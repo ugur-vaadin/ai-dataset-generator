@@ -1,0 +1,470 @@
+# Nordic Supply — domain specification (entities, columns, what the model sees).
+# Generated from the original Python spec on 2026-09-07; this file is now the source of truth.
+# Column fields: name, type (SQL), pk, not_null, unique, ref ("table.column"), desc (what the model reads),
+#   pii (name | contact | identifier | free-text | none; omitted = none).
+# Entity fields: name, description (first line the model reads), exposed (false = hidden from the AI user).
+
+[domain]
+name = "nordic_supply"
+version = "1.2.1"
+company = "Nordic Supply"
+description = "Wholesaler of sports, hiking and outdoor equipment selling to retail companies in the Nordics."
+business_key_examples = { customers = "C-10001", products = "FJV-TNT-0010", orders = "SO-2026-001234", shipments = "SH-2026-001234", claims = "CL-2026-00123" }
+
+[[entity]]
+name = "users"
+description = "Nordic Supply employees."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "username", type = "VARCHAR(60)", not_null = true, unique = true, pii = "name" },
+  { name = "full_name", type = "VARCHAR(120)", not_null = true, pii = "name" },
+  { name = "email", type = "VARCHAR(160)", pii = "contact" },
+  { name = "role", type = "VARCHAR(30)", not_null = true, desc = "ADMIN, ANALYST, SUPPORT_AGENT, CATALOGUE_MANAGER, ACCOUNT_MANAGER, WAREHOUSE" },
+  { name = "active", type = "BOOLEAN", not_null = true },
+  { name = "created_at", type = "TIMESTAMP", not_null = true },
+]
+
+[[entity]]
+name = "warehouses"
+description = "Our warehouses: VAN Vantaa (FI), GOT Göteborg (SE), OSL Oslo cross-dock (NO)."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "code", type = "VARCHAR(10)", not_null = true, unique = true },
+  { name = "name", type = "VARCHAR(120)", not_null = true },
+  { name = "country", type = "CHAR(2)", not_null = true },
+  { name = "city", type = "VARCHAR(80)" },
+  { name = "postal_code", type = "VARCHAR(12)" },
+]
+
+[[entity]]
+name = "categories"
+description = "Product categories, e.g. 'Tents & Shelters', 'Footwear', 'Winter Sports'."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "code", type = "VARCHAR(10)", not_null = true, unique = true },
+  { name = "name", type = "VARCHAR(80)", not_null = true },
+  { name = "season", type = "VARCHAR(10)", not_null = true, desc = "SPRING, SUMMER, AUTUMN, WINTER, ALL" },
+]
+
+[[entity]]
+name = "suppliers"
+description = "Brands/manufacturers we buy from, e.g. 'Fjellvind AS'."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "code", type = "VARCHAR(10)", not_null = true, unique = true },
+  { name = "name", type = "VARCHAR(120)", not_null = true },
+  { name = "country", type = "CHAR(2)", not_null = true },
+  { name = "city", type = "VARCHAR(80)" },
+  { name = "contact_email", type = "VARCHAR(160)", pii = "contact" },
+  { name = "lead_time_days", type = "INT", not_null = true },
+  { name = "active", type = "BOOLEAN", not_null = true },
+]
+
+[[entity]]
+name = "products"
+description = "The catalogue. Prices are NOT here: see price_history / product_current_prices."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "sku", type = "VARCHAR(20)", not_null = true, unique = true, desc = "e.g. 'FJV-TNT-0010' (supplier code, category code, sequence)" },
+  { name = "ean", type = "CHAR(13)", not_null = true, unique = true, desc = "EAN-13 barcode" },
+  { name = "name", type = "VARCHAR(200)", not_null = true, desc = "full display name: brand + model + type + variant + colour", text_asset = true },
+  { name = "description", type = "VARCHAR(400)", desc = "short marketing text", text_asset = true },
+  { name = "category_id", type = "INT", not_null = true, ref = "categories.id", desc = "-> categories.id" },
+  { name = "supplier_id", type = "INT", not_null = true, ref = "suppliers.id", desc = "-> suppliers.id" },
+  { name = "product_type", type = "VARCHAR(60)", not_null = true, desc = "kind of item ('Tent', 'Hiking Boot', 'Headlamp')" },
+  { name = "variant", type = "VARCHAR(40)", desc = "size, capacity, temperature rating, length" },
+  { name = "colour", type = "VARCHAR(40)" },
+  { name = "unit", type = "VARCHAR(10)", not_null = true, desc = "'pcs' or 'pair'" },
+  { name = "case_pack", type = "INT", not_null = true, desc = "units per carton" },
+  { name = "min_order_qty", type = "INT", not_null = true },
+  { name = "weight_kg", type = "DECIMAL(8,3)", not_null = true, desc = "per unit" },
+  { name = "active", type = "BOOLEAN", not_null = true, desc = "FALSE = discontinued" },
+  { name = "discontinued_on", type = "DATE" },
+  { name = "created_at", type = "DATE", not_null = true },
+]
+
+[[entity]]
+name = "price_history"
+description = "Wholesale list price per product over time (EUR). The current price is the row where valid_from <= today and (valid_to IS NULL or valid_to >= today). Rows with valid_from > today are scheduled price changes."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "product_id", type = "INT", not_null = true, ref = "products.id", desc = "-> products.id" },
+  { name = "list_price", type = "DECIMAL(10,2)", not_null = true },
+  { name = "currency", type = "CHAR(3)", not_null = true, desc = "always EUR" },
+  { name = "valid_from", type = "DATE", not_null = true },
+  { name = "valid_to", type = "DATE", desc = "NULL on the open-ended row" },
+  { name = "reason", type = "VARCHAR(80)", desc = "'Initial listing', 'Annual price update', 'Supplier increase', ..." },
+  { name = "created_by", type = "INT", ref = "users.id", desc = "-> users.id" },
+  { name = "created_at", type = "TIMESTAMP", not_null = true },
+]
+
+[[entity]]
+name = "promotions"
+description = "Time-boxed promotional prices. A product is 'on promotion' on a date when starts_on <= date <= ends_on."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "product_id", type = "INT", not_null = true, ref = "products.id", desc = "-> products.id" },
+  { name = "name", type = "VARCHAR(80)", not_null = true },
+  { name = "discount_pct", type = "DECIMAL(5,1)", not_null = true },
+  { name = "promo_price", type = "DECIMAL(10,2)", not_null = true },
+  { name = "starts_on", type = "DATE", not_null = true },
+  { name = "ends_on", type = "DATE", not_null = true },
+  { name = "created_by", type = "INT", ref = "users.id", desc = "-> users.id" },
+]
+
+[[entity]]
+name = "inventory"
+description = "Stock per product per warehouse. Free stock = on_hand - reserved; products with lines on backorder have no free stock in the shipping warehouse and a next_inbound_date."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "product_id", type = "INT", not_null = true, ref = "products.id", desc = "-> products.id" },
+  { name = "warehouse_id", type = "INT", not_null = true, ref = "warehouses.id", desc = "-> warehouses.id" },
+  { name = "on_hand", type = "INT", not_null = true },
+  { name = "reserved", type = "INT", not_null = true, desc = "allocated to open orders" },
+  { name = "reorder_point", type = "INT", not_null = true },
+  { name = "next_inbound_date", type = "DATE", desc = "next expected supplier delivery, NULL if none planned" },
+]
+
+[[entity]]
+name = "customers"
+description = "One row per retail company we sell to."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "customer_number", type = "VARCHAR(12)", not_null = true, unique = true, desc = "business key, e.g. 'C-10001'" },
+  { name = "name", type = "VARCHAR(160)", not_null = true, text_asset = true },
+  { name = "chain_name", type = "VARCHAR(80)", desc = "groups stores of the same chain (e.g. 'Retkiaitta'); NULL for independents" },
+  { name = "segment", type = "VARCHAR(30)", not_null = true, desc = "CHAIN_STORE, INDEPENDENT, ONLINE, DEPARTMENT_STORE, RENTAL_OUTFITTER, CLUB_OR_SCHOOL" },
+  { name = "country", type = "CHAR(2)", not_null = true, desc = "ISO-2: FI, SE, NO, DK, DE, EE" },
+  { name = "city", type = "VARCHAR(80)", not_null = true },
+  { name = "postal_code", type = "VARCHAR(12)" },
+  { name = "street", type = "VARCHAR(120)" },
+  { name = "vat_number", type = "VARCHAR(20)" },
+  { name = "email_domain", type = "VARCHAR(80)" },
+  { name = "phone", type = "VARCHAR(30)", pii = "contact" },
+  { name = "credit_limit", type = "DECIMAL(12,2)", desc = "EUR" },
+  { name = "payment_terms_days", type = "INT", not_null = true },
+  { name = "customer_discount_pct", type = "DECIMAL(5,1)", not_null = true, desc = "customer-level discount applied to every line" },
+  { name = "account_manager_id", type = "INT", ref = "users.id", desc = "-> users.id" },
+  { name = "created_at", type = "DATE", not_null = true },
+  { name = "active", type = "BOOLEAN", not_null = true },
+]
+
+[[entity]]
+name = "customer_contacts"
+description = ""
+exposed = false
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "customer_id", type = "INT", not_null = true, ref = "customers.id" },
+  { name = "first_name", type = "VARCHAR(60)", not_null = true, pii = "name" },
+  { name = "last_name", type = "VARCHAR(60)", not_null = true, pii = "name" },
+  { name = "role", type = "VARCHAR(40)", pii = "identifier" },
+  { name = "email", type = "VARCHAR(160)", not_null = true, pii = "contact" },
+  { name = "phone", type = "VARCHAR(30)", pii = "contact" },
+  { name = "is_primary", type = "BOOLEAN", not_null = true },
+  { name = "language", type = "CHAR(2)", pii = "identifier" },
+  { name = "marketing_consent", type = "BOOLEAN", not_null = true, desc = "GDPR: may we send marketing", pii = "identifier" },
+  { name = "consent_source", type = "VARCHAR(20)", desc = "WEBSITE, TRADE_FAIR, ACCOUNT_MANAGER, PORTAL", pii = "identifier" },
+  { name = "retention_until", type = "DATE", desc = "erase after this date unless there is an open business need", pii = "identifier" },
+]
+
+[[entity]]
+name = "delivery_addresses"
+description = "Ship-to addresses of a customer (a store, a central warehouse)."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "customer_id", type = "INT", not_null = true, ref = "customers.id", desc = "-> customers.id" },
+  { name = "label", type = "VARCHAR(60)", desc = "'Store', 'Central warehouse', 'Second store'" },
+  { name = "street", type = "VARCHAR(120)", not_null = true },
+  { name = "postal_code", type = "VARCHAR(12)" },
+  { name = "city", type = "VARCHAR(80)", not_null = true },
+  { name = "country", type = "CHAR(2)", not_null = true },
+  { name = "delivery_instructions", type = "VARCHAR(200)", pii = "free-text" },
+  { name = "is_default", type = "BOOLEAN", not_null = true },
+]
+
+[[entity]]
+name = "orders"
+description = "Sales orders."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "order_number", type = "VARCHAR(20)", not_null = true, unique = true, desc = "e.g. 'SO-2026-001234'" },
+  { name = "customer_id", type = "INT", not_null = true, ref = "customers.id", desc = "-> customers.id" },
+  { name = "delivery_address_id", type = "INT", not_null = true, ref = "delivery_addresses.id", desc = "-> delivery_addresses.id" },
+  { name = "placed_at", type = "TIMESTAMP", not_null = true },
+  { name = "channel", type = "VARCHAR(10)", not_null = true, desc = "EDI, PORTAL, EMAIL, PHONE" },
+  { name = "status", type = "VARCHAR(20)", not_null = true, desc = "OPEN, CONFIRMED, PARTIALLY_SHIPPED, SHIPPED, DELIVERED, CANCELLED" },
+  { name = "requested_delivery_date", type = "DATE", desc = "what the customer asked for" },
+  { name = "promised_ship_date", type = "DATE", not_null = true, desc = "the dispatch date we committed to" },
+  { name = "promised_delivery_date", type = "DATE", not_null = true, desc = "the delivery date we committed to" },
+  { name = "currency", type = "CHAR(3)", not_null = true },
+  { name = "total_net", type = "DECIMAL(12,2)", not_null = true, desc = "order value in EUR after customer discount" },
+  { name = "warehouse_id", type = "INT", not_null = true, ref = "warehouses.id", desc = "-> warehouses.id, where it ships from" },
+  { name = "created_by", type = "INT", ref = "users.id", desc = "-> users.id; NULL for EDI/portal orders" },
+  { name = "customer_reference", type = "VARCHAR(40)", desc = "the customer's own PO number", pii = "free-text" },
+  { name = "notes", type = "VARCHAR(200)", pii = "free-text", text_asset = true },
+]
+
+[[entity]]
+name = "order_lines"
+description = "Lines of an order."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "order_id", type = "INT", not_null = true, ref = "orders.id", desc = "-> orders.id" },
+  { name = "line_number", type = "INT", not_null = true },
+  { name = "product_id", type = "INT", not_null = true, ref = "products.id", desc = "-> products.id" },
+  { name = "quantity", type = "INT", not_null = true, desc = "in the product's unit" },
+  { name = "unit_price", type = "DECIMAL(10,2)", not_null = true, desc = "what was charged (promo price if a promotion applied)" },
+  { name = "list_price", type = "DECIMAL(10,2)", not_null = true, desc = "the price_history price that day" },
+  { name = "promotion_applied", type = "BOOLEAN", not_null = true },
+  { name = "discount_pct", type = "DECIMAL(5,1)", not_null = true },
+  { name = "line_total", type = "DECIMAL(12,2)", not_null = true, desc = "quantity * unit_price * (1 - discount_pct/100)" },
+  { name = "status", type = "VARCHAR(20)", not_null = true, desc = "OPEN (waiting to ship), BACKORDERED (no stock, waiting for supplier), SHIPPED, CANCELLED. A line is currently on backorder only when status = 'BACKORDERED'; backordered_qty/expected_restock_date stay filled on lines that later shipped" },
+  { name = "backordered_qty", type = "INT", not_null = true },
+  { name = "expected_restock_date", type = "DATE" },
+]
+
+[[entity]]
+name = "shipments"
+description = "Physical dispatches. An order can have several (partial shipments). A shipment is LATE when CAST(shipped_at AS DATE) > orders.promised_ship_date; a delivery is LATE when CAST(delivered_at AS DATE) > orders.promised_delivery_date."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "shipment_number", type = "VARCHAR(20)", not_null = true, unique = true, desc = "e.g. 'SH-2026-001234'" },
+  { name = "order_id", type = "INT", not_null = true, ref = "orders.id", desc = "-> orders.id" },
+  { name = "warehouse_id", type = "INT", not_null = true, ref = "warehouses.id", desc = "-> warehouses.id" },
+  { name = "delivery_address_id", type = "INT", not_null = true, ref = "delivery_addresses.id", desc = "-> delivery_addresses.id" },
+  { name = "carrier", type = "VARCHAR(40)", not_null = true, desc = "PostNord, DB Schenker, Bring, DHL Freight, DSV, Baltic Freight Line" },
+  { name = "tracking_number", type = "VARCHAR(30)" },
+  { name = "shipped_at", type = "TIMESTAMP", not_null = true },
+  { name = "expected_delivery_date", type = "DATE", not_null = true },
+  { name = "delivered_at", type = "TIMESTAMP", desc = "NULL while in transit" },
+  { name = "status", type = "VARCHAR(20)", not_null = true, desc = "IN_TRANSIT, DELIVERED, EXCEPTION" },
+  { name = "pallet_count", type = "INT", not_null = true, desc = "0 = parcel shipment" },
+  { name = "package_count", type = "INT", not_null = true },
+  { name = "weight_kg", type = "DECIMAL(10,1)", not_null = true },
+]
+
+[[entity]]
+name = "shipment_lines"
+description = "Which order lines travelled in which shipment, and on which pallet."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "shipment_id", type = "INT", not_null = true, ref = "shipments.id", desc = "-> shipments.id" },
+  { name = "order_line_id", type = "INT", not_null = true, ref = "order_lines.id", desc = "-> order_lines.id" },
+  { name = "quantity", type = "INT", not_null = true },
+  { name = "pallet_number", type = "INT", desc = "1 = first pallet; NULL for parcel shipments" },
+]
+
+[[entity]]
+name = "delivery_events"
+description = "Carrier/warehouse tracking timeline per shipment."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "shipment_id", type = "INT", not_null = true, ref = "shipments.id", desc = "-> shipments.id" },
+  { name = "event_time", type = "TIMESTAMP", not_null = true },
+  { name = "event_type", type = "VARCHAR(30)", not_null = true, desc = "PICKED, PACKED, DISPATCHED, HUB_SCAN, DELAYED, OUT_FOR_DELIVERY, DELIVERY_ATTEMPTED, DELIVERED, EXCEPTION, DAMAGE_REPORTED" },
+  { name = "location", type = "VARCHAR(80)" },
+  { name = "note", type = "VARCHAR(200)", desc = "reason for DELAYED/EXCEPTION, who signed for DELIVERED", pii = "free-text" },
+]
+
+[[entity]]
+name = "claims"
+description = "Customer complaints. A claim is OPEN when status NOT IN ('RESOLVED', 'CLOSED', 'REJECTED'). Days open = DATEDIFF('DAY', opened_at, CURRENT_TIMESTAMP)."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "claim_number", type = "VARCHAR(20)", not_null = true, unique = true, desc = "e.g. 'CL-2026-00123'" },
+  { name = "customer_id", type = "INT", not_null = true, ref = "customers.id", desc = "-> customers.id" },
+  { name = "order_id", type = "INT", ref = "orders.id", desc = "-> orders.id" },
+  { name = "shipment_id", type = "INT", ref = "shipments.id", desc = "-> shipments.id" },
+  { name = "claim_type", type = "VARCHAR(20)", not_null = true, desc = "DAMAGED, MISSING_ITEMS, WRONG_ITEM, LATE_DELIVERY, QUALITY_DEFECT, PRICING_DISPUTE, RETURN_REQUEST" },
+  { name = "status", type = "VARCHAR(20)", not_null = true, desc = "NEW, UNDER_REVIEW, AWAITING_CUSTOMER, APPROVED, REJECTED, RESOLVED, CLOSED" },
+  { name = "priority", type = "VARCHAR(10)", not_null = true, desc = "LOW, NORMAL, HIGH, URGENT" },
+  { name = "source", type = "VARCHAR(10)", not_null = true, desc = "EMAIL, PORTAL, PHONE" },
+  { name = "reported_by_contact_id", type = "INT", ref = "customer_contacts.id", pii = "identifier" },
+  { name = "assigned_to", type = "INT", ref = "users.id", desc = "-> users.id; NULL = unassigned" },
+  { name = "opened_at", type = "TIMESTAMP", not_null = true },
+  { name = "resolved_at", type = "TIMESTAMP" },
+  { name = "needed_by", type = "DATE", desc = "date the customer needs a resolution by" },
+  { name = "requested_resolution", type = "VARCHAR(30)", desc = "REPLACEMENT, REDELIVERY, CREDIT, REPAIR, RETURN_AUTHORISATION" },
+  { name = "claimed_amount", type = "DECIMAL(12,2)", desc = "EUR" },
+  { name = "approved_amount", type = "DECIMAL(12,2)", desc = "EUR, NULL until decided" },
+  { name = "description", type = "VARCHAR(1000)", desc = "the agent's summary", pii = "free-text", text_asset = true },
+  { name = "resolution_note", type = "VARCHAR(400)", pii = "free-text", text_asset = true },
+]
+
+[[entity]]
+name = "claim_lines"
+description = "The order lines a claim is about."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "claim_id", type = "INT", not_null = true, ref = "claims.id", desc = "-> claims.id" },
+  { name = "order_line_id", type = "INT", ref = "order_lines.id", desc = "-> order_lines.id" },
+  { name = "product_id", type = "INT", ref = "products.id", desc = "-> products.id" },
+  { name = "quantity_affected", type = "INT", not_null = true },
+  { name = "pallet_number", type = "INT" },
+  { name = "amount", type = "DECIMAL(12,2)", desc = "EUR" },
+  { name = "issue_note", type = "VARCHAR(200)", pii = "free-text", text_asset = true },
+]
+
+[[entity]]
+name = "saved_widgets"
+description = ""
+exposed = false
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "user_id", type = "INT", not_null = true, ref = "users.id" },
+  { name = "title", type = "VARCHAR(160)", not_null = true },
+  { name = "description", type = "VARCHAR(1000)", pii = "free-text" },
+  { name = "widget_type", type = "VARCHAR(10)", not_null = true },
+  { name = "query_sql", type = "{TEXT}" },
+  { name = "state_json", type = "{TEXT}" },
+  { name = "position", type = "INT", not_null = true },
+  { name = "created_at", type = "TIMESTAMP", not_null = true },
+  { name = "updated_at", type = "TIMESTAMP", not_null = true },
+]
+
+[views]
+product_current_prices = "(product_id, sku, name, category_id, supplier_id, list_price, valid_from) — each product's price valid today."
+late_shipments = "(shipment_id, shipment_number, order_id, order_number, customer_id, warehouse_id, carrier, promised_ship_date, shipped_on, promised_delivery_date, delivered_on) — shipments dispatched late and/or delivered late, both date pairs side by side."
+open_claims = "(all claims columns + customer_name, customer_country) — claims that are still open."
+
+[sql]
+# Raw SQL appended to the DDL. {TEXT} is replaced per dialect (H2: CLOB, PostgreSQL: TEXT).
+runtime_tables = """
+-- Activity log: written by the application from the AI request/response listeners and the
+-- controllers' state-change listeners. Never seeded; one row per AI turn.
+CREATE TABLE activity_log (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    occurred_at TIMESTAMP NOT NULL,
+    user_id INT REFERENCES users(id),
+    view_name VARCHAR(40) NOT NULL,            -- INSIGHTS, CLAIM_FORM, CATALOGUE
+    widget_id INT REFERENCES saved_widgets(id),
+    prompt {TEXT},                               -- what the user typed
+    prompt_sent {TEXT},                          -- what actually went to the provider (after masking)
+    data_scope VARCHAR(400),                   -- what the model was allowed to see (schema, form fields, ...)
+    proposal {TEXT},                             -- what the model proposed (query, field values, row changes)
+    decision VARCHAR(20),                      -- APPLIED, REJECTED, PARTIAL, UNDONE
+    rejection_rule VARCHAR(200),               -- which validation rule or policy rejected it
+    model_name VARCHAR(80),
+    finish_reason VARCHAR(40),
+    input_tokens INT,
+    output_tokens INT
+);
+CREATE INDEX ix_activity_log_user ON activity_log(user_id, occurred_at);
+
+-- Case 3: proposed bulk changes and their outcome. Never seeded.
+CREATE TABLE bulk_change_batches (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMP NOT NULL,
+    created_by INT NOT NULL REFERENCES users(id),
+    prompt {TEXT} NOT NULL,
+    description VARCHAR(400),                  -- the model's plain-English reading of the rule
+    status VARCHAR(20) NOT NULL,               -- PROPOSED, APPLIED, UNDONE, DISCARDED
+    applied_at TIMESTAMP,
+    undone_at TIMESTAMP
+);
+CREATE TABLE bulk_change_items (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    batch_id BIGINT NOT NULL REFERENCES bulk_change_batches(id),
+    product_id INT NOT NULL REFERENCES products(id),
+    field_name VARCHAR(40) NOT NULL,           -- e.g. list_price
+    old_value VARCHAR(80),
+    new_value VARCHAR(80),
+    effective_from DATE,
+    accepted BOOLEAN NOT NULL,                 -- kept in the review list or removed by the user
+    price_history_id INT REFERENCES price_history(id)
+);
+"""
+indexes = """
+CREATE INDEX ix_products_category ON products(category_id);
+CREATE INDEX ix_products_supplier ON products(supplier_id);
+CREATE INDEX ix_price_history_product ON price_history(product_id, valid_from);
+CREATE INDEX ix_promotions_product ON promotions(product_id, starts_on, ends_on);
+CREATE INDEX ix_customers_name ON customers(name);
+CREATE INDEX ix_contacts_customer ON customer_contacts(customer_id);
+CREATE INDEX ix_contacts_email ON customer_contacts(email);
+CREATE INDEX ix_addresses_customer ON delivery_addresses(customer_id);
+CREATE INDEX ix_orders_customer ON orders(customer_id, placed_at);
+CREATE INDEX ix_orders_placed ON orders(placed_at);
+CREATE INDEX ix_orders_status ON orders(status);
+CREATE INDEX ix_order_lines_order ON order_lines(order_id);
+CREATE INDEX ix_order_lines_product ON order_lines(product_id);
+CREATE INDEX ix_order_lines_status ON order_lines(status);
+CREATE INDEX ix_shipments_order ON shipments(order_id);
+CREATE INDEX ix_shipments_shipped ON shipments(shipped_at);
+CREATE INDEX ix_shipment_lines_shipment ON shipment_lines(shipment_id);
+CREATE INDEX ix_delivery_events_shipment ON delivery_events(shipment_id, event_time);
+CREATE INDEX ix_claims_customer ON claims(customer_id);
+CREATE INDEX ix_claims_status ON claims(status, opened_at);
+CREATE INDEX ix_claim_lines_claim ON claim_lines(claim_id);
+"""
+views = """
+-- Convenience views for the AI schema. They avoid the most error-prone joins.
+CREATE VIEW product_current_prices AS
+SELECT p.id AS product_id, p.sku, p.name, p.category_id, p.supplier_id, ph.list_price, ph.valid_from
+FROM products p JOIN price_history ph ON ph.product_id = p.id
+WHERE ph.valid_from <= CURRENT_DATE AND (ph.valid_to IS NULL OR ph.valid_to >= CURRENT_DATE);
+
+CREATE VIEW late_shipments AS
+SELECT s.id AS shipment_id, s.shipment_number, o.id AS order_id, o.order_number, o.customer_id,
+       s.warehouse_id, s.carrier, o.promised_ship_date, CAST(s.shipped_at AS DATE) AS shipped_on,
+       o.promised_delivery_date, CAST(s.delivered_at AS DATE) AS delivered_on
+FROM shipments s JOIN orders o ON o.id = s.order_id
+WHERE CAST(s.shipped_at AS DATE) > o.promised_ship_date
+   OR (s.delivered_at IS NOT NULL AND CAST(s.delivered_at AS DATE) > o.promised_delivery_date);
+
+CREATE VIEW open_claims AS
+SELECT c.*, cu.name AS customer_name, cu.country AS customer_country
+FROM claims c JOIN customers cu ON cu.id = c.customer_id
+WHERE c.status NOT IN ('RESOLVED', 'CLOSED', 'REJECTED');
+"""
+
+[ai_schema]
+# intro: first lines the model reads. hints: appended after the tables; {context} is filled by lifecycle.schema_context(ctx).
+intro = """You are querying the order-desk database of Nordic Supply, a wholesaler of sports, hiking and
+outdoor equipment that sells to retail companies (shops, chains, online stores) in the Nordic countries.
+Dialect: {dialect}. Use standard SQL. Never modify data; only SELECT.
+The application tells you today's date. "Last month" means the previous calendar month.
+
+TABLES — table(columns), then what it holds and what non-obvious columns mean.
+"""
+hints = """
+HINTS
+- Join keys: orders.customer_id = customers.id; order_lines.order_id = orders.id; order_lines.product_id = products.id;
+  products.category_id = categories.id; products.supplier_id = suppliers.id; shipments.order_id = orders.id;
+  shipment_lines.shipment_id = shipments.id; shipment_lines.order_line_id = order_lines.id; claims.order_id = orders.id.
+{dialect_hints}
+- Amounts are EUR. Quantities are in the product's unit (pcs or pair).
+- Free-text columns (orders.notes, claims.description, delivery_events.note) can contain names and phone numbers
+  of the customer's staff; do not put them in chart labels.
+{context}"""
+
+[ai_schema.dialects.h2]
+label = "H2 (version 2)"
+hints = """- Week grouping: ISO_WEEK(CAST(shipped_at AS DATE)) or DATE_TRUNC('WEEK', shipped_at). Month: FORMATDATETIME(d, 'yyyy-MM').
+- Date arithmetic: DATEADD('DAY', -7, CURRENT_TIMESTAMP), DATEDIFF('DAY', a, b), CURRENT_DATE.
+- H2 matches GROUP BY expressions strictly: group by the exact same expression as in SELECT, or compute the
+  grouped expression in a subquery and format it (e.g. 'W' || wk) in the outer query."""
+
+[ai_schema.dialects.postgres]
+label = "PostgreSQL"
+hints = """- Week grouping: EXTRACT(WEEK FROM shipped_at) or DATE_TRUNC('week', shipped_at). Month: TO_CHAR(d, 'YYYY-MM').
+- Date arithmetic: CURRENT_TIMESTAMP - INTERVAL '7 days', (CAST(b AS DATE) - CAST(a AS DATE)) gives days, CURRENT_DATE.
+- Identifiers are lower case; string comparison is case-sensitive (use ILIKE for names)."""

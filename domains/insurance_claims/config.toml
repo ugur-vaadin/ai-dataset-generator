@@ -1,0 +1,22 @@
+# Fennoskandia Insurance — story tunables.
+[generation]
+as_of = "2026-09-07"
+seed = 20260907
+scale = 1.0
+months = 12
+
+[volume]
+policyholders = 3000
+policies_per_holder = 1.4        # average
+incidents_per_month = 210        # before seasonality and scale
+
+[rates]
+claim_share = 0.85               # incidents that become claims
+rejection_share = 0.09
+partial_share = 0.12
+repair_shop_share = 0.55         # approved motor/home claims paid to a shop
+storm_multiplier = 6.0           # STORM incidents in the storm week vs a normal week
+slow_shop = "Bilplåt Umeå AB"     # a repair shop whose payments run late (dashboard story)
+
+[pii]
+free_text_share = 0.08           # incident descriptions naming a person or phone number

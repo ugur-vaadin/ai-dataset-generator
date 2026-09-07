@@ -1,0 +1,49 @@
+[first_names]
+NO = ["Ingrid", "Kristian", "Marit", "Ole", "Sigrid", "Eirik", "Solveig", "Håkon", "Kari", "Nora", "Sindre", "Tone", "Vegard", "Hege", "Jørgen"]
+SE = ["Anders", "Astrid", "Björn", "Ebba", "Erik", "Frida", "Gustav", "Hanna", "Johan", "Karin", "Lars", "Linnea", "Magnus", "Sara", "Oskar"]
+[last_names]
+NO = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Pedersen", "Nilsen", "Kristiansen", "Berg", "Haugen", "Bakke", "Dahl"]
+SE = ["Andersson", "Johansson", "Karlsson", "Nilsson", "Eriksson", "Larsson", "Olsson", "Persson", "Svensson", "Lindberg", "Bergström", "Holm"]
+[cities]
+NO = ["Oslo", "Bergen", "Trondheim", "Stavanger", "Drammen"]
+SE = ["Stockholm", "Göteborg", "Malmö", "Uppsala", "Västerås"]
+[streets]
+NO = ["Storgata", "Kirkegata", "Torggata", "Strandveien", "Fjellveien", "Parkveien", "Havnegata"]
+SE = ["Storgatan", "Kungsgatan", "Drottninggatan", "Järnvägsgatan", "Skolgatan", "Hamngatan", "Parkgatan"]
+[country_weights]
+NO = 55
+SE = 45
+[phone_patterns]
+NO = "+47 9## ## ###"
+SE = "+46 70 ### ## ##"
+[language_by_country]
+NO = "nb"
+SE = "sv"
+
+[staff]
+list = [["test.user", "Test User", "ADMIN"], ["mona.berg", "Mona Berg", "DISPATCHER"], ["petter.lund", "Petter Lund", "DISPATCHER"],
+        ["sara.holm", "Sara Holm", "PROPERTY_MANAGER"], ["eirik.moen", "Eirik Moen", "PROPERTY_MANAGER"], ["linnea.ek", "Linnea Ek", "PROPERTY_MANAGER"]]
+[contractors]
+list = [["Rørlegger Hansen AS", "PLUMBING", "Oslo", "NO", 95.00, 36], ["VVS Nord AB", "PLUMBING", "Stockholm", "SE", 88.00, 8],
+        ["Elektro Bergen AS", "ELECTRICAL", "Bergen", "NO", 90.00, 10], ["Elkraft Göteborg AB", "ELECTRICAL", "Göteborg", "SE", 85.00, 12],
+        ["Varme & Ventilasjon AS", "HEATING", "Oslo", "NO", 98.00, 14], ["Värmeteknik Malmö AB", "HEATING", "Malmö", "SE", 92.00, 9],
+        ["Låsservice Oslo AS", "LOCKS", "Oslo", "NO", 80.00, 4], ["Låssmeden Uppsala AB", "LOCKS", "Uppsala", "SE", 78.00, 5],
+        ["Byggservice Trondheim AS", "GENERAL", "Trondheim", "NO", 70.00, 24], ["Allservice Stockholm AB", "GENERAL", "Stockholm", "SE", 68.00, 20]]
+
+[building]
+types = { RESIDENTIAL = 65, COMMERCIAL = 15, MIXED = 20 }
+[unit]
+types = { APARTMENT = 80, OFFICE = 10, SHOP = 6, STORAGE = 4 }
+
+[faults]
+categories = { PLUMBING = 26, ELECTRICAL = 14, HEATING = 16, LOCKS = 10, APPLIANCE = 12, STRUCTURAL = 8, CLEANING = 8, OTHER = 6 }
+urgency_by_category = { PLUMBING = "HIGH", ELECTRICAL = "HIGH", HEATING = "HIGH", LOCKS = "EMERGENCY", APPLIANCE = "NORMAL", STRUCTURAL = "NORMAL", CLEANING = "LOW", OTHER = "LOW" }
+channels = { EMAIL = 30, PORTAL = 40, PHONE = 20, APP = 10 }
+trade_by_category = { PLUMBING = "PLUMBING", ELECTRICAL = "ELECTRICAL", HEATING = "HEATING", LOCKS = "LOCKS", APPLIANCE = "GENERAL", STRUCTURAL = "GENERAL", CLEANING = "GENERAL", OTHER = "GENERAL" }
+descriptions = { PLUMBING = "Water dripping under the kitchen sink, bucket is filling twice a day.", ELECTRICAL = "Power goes off in the living room when the oven is on.", HEATING = "Radiators cold in the whole apartment, 15 degrees inside.", LOCKS = "Front door lock jammed, cannot get in.", APPLIANCE = "Dishwasher stopped mid-cycle and shows an error.", STRUCTURAL = "Crack in the bathroom ceiling, plaster falling.", CLEANING = "Stairwell not cleaned for two weeks, rubbish in the entrance.", OTHER = "Intercom does not ring in our apartment." }
+month_volume = { "1" = 1.3, "2" = 1.2, "3" = 1.0, "4" = 0.9, "5" = 0.9, "6" = 0.8, "7" = 0.8, "8" = 0.9, "9" = 1.0, "10" = 1.1, "11" = 1.2, "12" = 1.3 }
+cost_by_category = { PLUMBING = [150, 1800], ELECTRICAL = [120, 1500], HEATING = [200, 3500], LOCKS = [90, 600], APPLIANCE = [80, 900], STRUCTURAL = [300, 6000], CLEANING = [60, 400], OTHER = [60, 800] }
+
+[priority]
+by_urgency = { EMERGENCY = "P1", HIGH = "P2", NORMAL = "P3", LOW = "P4" }
+window_hours = { P1 = 24, P2 = 72, P3 = 240, P4 = 720 }

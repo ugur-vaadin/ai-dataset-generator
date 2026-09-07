@@ -1,0 +1,27 @@
+[[check]]
+name = "one current price per product"
+sql = "SELECT COUNT(*) FROM products p WHERE (SELECT COUNT(*) FROM price_history h WHERE h.product_id = p.id AND h.valid_to IS NULL) <> 1"
+[[check]]
+name = "price ranges contiguous"
+sql = "SELECT COUNT(*) FROM price_history a JOIN price_history b ON a.product_id = b.product_id AND b.id = a.id + 1 AND b.product_id = a.product_id WHERE a.valid_to IS NOT NULL AND date(b.valid_from) <> date(a.valid_to, '+1 day')"
+[[check]]
+name = "order total equals sum of lines"
+sql = "SELECT COUNT(*) FROM orders o WHERE ABS(o.total_net - (SELECT SUM(line_total) FROM order_lines l WHERE l.order_id = o.id)) > 0.01"
+[[check]]
+name = "pallet_count is the max pallet"
+sql = "SELECT COUNT(*) FROM orders o WHERE o.pallet_count <> (SELECT MAX(pallet_number) FROM order_lines l WHERE l.order_id = o.id)"
+[[check]]
+name = "line numbers run 1..n per order"
+sql = "SELECT COUNT(*) FROM orders o WHERE (SELECT MAX(line_number) FROM order_lines l WHERE l.order_id = o.id) <> o.line_count"
+[[check]]
+name = "only TENTS picked for lines"
+sql = "SELECT COUNT(*) FROM order_lines l JOIN products p ON p.id = l.product_id WHERE p.category <> 'TENTS'"
+[[check]]
+name = "customer aggregates match"
+sql = "SELECT COUNT(*) FROM customers c WHERE c.order_count <> (SELECT COUNT(*) FROM orders o WHERE o.customer_id = c.id)"
+[[check]]
+name = "EAN check digits valid"
+sql = "SELECT COUNT(*) FROM products WHERE length(ean) <> 13"
+[[check]]
+name = "heavy tail: top 10% of customers hold over 30% of orders"
+sql = "SELECT CASE WHEN (SELECT SUM(order_count) FROM (SELECT order_count FROM customers ORDER BY order_count DESC LIMIT 30)) > 0.3 * (SELECT SUM(order_count) FROM customers) THEN 0 ELSE 1 END"

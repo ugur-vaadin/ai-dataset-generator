@@ -1,0 +1,84 @@
+# Engine smoke pack: exercises every flow-engine feature (pick, distributions, named dates, seasonality,
+# aggregates, sibling references, anchor ensure, text filters). Hidden from the domain list; run by scripts/test.sh.
+[domain]
+name = "_engine_smoke"
+version = "1.0.0"
+company = "Engine Smoke Ltd"
+description = "Synthetic pack that proves the declarative engine's features."
+
+[[entity]]
+name = "customers"
+description = "Retail customers with a popularity weight."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "name", type = "VARCHAR(120)", not_null = true },
+  { name = "weight", type = "DECIMAL(8,3)", not_null = true, desc = "order propensity (Pareto)" },
+  { name = "orders_total", type = "DECIMAL(12,2)", desc = "sum of the customer's order totals (aggregate)" },
+  { name = "order_count", type = "INT", desc = "aggregate" },
+]
+[[entity]]
+name = "products"
+description = "Products with EAN codes."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "sku", type = "VARCHAR(20)", not_null = true, unique = true },
+  { name = "ean", type = "CHAR(13)", not_null = true, unique = true },
+  { name = "category", type = "VARCHAR(20)", not_null = true, desc = "TENTS, PACKS, BOOTS" },
+  { name = "name", type = "VARCHAR(120)", not_null = true },
+]
+[[entity]]
+name = "price_history"
+description = "Contiguous validity ranges per product; exactly one open-ended row."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "product_id", type = "INT", not_null = true, ref = "products.id" },
+  { name = "list_price", type = "DECIMAL(10,2)", not_null = true },
+  { name = "valid_from", type = "DATE", not_null = true },
+  { name = "valid_to", type = "DATE", desc = "NULL on the current row" },
+]
+[[entity]]
+name = "orders"
+description = "Orders per day with seasonality; late dispatch inside the outage window."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "order_number", type = "VARCHAR(20)", not_null = true, unique = true },
+  { name = "customer_id", type = "INT", not_null = true, ref = "customers.id" },
+  { name = "placed_at", type = "TIMESTAMP", not_null = true },
+  { name = "promised_ship_date", type = "DATE", not_null = true },
+  { name = "shipped_at", type = "TIMESTAMP" },
+  { name = "total_net", type = "DECIMAL(12,2)", desc = "sum of lines (aggregate)" },
+  { name = "line_count", type = "INT" },
+  { name = "pallet_count", type = "INT", desc = "max pallet number (aggregate)" },
+]
+[[entity]]
+name = "order_lines"
+description = "Lines with per-parent pallet numbering."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "order_id", type = "INT", not_null = true, ref = "orders.id" },
+  { name = "line_number", type = "INT", not_null = true },
+  { name = "product_id", type = "INT", not_null = true, ref = "products.id" },
+  { name = "quantity", type = "INT", not_null = true },
+  { name = "unit_price", type = "DECIMAL(10,2)", not_null = true },
+  { name = "line_total", type = "DECIMAL(12,2)", not_null = true },
+  { name = "pallet_number", type = "INT", not_null = true },
+]
+[views]
+[sql]
+runtime_tables = ""
+indexes = ""
+views = ""
+[ai_schema]
+intro = "Engine smoke database. Dialect: {dialect}. Only SELECT.\n\nTABLES\n"
+hints = "\nHINTS\n{dialect_hints}\n{context}"
+[ai_schema.dialects.h2]
+label = "H2"
+hints = "- H2 idioms"
+[ai_schema.dialects.postgres]
+label = "PostgreSQL"
+hints = "- PostgreSQL idioms"

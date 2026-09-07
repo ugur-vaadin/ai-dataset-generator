@@ -1,0 +1,31 @@
+[[check]]
+name = "work orders created after their report"
+sql = "SELECT COUNT(*) FROM work_orders w JOIN fault_reports f ON f.id = w.fault_report_id WHERE w.created_at < f.reported_at"
+[[check]]
+name = "nothing reported after as_of"
+sql = "SELECT COUNT(*) FROM fault_reports WHERE date(reported_at) > {as_of}"
+[[check]]
+name = "done work orders have completion and cost; open ones do not"
+sql = "SELECT COUNT(*) FROM work_orders WHERE (status = 'DONE' AND (completed_at IS NULL OR cost_actual IS NULL)) OR (status <> 'DONE' AND completed_at IS NOT NULL)"
+[[check]]
+name = "assigned work orders have a contractor of the right trade"
+sql = "SELECT COUNT(*) FROM work_orders w JOIN fault_reports f ON f.id = w.fault_report_id JOIN contractors c ON c.id = w.contractor_id WHERE (f.category IN ('PLUMBING','ELECTRICAL','HEATING','LOCKS') AND c.trade <> f.category) OR (f.category NOT IN ('PLUMBING','ELECTRICAL','HEATING','LOCKS') AND c.trade <> 'GENERAL')"
+[[check]]
+name = "NEW work orders are unassigned"
+sql = "SELECT COUNT(*) FROM work_orders WHERE status = 'NEW' AND contractor_id IS NOT NULL"
+[[check]]
+name = "due_at follows the priority window"
+sql = "SELECT COUNT(*) FROM work_orders WHERE ROUND((julianday(due_at) - julianday(created_at)) * 24) <> CASE priority WHEN 'P1' THEN 24 WHEN 'P2' THEN 72 WHEN 'P3' THEN 240 ELSE 720 END"
+[[check]]
+name = "tenants only in occupied units"
+sql = "SELECT COUNT(*) FROM tenants t JOIN units u ON u.id = t.unit_id WHERE u.occupied = 0"
+[[check]]
+name = "free-text PII present but bounded (3%..15% of reports)"
+sql = "SELECT CASE WHEN n BETWEEN 0.03 * total AND 0.15 * total THEN 0 ELSE 1 END FROM (SELECT (SELECT COUNT(*) FROM fault_reports WHERE description LIKE '%+4%') AS n, (SELECT COUNT(*) FROM fault_reports) AS total)"
+
+[[smoke]]
+name = "widget: overdue open work orders by building"
+sql = "SELECT building_code, building_name, COUNT(*) AS overdue FROM open_work_orders WHERE due_at < CURRENT_TIMESTAMP GROUP BY building_code, building_name ORDER BY overdue DESC"
+[[smoke]]
+name = "widget: faults by category last 8 weeks"
+sql = "SELECT category, COUNT(*) FROM fault_reports WHERE reported_at > CURRENT_TIMESTAMP - INTERVAL '56' DAY GROUP BY category ORDER BY 2 DESC"

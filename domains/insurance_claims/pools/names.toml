@@ -1,0 +1,76 @@
+# Fennoskandia Insurance — pools. Nordic, fictional. Order matters for reproducibility.
+[first_names]
+FI = ["Aino", "Eero", "Helmi", "Juhani", "Kaisa", "Lauri", "Maija", "Mikko", "Noora", "Olli", "Sanna", "Tuomas", "Venla", "Ville", "Anni"]
+SE = ["Anders", "Astrid", "Björn", "Ebba", "Erik", "Frida", "Gustav", "Hanna", "Johan", "Karin", "Lars", "Linnea", "Magnus", "Sara", "Oskar"]
+NO = ["Ingrid", "Kristian", "Marit", "Ole", "Sigrid", "Eirik", "Solveig", "Håkon", "Kari", "Nora", "Sindre", "Tone", "Vegard", "Hege", "Jørgen"]
+[last_names]
+FI = ["Virtanen", "Korhonen", "Mäkinen", "Nieminen", "Laine", "Heikkinen", "Koskinen", "Järvinen", "Lehtonen", "Salminen", "Rantanen", "Saarinen"]
+SE = ["Andersson", "Johansson", "Karlsson", "Nilsson", "Eriksson", "Larsson", "Olsson", "Persson", "Svensson", "Lindberg", "Bergström", "Holm"]
+NO = ["Hansen", "Johansen", "Olsen", "Larsen", "Andersen", "Pedersen", "Nilsen", "Kristiansen", "Berg", "Haugen", "Bakke", "Dahl"]
+[cities]
+FI = ["Helsinki", "Espoo", "Tampere", "Turku", "Oulu", "Jyväskylä", "Rovaniemi"]
+SE = ["Stockholm", "Göteborg", "Malmö", "Uppsala", "Umeå", "Luleå"]
+NO = ["Oslo", "Bergen", "Trondheim", "Stavanger", "Tromsø"]
+[postal_codes]
+Helsinki = "00100"
+Espoo = "02100"
+Tampere = "33100"
+Turku = "20100"
+Oulu = "90100"
+"Jyväskylä" = "40100"
+Rovaniemi = "96100"
+Stockholm = "111 20"
+"Göteborg" = "411 04"
+"Malmö" = "211 20"
+Uppsala = "753 10"
+"Umeå" = "903 26"
+"Luleå" = "972 31"
+Oslo = "0150"
+Bergen = "5003"
+Trondheim = "7010"
+Stavanger = "4006"
+"Tromsø" = "9008"
+[phone_patterns]
+FI = "+358 40 ### ####"
+SE = "+46 70 ### ## ##"
+NO = "+47 9## ## ###"
+[registration_patterns]
+FI = "ABC-###"
+SE = "ABC ###"
+NO = "AB #####"
+[streets]
+FI = ["Mannerheimintie", "Hämeenkatu", "Kauppakatu", "Rantatie", "Puistokatu"]
+SE = ["Storgatan", "Kungsgatan", "Drottninggatan", "Järnvägsgatan", "Skolgatan"]
+NO = ["Storgata", "Kirkegata", "Torggata", "Strandveien", "Fjellveien"]
+
+[country_weights]
+FI = 45
+SE = 35
+NO = 20
+
+[adjusters]
+list = [["test.user", "Test User", "ADMIN"], ["maria.koski", "Maria Koski", "TEAM_LEAD"], ["petter.lund", "Petter Lund", "SENIOR_ADJUSTER"],
+        ["sanna.aho", "Sanna Aho", "ADJUSTER"], ["jonas.berg", "Jonas Berg", "ADJUSTER"], ["ida.holm", "Ida Holm", "ADJUSTER"], ["eirik.moen", "Eirik Moen", "ADJUSTER"]]
+
+[repair_shops]
+list = [["Bilplåt Umeå AB", "Umeå", "SE", "BODYWORK", 9], ["Lasikeskus Tampere Oy", "Tampere", "FI", "GLASS", 2], ["Karosseri Oslo AS", "Oslo", "NO", "BODYWORK", 7],
+        ["Putkimies Espoo Oy", "Espoo", "FI", "PLUMBING", 4], ["Kattotyö Helsinki Oy", "Helsinki", "FI", "ROOFING", 12], ["Bilglas Göteborg AB", "Göteborg", "SE", "GLASS", 2],
+        ["Fjordbil Bergen AS", "Bergen", "NO", "BODYWORK", 8], ["Korjaamo Oulu Oy", "Oulu", "FI", "GENERAL", 6], ["Takläggarna Malmö AB", "Malmö", "SE", "ROOFING", 11],
+        ["Rör & Vatten Stockholm AB", "Stockholm", "SE", "PLUMBING", 3]]
+
+[incidents]
+# incident volume by calendar month (winter has more collisions and water damage)
+month_volume = { "1" = 1.4, "2" = 1.2, "3" = 1.0, "4" = 0.9, "5" = 0.9, "6" = 0.9, "7" = 0.9, "8" = 1.0, "9" = 1.0, "10" = 1.1, "11" = 1.4, "12" = 1.4 }
+motor_types = { COLLISION = 22, PARKING_DAMAGE = 20, THEFT = 6, GLASS = 15 }
+home_types = { WATER_DAMAGE = 18, STORM = 8, FIRE = 2, THEFT = 6, LIABILITY = 9 }
+travel_types = { THEFT = 6, LIABILITY = 9 }
+reported_via = { PHONE = 30, PORTAL = 35, EMAIL = 20, APP = 15 }
+amount_by_type = { GLASS = [300, 900], PARKING_DAMAGE = [600, 2800], COLLISION = [1500, 9000], THEFT = [400, 3000], WATER_DAMAGE = [2000, 15000], STORM = [1500, 12000], FIRE = [5000, 40000], LIABILITY = [300, 4000] }
+specialty_by_type = { GLASS = "GLASS", PARKING_DAMAGE = "BODYWORK", COLLISION = "BODYWORK", WATER_DAMAGE = "PLUMBING", STORM = "ROOFING", FIRE = "GENERAL", THEFT = "", LIABILITY = "" }
+descriptions = { COLLISION = "Rear-ended at a junction, bumper and tailgate damaged.", PARKING_DAMAGE = "Found a dent and scratches on the driver's door after shopping.", THEFT = "Bicycle stolen from the locked storage room.", GLASS = "Stone chip on the motorway, windscreen cracked.", WATER_DAMAGE = "Dishwasher hose burst, water under the kitchen floor.", STORM = "Storm tore roof tiles off, water came into the attic.", FIRE = "Small kitchen fire, cabinets and ceiling smoke-damaged.", LIABILITY = "Our dog knocked over a neighbour's e-bike, display broken." }
+rejection_reasons = ["Damage predates the policy start", "Deductible exceeds the claimed amount", "Not covered: wear and tear", "Duplicate of an earlier claim", "Incident not reported within 30 days"]
+
+[products]
+premium_by_product = { MOTOR = [380, 1400], HOME = [220, 900], TRAVEL = [60, 240] }
+second_policy = { HOME = 70, TRAVEL = 30 }
+

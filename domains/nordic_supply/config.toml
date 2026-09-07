@@ -1,0 +1,113 @@
+# Nordic Supply dataset — story tunables.
+# Copy this file, change values, run: python3 generate_dataset.py --config my.toml
+# Structural definitions (categories, suppliers, product templates, users, warehouses, anchor
+# stores) live in nordicsupply/pools.py because the e-mails and the demo script depend on them.
+
+[generation]
+as_of = "2026-09-07"        # the demo's "today"; command-line --as-of overrides
+seed = 20260907
+scale = 1.0                 # multiplies customers, products, orders
+months = 14                 # months of order history before as_of
+
+[volume]
+customers = 2400
+products = 3200
+orders_per_month = 1000     # before seasonality and scale
+
+# Order volume by calendar month (1 = average month).
+[month_volume]
+"1" = 0.8
+"2" = 0.85
+"3" = 1.05
+"4" = 1.15
+"5" = 1.2
+"6" = 1.0
+"7" = 0.7
+"8" = 1.15
+"9" = 1.2
+"10" = 1.05
+"11" = 1.1
+"12" = 0.7
+
+# Where the customers are (weights, not percentages).
+[country_weights]
+FI = 34
+SE = 30
+NO = 20
+DK = 9
+DE = 4
+EE = 3
+
+# Retail chains; each gets `stores` store customers named "<chain> <city>".
+[[chains]]
+name = "Retkiaitta"
+countries = ["FI"]
+stores = 38
+[[chains]]
+name = "Nordkapp Sports"
+countries = ["NO", "SE"]
+stores = 46
+[[chains]]
+name = "Trailhead"
+countries = ["SE", "DK"]
+stores = 34
+[[chains]]
+name = "Villmark & Fjell"
+countries = ["NO"]
+stores = 22
+[[chains]]
+name = "Kompassi Sport"
+countries = ["FI"]
+stores = 27
+[[chains]]
+name = "Sportmagasinet"
+countries = ["DK"]
+stores = 15
+[[chains]]
+name = "Fjällbutiken"
+countries = ["SE"]
+stores = 19
+[[chains]]
+name = "Tunturikauppa"
+countries = ["FI"]
+stores = 12
+
+[carriers]
+names = ["PostNord", "DB Schenker", "Bring", "DHL Freight", "DSV", "Baltic Freight Line"]
+weights = [30, 22, 18, 14, 10, 6]
+bad_carrier = "Baltic Freight Line"     # transit delays since last month (case 1 second cause)
+bad_carrier_delay_prob = 0.6
+
+# Late-shipment model. Deliberately pessimistic for the demo; a real distributor is ~5-10%.
+[late]
+base_late_dispatch_prob = 0.11
+nov_dec_extra = 0.06
+september_extra = 0.03
+mean_delay_days = 1.8
+max_delay_days = 10
+transit_extra_prob = 0.07
+outage_late_prob = 0.8          # Göteborg outage week (second full week of last month)
+outage_delay_min = 3
+outage_delay_max = 6
+
+# Backorders. A "short stock" set of products drives them (plus Winter Sports pre-season and Fjellvind tents).
+[backorder]
+short_stock_share = 0.05
+winter_sports_short_share = 0.30
+fjellvind_tents_short_share = 0.25
+short_recent_prob = 0.55        # a recent line of a short product is backordered with this probability
+short_old_prob = 0.12
+normal_recent_prob = 0.03
+normal_old_prob = 0.01
+recent_days = 75
+
+[claims]
+base_rate = 0.055               # share of delivered orders that get a claim
+late_bonus_3d = 0.12            # added when delivered >= 3 days late
+late_bonus_1d = 0.04            # added when delivered 1-2 days late
+cancel_rate = 0.02              # share of orders cancelled
+
+# Personal data placed where real data has it (all synthetic). The masking demo needs targets beyond the e-mails.
+[pii]
+free_text_share = 0.06          # share of orders.notes / claims.description mentioning a contact's name or phone
+marketing_consent_share = 0.55  # share of contacts who consented to marketing

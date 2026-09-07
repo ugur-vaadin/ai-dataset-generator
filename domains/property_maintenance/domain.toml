@@ -1,0 +1,183 @@
+# Fjordhem Property Management — domain specification. See DOMAIN_GUIDE.md.
+[domain]
+name = "property_maintenance"
+version = "0.1.0"
+company = "Fjordhem Property Management"
+description = "Nordic property manager: tenants report faults, the service desk turns them into work orders for contractors."
+business_key_examples = { buildings = "B-014", fault_reports = "FR-2026-01234", work_orders = "WO-2026-01234" }
+
+[[entity]]
+name = "staff"
+description = "Fjordhem employees: dispatchers and property managers."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "username", type = "VARCHAR(60)", not_null = true, unique = true, pii = "name" },
+  { name = "full_name", type = "VARCHAR(120)", not_null = true, pii = "name" },
+  { name = "role", type = "VARCHAR(20)", not_null = true, desc = "DISPATCHER, PROPERTY_MANAGER, ADMIN" },
+]
+
+[[entity]]
+name = "contractors"
+description = "External contractors we assign work orders to."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "name", type = "VARCHAR(120)", not_null = true },
+  { name = "trade", type = "VARCHAR(20)", not_null = true, desc = "PLUMBING, ELECTRICAL, HEATING, LOCKS, GENERAL" },
+  { name = "city", type = "VARCHAR(80)", not_null = true },
+  { name = "country", type = "CHAR(2)", not_null = true, desc = "NO, SE" },
+  { name = "hourly_rate", type = "DECIMAL(8,2)", not_null = true, desc = "EUR" },
+  { name = "typical_response_hours", type = "INT", not_null = true, desc = "how fast they usually start" },
+]
+
+[[entity]]
+name = "buildings"
+description = "Buildings under management."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "code", type = "VARCHAR(10)", not_null = true, unique = true, desc = "e.g. 'B-014'" },
+  { name = "name", type = "VARCHAR(120)", not_null = true, desc = "street address used as the building name", text_asset = true },
+  { name = "city", type = "VARCHAR(80)", not_null = true },
+  { name = "country", type = "CHAR(2)", not_null = true },
+  { name = "building_type", type = "VARCHAR(15)", not_null = true, desc = "RESIDENTIAL, COMMERCIAL, MIXED" },
+  { name = "built_year", type = "INT", not_null = true },
+  { name = "manager_id", type = "INT", not_null = true, ref = "staff.id", desc = "responsible property manager" },
+]
+
+[[entity]]
+name = "units"
+description = "Apartments and commercial units inside buildings."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "building_id", type = "INT", not_null = true, ref = "buildings.id" },
+  { name = "unit_number", type = "VARCHAR(10)", not_null = true, desc = "e.g. '4B'" },
+  { name = "floor", type = "INT", not_null = true },
+  { name = "unit_type", type = "VARCHAR(15)", not_null = true, desc = "APARTMENT, OFFICE, SHOP, STORAGE" },
+  { name = "size_sqm", type = "INT", not_null = true },
+  { name = "occupied", type = "BOOLEAN", not_null = true },
+]
+
+[[entity]]
+name = "tenants"
+description = "The people renting the units. Personal data; hidden from the AI user."
+exposed = false
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "unit_id", type = "INT", not_null = true, ref = "units.id" },
+  { name = "first_name", type = "VARCHAR(60)", not_null = true, pii = "name" },
+  { name = "last_name", type = "VARCHAR(60)", not_null = true, pii = "name" },
+  { name = "email", type = "VARCHAR(160)", not_null = true, pii = "contact" },
+  { name = "phone", type = "VARCHAR(30)", pii = "contact" },
+  { name = "language", type = "CHAR(2)", desc = "nb, sv, en" },
+  { name = "lease_start", type = "DATE", not_null = true },
+  { name = "portal_account", type = "BOOLEAN", not_null = true, desc = "can report through the tenant portal" },
+]
+
+[[entity]]
+name = "fault_reports"
+description = "What a tenant reported, as recorded by the service desk. A report may or may not become a work order."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "report_number", type = "VARCHAR(20)", not_null = true, unique = true },
+  { name = "unit_id", type = "INT", not_null = true, ref = "units.id" },
+  { name = "tenant_id", type = "INT", ref = "tenants.id", desc = "hidden table; NULL when reported by staff" },
+  { name = "category", type = "VARCHAR(20)", not_null = true, desc = "PLUMBING, ELECTRICAL, HEATING, LOCKS, APPLIANCE, STRUCTURAL, CLEANING, OTHER" },
+  { name = "urgency", type = "VARCHAR(10)", not_null = true, desc = "LOW, NORMAL, HIGH, EMERGENCY (water, no heat in winter, lockout)" },
+  { name = "channel", type = "VARCHAR(10)", not_null = true, desc = "EMAIL, PORTAL, PHONE, APP" },
+  { name = "reported_at", type = "TIMESTAMP", not_null = true },
+  { name = "description", type = "VARCHAR(600)", desc = "the tenant's words as recorded", pii = "free-text", text_asset = true },
+]
+
+[[entity]]
+name = "work_orders"
+description = "A job for a contractor, created from a fault report. Open when status NOT IN ('DONE', 'CANCELLED'). Overdue when open and due_at < now."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "work_order_number", type = "VARCHAR(20)", not_null = true, unique = true },
+  { name = "fault_report_id", type = "INT", not_null = true, ref = "fault_reports.id" },
+  { name = "building_id", type = "INT", not_null = true, ref = "buildings.id" },
+  { name = "contractor_id", type = "INT", ref = "contractors.id", desc = "NULL until assigned" },
+  { name = "status", type = "VARCHAR(15)", not_null = true, desc = "NEW, ASSIGNED, SCHEDULED, IN_PROGRESS, DONE, CANCELLED" },
+  { name = "priority", type = "VARCHAR(10)", not_null = true, desc = "P1 (same day), P2 (3 days), P3 (10 days), P4 (30 days)" },
+  { name = "created_at", type = "TIMESTAMP", not_null = true },
+  { name = "due_at", type = "TIMESTAMP", not_null = true, desc = "created_at plus the priority's window" },
+  { name = "completed_at", type = "TIMESTAMP", desc = "NULL while open" },
+  { name = "cost_estimate", type = "DECIMAL(10,2)", desc = "EUR" },
+  { name = "cost_actual", type = "DECIMAL(10,2)", desc = "EUR, NULL until done" },
+  { name = "created_by", type = "INT", ref = "staff.id" },
+]
+
+[[entity]]
+name = "work_order_events"
+description = "Timeline of a work order."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "work_order_id", type = "INT", not_null = true, ref = "work_orders.id" },
+  { name = "event_time", type = "TIMESTAMP", not_null = true },
+  { name = "event_type", type = "VARCHAR(20)", not_null = true, desc = "CREATED, ASSIGNED, SCHEDULED, STARTED, COMPLETED, CANCELLED, NOTE" },
+  { name = "note", type = "VARCHAR(300)", pii = "free-text", text_asset = true },
+]
+
+[views]
+open_work_orders = "(work_orders columns + building code and name, contractor name) — work orders not DONE/CANCELLED."
+
+[sql]
+runtime_tables = """
+CREATE TABLE activity_log (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    occurred_at TIMESTAMP NOT NULL,
+    staff_id INT REFERENCES staff(id),
+    view_name VARCHAR(40) NOT NULL,
+    prompt {TEXT},
+    proposal {TEXT},
+    decision VARCHAR(20)
+);
+"""
+indexes = """
+CREATE INDEX ix_units_building ON units(building_id);
+CREATE INDEX ix_tenants_unit ON tenants(unit_id);
+CREATE INDEX ix_faults_unit ON fault_reports(unit_id, reported_at);
+CREATE INDEX ix_wo_status ON work_orders(status, due_at);
+CREATE INDEX ix_wo_building ON work_orders(building_id);
+CREATE INDEX ix_wo_contractor ON work_orders(contractor_id);
+CREATE INDEX ix_events_wo ON work_order_events(work_order_id, event_time);
+"""
+views = """
+CREATE VIEW open_work_orders AS
+SELECT w.*, b.code AS building_code, b.name AS building_name, c.name AS contractor_name
+FROM work_orders w JOIN buildings b ON b.id = w.building_id LEFT JOIN contractors c ON c.id = w.contractor_id
+WHERE w.status NOT IN ('DONE', 'CANCELLED');
+"""
+
+[ai_schema]
+intro = """You are querying the service-desk database of Fjordhem Property Management, a Nordic property manager.
+Dialect: {dialect}. Use standard SQL. Never modify data; only SELECT.
+The application tells you today's date. "Last month" means the previous calendar month.
+
+TABLES — table(columns), then what it holds and what non-obvious columns mean.
+"""
+hints = """
+HINTS
+- Join keys: units.building_id = buildings.id; fault_reports.unit_id = units.id; work_orders.fault_report_id = fault_reports.id;
+  work_orders.building_id = buildings.id; work_orders.contractor_id = contractors.id; work_order_events.work_order_id = work_orders.id.
+- A work order is OPEN when status NOT IN ('DONE', 'CANCELLED'); OVERDUE when open and due_at < now.
+- Response time = first STARTED event minus created_at; completion time = completed_at - created_at.
+{dialect_hints}
+- Amounts are EUR. fault_reports.description and work_order_events.note are free text and may contain names and phone numbers.
+{context}"""
+
+[ai_schema.dialects.h2]
+label = "H2 (version 2)"
+hints = """- Week grouping: ISO_WEEK(CAST(created_at AS DATE)). Month: FORMATDATETIME(d, 'yyyy-MM').
+- Date arithmetic: DATEADD('DAY', -7, CURRENT_TIMESTAMP), DATEDIFF('HOUR', a, b), CURRENT_TIMESTAMP."""
+
+[ai_schema.dialects.postgres]
+label = "PostgreSQL"
+hints = """- Week grouping: EXTRACT(WEEK FROM created_at). Month: TO_CHAR(d, 'YYYY-MM').
+- Date arithmetic: CURRENT_TIMESTAMP - INTERVAL '7 days', EXTRACT(EPOCH FROM (b - a))/3600 for hours."""

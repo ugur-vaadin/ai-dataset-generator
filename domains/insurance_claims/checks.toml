@@ -1,0 +1,31 @@
+[[check]]
+name = "incidents reported after they occurred"
+sql = "SELECT COUNT(*) FROM incidents WHERE reported_at < occurred_at"
+[[check]]
+name = "nothing reported after as_of"
+sql = "SELECT COUNT(*) FROM incidents WHERE date(reported_at) > {as_of}"
+[[check]]
+name = "claims opened after the incident was reported"
+sql = "SELECT COUNT(*) FROM claims c JOIN incidents i ON i.id = c.incident_id WHERE c.opened_at < i.reported_at"
+[[check]]
+name = "decided claims have decided_at; open ones do not"
+sql = "SELECT COUNT(*) FROM claims WHERE (status IN ('APPROVED','PARTIALLY_APPROVED','REJECTED','PAID','CLOSED') AND decided_at IS NULL) OR (status IN ('NEW','ASSESSING','AWAITING_DOCUMENTS') AND decided_at IS NOT NULL)"
+[[check]]
+name = "payments only for paid/closed claims and sum to approved_amount"
+sql = "SELECT COUNT(*) FROM claims c WHERE c.status IN ('PAID','CLOSED') AND ABS(c.approved_amount - (SELECT COALESCE(SUM(amount),0) FROM claim_payments p WHERE p.claim_id = c.id)) > 0.05"
+[[check]]
+name = "rejected claims have a reason and no payments"
+sql = "SELECT COUNT(*) FROM claims c WHERE c.status = 'REJECTED' AND (c.rejection_reason IS NULL OR EXISTS (SELECT 1 FROM claim_payments p WHERE p.claim_id = c.id))"
+[[check]]
+name = "policy active means today within its dates"
+sql = "SELECT COUNT(*) FROM policies WHERE (status = 'ACTIVE') <> (start_date <= {as_of} AND end_date >= {as_of})"
+[[check]]
+name = "free-text PII present but bounded (incident descriptions with a phone: 3%..15%)"
+sql = "SELECT CASE WHEN n BETWEEN 0.03 * total AND 0.15 * total THEN 0 ELSE 1 END FROM (SELECT (SELECT COUNT(*) FROM incidents WHERE description LIKE '%+3%' OR description LIKE '%+4%') AS n, (SELECT COUNT(*) FROM incidents) AS total)"
+
+[[smoke]]
+name = "widget: claims open over 14 days"
+sql = "SELECT claim_number, product, status, opened_at FROM open_claims WHERE opened_at < CURRENT_TIMESTAMP - INTERVAL '14' DAY ORDER BY opened_at"
+[[smoke]]
+name = "widget: incidents by type last 8 weeks"
+sql = "SELECT incident_type, COUNT(*) FROM incidents WHERE occurred_at > CURRENT_TIMESTAMP - INTERVAL '56' DAY GROUP BY incident_type ORDER BY 2 DESC"

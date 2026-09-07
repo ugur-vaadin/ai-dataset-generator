@@ -1,0 +1,34 @@
+# Fennoskandia Insurance demo scenarios.
+[scenarios]
+anchors_group = "demo"
+
+[[scenario]]
+key = "P1_parking_damage"
+case = "2"
+title = "Parking-lot damage reported by e-mail (message to claim)"
+document = "emails/01-parking-damage.eml"
+exercises = "No policy or customer number in the text: sender e-mail and registration number must be resolved to the policyholder and the MOTOR policy; 'Tuesday' resolves to a date; no incident or claim exists yet."
+expected = "New incident PARKING_DAMAGE on the active MOTOR policy, claim NEW, repair shop by city, deductible from the policy."
+expect = [
+  { kind = "sql_one", name = "policy exists and is active", sql = "SELECT COUNT(*) FROM policies WHERE id = {policy_id} AND status = 'ACTIVE'" },
+  { kind = "sql_zero", name = "no incident yet since the Tuesday", sql = "SELECT COUNT(*) FROM incidents WHERE policy_id = {policy_id} AND date(occurred_at) >= '{tuesday}'" },
+  { kind = "sql_one", name = "sender e-mail resolves to the policyholder", sql = "SELECT COUNT(*) FROM policyholders WHERE email = '{email}' AND id = {policyholder_id}" },
+  { kind = "before_as_of", field = "tuesday" },
+  { kind = "weekday", field = "tuesday", weekday = "Tuesday" },
+  { kind = "document_contains", must = ["{vehicle_reg}", "{holder}", "Tuesday"], must_not = ["{policy_number}", "{customer_number}"] },
+]
+[[scenario.image]]
+file = "photos/parking-damage.jpg"
+caption = "Damage on {vehicle_reg}, {tuesday}"
+prompt = """Realistic smartphone photo of a dented driver's door and scratched rear panel on a grey family car in a
+supermarket parking lot in Finland, overcast daylight, no readable licence plate, no people, no logos."""
+
+[[scenario]]
+key = "P2_storm_week"
+case = "1"
+title = "Storm week (dashboard story)"
+exercises = "A storm two weeks before as-of multiplies STORM incidents for one week; roofing shops are the bottleneck; one bodywork shop pays out late."
+expected = "Charts: incidents by week and type; claims open over 14 days; time to payment by repair shop."
+expect = [
+  { kind = "sql_positive", name = "storm week has many STORM incidents", sql = "SELECT COUNT(*) FROM incidents WHERE incident_type = 'STORM' AND date(occurred_at) BETWEEN '{storm_start}' AND '{storm_end}'" },
+]

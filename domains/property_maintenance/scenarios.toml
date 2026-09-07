@@ -1,0 +1,36 @@
+[scenarios]
+anchors_group = "demo"
+
+[[scenario]]
+key = "T1_ceiling_leak"
+case = "2"
+title = "Tenant e-mail about a ceiling leak (message to work order)"
+document = "emails/01-ceiling-leak.eml"
+exercises = "No unit or building code in the text: sender e-mail resolves to the tenant, the unit and the building; 'since Tuesday' becomes a date; no fault report exists yet; urgency and trade follow from the words."
+expected = "New fault report PLUMBING/HIGH on the tenant's unit, work order P2 for a plumbing contractor in the building's city, due within 72 hours."
+expect = [
+  { kind = "sql_one", name = "tenant exists", sql = "SELECT COUNT(*) FROM tenants WHERE id = {tenant_id} AND email = '{email}'" },
+  { kind = "sql_zero", name = "no recent fault report for the tenant", sql = "SELECT COUNT(*) FROM fault_reports WHERE tenant_id = {tenant_id} AND date(reported_at) >= date('{tuesday}', '-30 days')" },
+  { kind = "sql_one", name = "unit is occupied and belongs to the building", sql = "SELECT COUNT(*) FROM units WHERE id = {unit_id} AND building_id = {building_id} AND occupied = 1" },
+  { kind = "weekday", field = "tuesday", weekday = "Tuesday" },
+  { kind = "before_as_of", field = "tuesday" },
+  { kind = "document_contains", must = ["{tenant}", "{unit_number}", "{building}", "Tuesday"], must_not = ["FR-", "WO-"] },
+]
+[[scenario.image]]
+file = "photos/ceiling-leak.jpg"
+caption = "Ceiling stain in unit {unit_number}, {building}, {city}"
+prompt = """Realistic smartphone photo of a bathroom ceiling in a Norwegian apartment with a large brown water stain and a
+drip forming at its lowest point, paint bubbling, a towel on the floor below. Indoor light, slightly tilted framing,
+no people, no readable text."""
+
+[[scenario]]
+key = "D1_cold_snap"
+case = "1"
+title = "Cold week (dashboard story)"
+exercises = "A cold week two weeks before as-of triples HEATING faults at EMERGENCY urgency; one plumbing contractor is slow to start and finish, so overdue work orders pile up under them."
+expected = "Charts: faults by week and category; open work orders overdue by building; response time by contractor."
+expect = [
+  { kind = "sql_positive", name = "heating faults spike in the cold week", sql = "SELECT COUNT(*) FROM fault_reports WHERE category = 'HEATING' AND date(reported_at) BETWEEN '{cold_start}' AND '{cold_end}'" },
+  { kind = "sql_one", name = "the slow contractor has the worst average start time", sql = "SELECT CASE WHEN (SELECT c.name FROM work_order_events e JOIN work_orders w ON w.id = e.work_order_id JOIN contractors c ON c.id = w.contractor_id WHERE e.event_type = 'STARTED' GROUP BY c.name ORDER BY AVG(julianday(e.event_time) - julianday(w.created_at)) DESC LIMIT 1) = '{slow_contractor}' THEN 1 ELSE 0 END" },
+  { kind = "sql_positive", name = "overdue open work orders exist", sql = "SELECT COUNT(*) FROM work_orders WHERE status NOT IN ('DONE','CANCELLED') AND due_at < '{as_of}'" },
+]

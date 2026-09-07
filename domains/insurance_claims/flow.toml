@@ -1,0 +1,172 @@
+# Fennoskandia Insurance — declarative flow. The framework generates every table from this file;
+# lifecycle.py only keeps reporting hooks. Expression reference: dsgen/flow.py docstring and DOMAIN_GUIDE.md.
+
+[dates]
+storm_start = "date:last_weekday_before(as_of, Wednesday) - 7 days"
+storm_end = "date:dates.storm_start + 2 days"
+
+[[bands.claims]]
+max_age = 3
+statuses = { NEW = 60, ASSESSING = 40 }
+[[bands.claims]]
+max_age = 14
+statuses = { ASSESSING = 40, AWAITING_DOCUMENTS = 25, APPROVED = 25, REJECTED = 10 }
+[[bands.claims]]
+max_age = 45
+statuses = { AWAITING_DOCUMENTS = 8, APPROVED = 15, PARTIALLY_APPROVED = 8, REJECTED = 9, PAID = 60 }
+[[bands.claims]]
+statuses = { PAID = 40, CLOSED = 50, REJECTED = 10 }
+
+[entity.adjusters]
+rows_from = { pool = "adjusters.list", columns = ["username", "full_name", "role"] }
+fields = { active = "true" }
+
+[entity.repair_shops]
+rows_from = { pool = "repair_shops.list", columns = ["name", "city", "country", "specialty", "avg_repair_days"] }
+
+[entity.policyholders]
+count = "cfg:volume.policyholders"
+[entity.policyholders.fields]
+country = "weighted:country_weights"
+first_name = "pool:first_names[country]"
+last_name = "pool:last_names[country]"
+city = "pool:cities[country]"
+postal_code = "lookup:postal_codes[city]"
+customer_number = "key:FK-2{seq:05}"
+email = "template:{first_name|ascii}.{last_name|ascii}{id}@example.org"
+phone = "rand:phone_patterns[country]"
+date_of_birth = "date:as_of - 7300..27000 days"
+street = "template:{_street} {_no}"
+_street = "pool:streets[country]"
+_no = "int:1..80"
+marketing_consent = "bool:0.5"
+customer_since = "date:as_of - 60..3600 days"
+_second_policy = "bool:0.4"
+
+[entity.policies]
+per = { parent = "policyholders" }
+[[entity.policies.variants]]
+when = "true"
+fields = { product = "MOTOR" }
+[[entity.policies.variants]]
+when = "parent._second_policy == true"
+fields = { product = "weighted:products.second_policy" }
+[entity.policies.fields]
+policyholder_id = "copy:parent.id"
+_active = "bool:0.92"
+start_date = "if:_active == true then date:as_of - 0..364 days else date:as_of - 400..1400 days"
+end_date = "date:start_date + 364 days"
+status = "if:_active == true then ACTIVE else weighted:LAPSED=2|CANCELLED=1"
+vehicle_reg = "if:product == MOTOR then rand:registration_patterns[parent.country] else null"
+annual_premium = "money:products.premium_by_product[product]"
+deductible = "choice:150|200|300|500"
+city = "copy:parent.city"
+policy_number = "key:POL-{start_date|year}-{seq:06}"
+
+[entity.incidents]
+per = { day = "history", count = "cfg:volume.incidents_per_month / 30", pick = "policies", pick_where = "status == ACTIVE or end_date > history_start", seasonality = "incidents.month_volume" }
+drop_when = "reported_at > as_of"
+[[entity.incidents.burst]]
+from = "copy:dates.storm_start"
+to = "copy:dates.storm_end"
+factor = "cfg:rates.storm_multiplier"
+when = "parent.product == HOME"
+prob = 0.8
+set = { incident_type = "STORM" }
+[entity.incidents.fields]
+policy_id = "copy:parent.id"
+incident_type = "if:parent.product == MOTOR then weighted:incidents.motor_types else if:parent.product == HOME then weighted:incidents.home_types else weighted:incidents.travel_types"
+occurred_at = "ts:day @ 6..22"
+reported_at = "ts:occurred_at + 1..96 hours"
+reported_via = "weighted:incidents.reported_via"
+location_city = "copy:parent.city"
+_pii = "bool:cfg.pii.free_text_share"
+description = "if:_pii == true then template:{_desc} Call {parent.policyholder_id->policyholders.first_name} {parent.policyholder_id->policyholders.last_name} on {parent.policyholder_id->policyholders.phone} for the photos. else copy:_desc"
+_desc = "lookup:incidents.descriptions[incident_type]"
+incident_number = "key:INC-{occurred_at|year}-{seq:05}"
+
+[entity.claims]
+per = { parent = "incidents", share = "cfg:rates.claim_share" }
+drop_when = "opened_at > as_of"
+[entity.claims.fields]
+incident_id = "copy:parent.id"
+policy_id = "copy:parent.policy_id"
+opened_at = "ts:parent.reported_at + 1..30 hours"
+status = "status_by_age:opened_at using bands.claims"
+claimed_amount = "money:incidents.amount_by_type[parent.incident_type]"
+_decided = "if:status in [APPROVED, PARTIALLY_APPROVED, REJECTED, PAID, CLOSED] then true else false"
+decided_at = "if:_decided == true then ts:opened_at + 2..20 days | clamp else null"
+approved_amount = "if:status == REJECTED then 0 else if:status == PARTIALLY_APPROVED then calc:max(0, {claimed_amount} * 0.6 - {policy_id->policies.deductible}) else if:_decided == true then calc:max(0, {claimed_amount} - {policy_id->policies.deductible}) else null"
+rejection_reason = "if:status == REJECTED then pool:incidents.rejection_reasons else null"
+_spec = "lookup:incidents.specialty_by_type[parent.incident_type]"
+_use_shop = "bool:cfg.rates.repair_shop_share"
+repair_shop_id = "if:status != REJECTED and _spec != '' and _use_shop == true then pick:repair_shops where specialty == row._spec else null"
+_unassigned = "bool:0.5"
+adjuster_id = "if:status == NEW and _unassigned == true then null else int:2..7"
+_docs = "if:status == AWAITING_DOCUMENTS then true else bool:0.3"
+_slow = "if:repair_shop_id->repair_shops.name == cfg.rates.slow_shop then true else false"
+_paid_at = "if:status in [PAID, CLOSED] and approved_amount > 0 then if:_slow == true then ts:decided_at + 12..31 days | clamp else ts:decided_at + 2..6 days | clamp else null"
+claim_number = "key:CLM-{opened_at|year}-{seq:05}"
+
+[entity.claim_payments]
+per = { parent = "claims", when = "parent.status in [PAID, CLOSED] and parent.approved_amount > 0" }
+[entity.claim_payments.fields]
+claim_id = "copy:parent.id"
+paid_at = "copy:parent._paid_at"
+amount = "copy:parent.approved_amount"
+payee_type = "if:parent.repair_shop_id == null then POLICYHOLDER else REPAIR_SHOP"
+repair_shop_id = "copy:parent.repair_shop_id"
+reference = "key:PAY-{seq:06}"
+
+[entity.claim_events]
+per = { parent = "claims" }
+[entity.claim_events.fields]
+claim_id = "copy:parent.id"
+note = ""
+[[entity.claim_events.variants]]
+when = "true"
+fields = { event_type = "OPENED", event_time = "copy:parent.opened_at" }
+[[entity.claim_events.variants]]
+when = "parent.adjuster_id != null"
+fields = { event_type = "ASSIGNED", event_time = "ts:parent.opened_at + 1..20 hours | clamp" }
+[[entity.claim_events.variants]]
+when = "parent._docs == true"
+fields = { event_type = "DOCUMENTS_REQUESTED", event_time = "ts:parent.opened_at + 1 days | clamp", note = "Photos and repair estimate requested" }
+[[entity.claim_events.variants]]
+when = "parent.decided_at != null"
+fields = { event_type = "DECIDED", event_time = "copy:parent.decided_at", note = "if:parent.status == REJECTED then template:REJECTED: {parent.rejection_reason} else copy:parent.status" }
+[[entity.claim_events.variants]]
+when = "parent._paid_at != null"
+fields = { event_type = "PAID", event_time = "copy:parent._paid_at" }
+[[entity.claim_events.variants]]
+when = "parent._paid_at != null and parent.status == CLOSED"
+fields = { event_type = "CLOSED", event_time = "ts:parent._paid_at + 1 days | clamp" }
+
+# ---- demo anchors
+[[anchor]]
+group = "demo"
+key = "P1_parking_damage"
+pre = { tuesday = "date:last_weekday_before(as_of, Tuesday)" }
+[anchor.pick]
+entity = "policies"
+where = "status == ACTIVE and product == MOTOR and policyholder_id->policyholders.country == FI"
+[anchor.pick.none_of]
+entity = "incidents"
+link = "policy_id"
+where = "occurred_at >= anchor.tuesday - 30 days"
+[anchor.fields]
+policy_id = "copy:pick.id"
+policy_number = "copy:pick.policy_number"
+policyholder_id = "copy:pick.policyholder_id"
+customer_number = "copy:pick.policyholder_id->policyholders.customer_number"
+holder = "template:{pick.policyholder_id->policyholders.first_name} {pick.policyholder_id->policyholders.last_name}"
+email = "copy:pick.policyholder_id->policyholders.email"
+phone = "copy:pick.policyholder_id->policyholders.phone"
+city = "copy:pick.city"
+vehicle_reg = "copy:pick.vehicle_reg"
+deductible = "template:{pick.deductible|money}"
+
+[[anchor]]
+group = "demo"
+key = "P2_storm_week"
+fields = { storm_start = "copy:dates.storm_start", storm_end = "copy:dates.storm_end" }

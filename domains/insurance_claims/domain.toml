@@ -1,0 +1,193 @@
+# Fennoskandia Insurance — domain specification for the insurance claims-desk demo.
+# Second domain pack; exists to prove dsgen is domain-neutral. See DOMAIN_GUIDE.md.
+
+[domain]
+name = "insurance_claims"
+version = "0.2.1"
+company = "Fennoskandia Insurance"
+description = "A Nordic motor and home insurer. The claims desk turns policyholders' messages into claims and pays repair shops."
+business_key_examples = { policies = "POL-2026-004512", incidents = "INC-2026-01234", claims = "CLM-2026-01234" }
+
+[[entity]]
+name = "adjusters"
+description = "Claims-desk employees."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "username", type = "VARCHAR(60)", not_null = true, unique = true, pii = "name" },
+  { name = "full_name", type = "VARCHAR(120)", not_null = true, pii = "name" },
+  { name = "role", type = "VARCHAR(20)", not_null = true, desc = "ADJUSTER, SENIOR_ADJUSTER, TEAM_LEAD, ADMIN" },
+  { name = "active", type = "BOOLEAN", not_null = true },
+]
+
+[[entity]]
+name = "repair_shops"
+description = "Partner repair shops that get paid directly for approved repairs."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "name", type = "VARCHAR(120)", not_null = true, text_asset = true },
+  { name = "city", type = "VARCHAR(80)", not_null = true },
+  { name = "country", type = "CHAR(2)", not_null = true, desc = "FI, SE, NO" },
+  { name = "specialty", type = "VARCHAR(20)", not_null = true, desc = "BODYWORK, GLASS, PLUMBING, ROOFING, GENERAL" },
+  { name = "avg_repair_days", type = "INT", not_null = true },
+]
+
+[[entity]]
+name = "policyholders"
+description = "The insured persons. Personal data; not visible to the AI user."
+exposed = false
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "customer_number", type = "VARCHAR(12)", not_null = true, unique = true },
+  { name = "first_name", type = "VARCHAR(60)", not_null = true, pii = "name" },
+  { name = "last_name", type = "VARCHAR(60)", not_null = true, pii = "name" },
+  { name = "email", type = "VARCHAR(160)", not_null = true, pii = "contact" },
+  { name = "phone", type = "VARCHAR(30)", pii = "contact" },
+  { name = "date_of_birth", type = "DATE", not_null = true, pii = "identifier" },
+  { name = "street", type = "VARCHAR(120)", pii = "identifier" },
+  { name = "postal_code", type = "VARCHAR(12)", pii = "identifier" },
+  { name = "city", type = "VARCHAR(80)", not_null = true },
+  { name = "country", type = "CHAR(2)", not_null = true },
+  { name = "marketing_consent", type = "BOOLEAN", not_null = true, pii = "identifier" },
+  { name = "customer_since", type = "DATE", not_null = true },
+]
+
+[[entity]]
+name = "policies"
+description = "Insurance policies. One policyholder can hold several."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "policy_number", type = "VARCHAR(20)", not_null = true, unique = true, desc = "e.g. 'POL-2026-004512'" },
+  { name = "policyholder_id", type = "INT", not_null = true, ref = "policyholders.id", desc = "-> policyholders.id (hidden from the AI)" },
+  { name = "product", type = "VARCHAR(10)", not_null = true, desc = "MOTOR, HOME, TRAVEL" },
+  { name = "vehicle_reg", type = "VARCHAR(12)", desc = "registration number for MOTOR policies, e.g. 'ABC-123'", pii = "identifier" },
+  { name = "start_date", type = "DATE", not_null = true },
+  { name = "end_date", type = "DATE", not_null = true, desc = "renewal date; the policy is ACTIVE while today is within start_date..end_date" },
+  { name = "annual_premium", type = "DECIMAL(10,2)", not_null = true, desc = "EUR per year" },
+  { name = "deductible", type = "DECIMAL(10,2)", not_null = true, desc = "EUR the policyholder pays per claim" },
+  { name = "status", type = "VARCHAR(12)", not_null = true, desc = "ACTIVE, LAPSED, CANCELLED" },
+  { name = "city", type = "VARCHAR(80)", not_null = true, desc = "insured address city (HOME) or registration city (MOTOR)" },
+]
+
+[[entity]]
+name = "incidents"
+description = "What happened, as reported by the policyholder. An incident may or may not become a claim."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "incident_number", type = "VARCHAR(20)", not_null = true, unique = true },
+  { name = "policy_id", type = "INT", not_null = true, ref = "policies.id" },
+  { name = "incident_type", type = "VARCHAR(20)", not_null = true, desc = "COLLISION, PARKING_DAMAGE, THEFT, GLASS, WATER_DAMAGE, STORM, FIRE, LIABILITY" },
+  { name = "occurred_at", type = "TIMESTAMP", not_null = true },
+  { name = "reported_at", type = "TIMESTAMP", not_null = true, desc = "when the policyholder told us" },
+  { name = "reported_via", type = "VARCHAR(10)", not_null = true, desc = "PHONE, PORTAL, EMAIL, APP" },
+  { name = "location_city", type = "VARCHAR(80)" },
+  { name = "description", type = "VARCHAR(600)", desc = "the policyholder's words as recorded by the desk", pii = "free-text", text_asset = true },
+]
+
+[[entity]]
+name = "claims"
+description = "A claim on a policy for an incident. A claim is OPEN when status NOT IN ('PAID', 'REJECTED', 'CLOSED')."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "claim_number", type = "VARCHAR(20)", not_null = true, unique = true, desc = "e.g. 'CLM-2026-01234'" },
+  { name = "incident_id", type = "INT", not_null = true, ref = "incidents.id" },
+  { name = "policy_id", type = "INT", not_null = true, ref = "policies.id" },
+  { name = "status", type = "VARCHAR(20)", not_null = true, desc = "NEW, ASSESSING, AWAITING_DOCUMENTS, APPROVED, PARTIALLY_APPROVED, REJECTED, PAID, CLOSED" },
+  { name = "adjuster_id", type = "INT", ref = "adjusters.id", desc = "NULL = unassigned" },
+  { name = "repair_shop_id", type = "INT", ref = "repair_shops.id", desc = "NULL when paid to the policyholder or not yet chosen" },
+  { name = "opened_at", type = "TIMESTAMP", not_null = true },
+  { name = "decided_at", type = "TIMESTAMP", desc = "NULL until approved/rejected" },
+  { name = "claimed_amount", type = "DECIMAL(12,2)", not_null = true, desc = "EUR" },
+  { name = "approved_amount", type = "DECIMAL(12,2)", desc = "EUR after deductible; NULL until decided" },
+  { name = "rejection_reason", type = "VARCHAR(200)" },
+]
+
+[[entity]]
+name = "claim_payments"
+description = "Payments made for approved claims, to the policyholder or directly to a repair shop."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "claim_id", type = "INT", not_null = true, ref = "claims.id" },
+  { name = "paid_at", type = "TIMESTAMP", not_null = true },
+  { name = "amount", type = "DECIMAL(12,2)", not_null = true, desc = "EUR" },
+  { name = "payee_type", type = "VARCHAR(15)", not_null = true, desc = "POLICYHOLDER, REPAIR_SHOP" },
+  { name = "repair_shop_id", type = "INT", ref = "repair_shops.id" },
+  { name = "reference", type = "VARCHAR(30)" },
+]
+
+[[entity]]
+name = "claim_events"
+description = "Timeline of a claim."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "claim_id", type = "INT", not_null = true, ref = "claims.id" },
+  { name = "event_time", type = "TIMESTAMP", not_null = true },
+  { name = "event_type", type = "VARCHAR(25)", not_null = true, desc = "OPENED, ASSIGNED, DOCUMENTS_REQUESTED, DOCUMENTS_RECEIVED, ASSESSED, DECIDED, PAID, CLOSED, NOTE" },
+  { name = "note", type = "VARCHAR(300)", pii = "free-text", text_asset = true },
+]
+
+[views]
+open_claims = "(all claims columns + policy_number, product) — claims that are still open."
+
+[sql]
+runtime_tables = """
+-- Activity log for the AI turns; written by the application, never seeded.
+CREATE TABLE activity_log (
+    id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    occurred_at TIMESTAMP NOT NULL,
+    adjuster_id INT REFERENCES adjusters(id),
+    view_name VARCHAR(40) NOT NULL,
+    prompt {TEXT},
+    proposal {TEXT},
+    decision VARCHAR(20)
+);
+"""
+indexes = """
+CREATE INDEX ix_policies_holder ON policies(policyholder_id);
+CREATE INDEX ix_incidents_policy ON incidents(policy_id, occurred_at);
+CREATE INDEX ix_claims_status ON claims(status, opened_at);
+CREATE INDEX ix_claims_policy ON claims(policy_id);
+CREATE INDEX ix_payments_claim ON claim_payments(claim_id);
+CREATE INDEX ix_events_claim ON claim_events(claim_id, event_time);
+"""
+views = """
+CREATE VIEW open_claims AS
+SELECT c.*, p.policy_number, p.product
+FROM claims c JOIN policies p ON p.id = c.policy_id
+WHERE c.status NOT IN ('PAID', 'REJECTED', 'CLOSED');
+"""
+
+[ai_schema]
+intro = """You are querying the claims-desk database of Fennoskandia Insurance, a Nordic motor and home insurer.
+Dialect: {dialect}. Use standard SQL. Never modify data; only SELECT.
+The application tells you today's date. "Last month" means the previous calendar month.
+
+TABLES — table(columns), then what it holds and what non-obvious columns mean.
+"""
+hints = """
+HINTS
+- Join keys: policies.policyholder_id (hidden table); incidents.policy_id = policies.id; claims.incident_id = incidents.id;
+  claims.policy_id = policies.id; claim_payments.claim_id = claims.id; claim_events.claim_id = claims.id.
+- A claim is OPEN when status NOT IN ('PAID', 'REJECTED', 'CLOSED'). Days open = days between opened_at and now.
+- Time to decision = decided_at - opened_at; time to payment = claim_payments.paid_at - claims.opened_at.
+{dialect_hints}
+- Amounts are EUR. approved_amount is after the policy deductible.
+- incidents.description and claim_events.note are free text and may contain names and phone numbers; never put them in chart labels.
+{context}"""
+
+[ai_schema.dialects.h2]
+label = "H2 (version 2)"
+hints = """- Week grouping: ISO_WEEK(CAST(occurred_at AS DATE)). Month: FORMATDATETIME(d, 'yyyy-MM').
+- Date arithmetic: DATEADD('DAY', -14, CURRENT_TIMESTAMP), DATEDIFF('DAY', a, b), CURRENT_DATE.
+- H2 matches GROUP BY expressions strictly: group by the same expression as in SELECT or use a subquery."""
+
+[ai_schema.dialects.postgres]
+label = "PostgreSQL"
+hints = """- Week grouping: EXTRACT(WEEK FROM occurred_at). Month: TO_CHAR(d, 'YYYY-MM').
+- Date arithmetic: CURRENT_TIMESTAMP - INTERVAL '14 days', (CAST(b AS DATE) - CAST(a AS DATE)) gives days."""

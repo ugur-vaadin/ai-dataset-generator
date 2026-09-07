@@ -1,0 +1,3 @@
+# Name pools. Edit freely; order matters for reproducibility.
+first_names = ["Anna", "Ben", "Chloe", "David", "Eva", "Finn", "Greta", "Hugo", "Ida", "Jon"]
+last_names = ["Andersen", "Berg", "Carlsson", "Dahl", "Eriksen", "Falk", "Gran", "Holm", "Isaksen", "Juhl"]

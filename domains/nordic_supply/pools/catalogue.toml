@@ -1,0 +1,515 @@
+# Catalogue structure for Nordic Supply: categories with product-type templates, suppliers, naming pools,
+# variant pools, warehouses, users, seasonality. Generated from the original Python constants; edit freely.
+#
+# Variant kinds (types[].kind): PERSONS TEMP LITRES LITRES_SMALL LITRES_BIG SHOE SIZE COLOR GAS ROPE LENGTH NONE
+# season: SPRING SUMMER AUTUMN WINTER ALL
+
+[naming]
+model_names = ["Storm", "Ridge", "Summit", "Glacier", "Tundra", "Fjord", "Nordkapp", "Kebne", "Sarek", "Halti", "Saana", "Pallas", "Ylläs", "Snøhetta", "Rondane", "Jotun", "Abisko", "Kungsleden", "Padjelanta", "Lyngen", "Senja", "Varanger", "Kilpis", "Inari", "Kaldo", "Polar", "Trail", "Ultra", "Alpine", "Nordic", "Arctic", "Boreal", "Vinter", "Kaamos", "Ruska", "Lumi", "Myrsky", "Tuuli", "Vuori", "Kallio", "Fjell", "Bre", "Elv", "Skog", "Hav", "Vidda", "Tind", "Nuten", "Kebnekaise", "Sylarna", "Helags", "Åreskutan"]
+lines = ["", "", "", " Pro", " Lite", " XT", " Plus", " Eco", " WP", " II", " 2.0"]
+colors = ["Moss Green", "Slate Grey", "Burnt Orange", "Midnight Blue", "Sand", "Black", "Ruby Red", "Arctic White", "Forest", "Ochre", "Petrol", "Lichen", "Graphite", "Sunset Yellow", "Deep Teal"]
+
+[variants]
+PERSONS = ["1P", "2P", "3P", "4P"]
+TEMP = ["+5°C", "0°C", "-5°C", "-10°C", "-20°C"]
+LITRES = ["35L", "45L", "55L", "65L", "75L"]
+LITRES_SMALL = ["8L", "12L", "18L", "22L", "28L"]
+LITRES_BIG = ["40L", "60L", "90L", "120L"]
+SHOE = ["EU 37", "EU 38", "EU 39", "EU 40", "EU 41", "EU 42", "EU 43", "EU 44", "EU 45", "EU 46", "EU 47"]
+SIZE = ["XS", "S", "M", "L", "XL", "XXL"]
+COLOR = ["Moss Green", "Slate Grey", "Burnt Orange", "Midnight Blue", "Sand", "Black", "Ruby Red", "Arctic White", "Forest", "Ochre", "Petrol", "Lichen", "Graphite", "Sunset Yellow", "Deep Teal"]
+GAS = ["100 g", "230 g", "450 g"]
+ROPE = ["9.5 mm 60 m", "9.8 mm 70 m", "8.9 mm 60 m"]
+LENGTH = ["150 cm", "160 cm", "170 cm", "180 cm", "105 cm", "115 cm", "125 cm", "135 cm", "210 cm", "220 cm"]
+
+[units]
+PERSONS = "pcs"
+TEMP = "pcs"
+LITRES = "pcs"
+LITRES_SMALL = "pcs"
+LITRES_BIG = "pcs"
+SHOE = "pair"
+SIZE = "pcs"
+COLOR = "pcs"
+GAS = "pcs"
+ROPE = "pcs"
+LENGTH = "pcs"
+NONE = "pcs"
+
+[season_factor]
+SPRING = { 2 = 1.2, 3 = 1.6, 4 = 1.8, 5 = 1.6, 6 = 1.1 }
+SUMMER = { 4 = 1.2, 5 = 1.6, 6 = 1.8, 7 = 1.4, 8 = 1.3 }
+AUTUMN = { 8 = 1.5, 9 = 1.8, 10 = 1.6, 11 = 1.2 }
+WINTER = { 9 = 1.5, 10 = 1.9, 11 = 2.0, 12 = 1.7, 1 = 1.4, 2 = 1.2 }
+ALL = {  }
+# season_factor: demand multiplier per calendar month; missing months = 0.55 for seasonal categories, 1.0 for ALL
+
+[channels]
+names = ["EDI", "PORTAL", "EMAIL", "PHONE"]
+
+[delays]
+reasons = ["Missed linehaul connection", "Vehicle breakdown", "Capacity shortage at terminal", "Weather: road closed", "Address query, awaiting receiver", "Customs documentation check"]
+
+[[category]]
+code = "TNT"
+name = "Tents & Shelters"
+season = "SUMMER"
+price_range = [120, 650]
+weight_range = [0.9, 6.5]
+demand = 1.0
+types = [{ name = "Tent", kind = "PERSONS", mult = 1.0 }, { name = "Tunnel Tent", kind = "PERSONS", mult = 1.35 }, { name = "Tarp", kind = "COLOR", mult = 0.35 }, { name = "Bivy", kind = "COLOR", mult = 0.55 }, { name = "Footprint", kind = "PERSONS", mult = 0.18 }]
+
+[[category]]
+code = "SLP"
+name = "Sleeping Bags & Mats"
+season = "ALL"
+price_range = [60, 450]
+weight_range = [0.4, 2.2]
+demand = 1.0
+types = [{ name = "Down Sleeping Bag", kind = "TEMP", mult = 1.3 }, { name = "Synthetic Sleeping Bag", kind = "TEMP", mult = 0.8 }, { name = "Sleeping Mat", kind = "COLOR", mult = 0.55 }, { name = "Insulated Mat", kind = "COLOR", mult = 0.75 }, { name = "Camp Pillow", kind = "COLOR", mult = 0.15 }, { name = "Bag Liner", kind = "COLOR", mult = 0.2 }]
+
+[[category]]
+code = "PCK"
+name = "Backpacks & Bags"
+season = "ALL"
+price_range = [40, 320]
+weight_range = [0.3, 2.6]
+demand = 1.3
+types = [{ name = "Backpack", kind = "LITRES", mult = 1.0 }, { name = "Daypack", kind = "LITRES_SMALL", mult = 0.45 }, { name = "Duffel", kind = "LITRES_BIG", mult = 0.6 }, { name = "Dry Bag", kind = "LITRES_SMALL", mult = 0.15 }, { name = "Hip Pack", kind = "COLOR", mult = 0.2 }]
+
+[[category]]
+code = "FTW"
+name = "Footwear"
+season = "ALL"
+price_range = [60, 260]
+weight_range = [0.5, 1.6]
+demand = 1.4
+types = [{ name = "Hiking Boot", kind = "SHOE", mult = 1.0 }, { name = "Trail Shoe", kind = "SHOE", mult = 0.7 }, { name = "Approach Shoe", kind = "SHOE", mult = 0.75 }, { name = "Winter Boot", kind = "SHOE", mult = 1.1 }, { name = "Hiking Sandal", kind = "SHOE", mult = 0.45 }]
+
+[[category]]
+code = "SHL"
+name = "Shell & Insulated Apparel"
+season = "AUTUMN"
+price_range = [35, 380]
+weight_range = [0.3, 1.1]
+demand = 1.3
+types = [{ name = "Rain Jacket", kind = "SIZE", mult = 0.8 }, { name = "Hardshell Jacket", kind = "SIZE", mult = 1.3 }, { name = "Softshell Jacket", kind = "SIZE", mult = 0.7 }, { name = "Insulated Jacket", kind = "SIZE", mult = 1.1 }, { name = "Shell Trousers", kind = "SIZE", mult = 0.65 }, { name = "Down Vest", kind = "SIZE", mult = 0.6 }]
+
+[[category]]
+code = "BAS"
+name = "Base & Mid Layers"
+season = "ALL"
+price_range = [18, 140]
+weight_range = [0.15, 0.6]
+demand = 1.2
+types = [{ name = "Merino Base Layer Top", kind = "SIZE", mult = 0.7 }, { name = "Merino Base Layer Bottom", kind = "SIZE", mult = 0.6 }, { name = "Fleece Jacket", kind = "SIZE", mult = 0.8 }, { name = "Hiking Trousers", kind = "SIZE", mult = 0.9 }, { name = "Hiking Shorts", kind = "SIZE", mult = 0.5 }, { name = "Hiking Socks 2-pack", kind = "SIZE", mult = 0.2 }]
+
+[[category]]
+code = "CLB"
+name = "Climbing"
+season = "SUMMER"
+price_range = [8, 220]
+weight_range = [0.05, 4.5]
+demand = 0.6
+types = [{ name = "Harness", kind = "SIZE", mult = 0.6 }, { name = "Dynamic Rope", kind = "ROPE", mult = 1.0 }, { name = "Quickdraw 6-pack", kind = "COLOR", mult = 0.55 }, { name = "Locking Carabiner", kind = "COLOR", mult = 0.08 }, { name = "Climbing Helmet", kind = "SIZE", mult = 0.5 }, { name = "Belay Device", kind = "COLOR", mult = 0.2 }, { name = "Chalk Bag", kind = "COLOR", mult = 0.1 }]
+
+[[category]]
+code = "KIT"
+name = "Camp Kitchen"
+season = "SUMMER"
+price_range = [4, 180]
+weight_range = [0.05, 1.2]
+demand = 1.1
+types = [{ name = "Camp Stove", kind = "COLOR", mult = 0.6 }, { name = "Gas Canister", kind = "GAS", mult = 0.05 }, { name = "Cookset", kind = "COLOR", mult = 0.4 }, { name = "Insulated Mug", kind = "COLOR", mult = 0.15 }, { name = "Water Filter", kind = "COLOR", mult = 0.5 }, { name = "Water Bottle", kind = "COLOR", mult = 0.12 }, { name = "Titanium Spork", kind = "NONE", mult = 0.06 }]
+
+[[category]]
+code = "NAV"
+name = "Navigation & Electronics"
+season = "ALL"
+price_range = [15, 450]
+weight_range = [0.05, 0.6]
+demand = 0.8
+types = [{ name = "Headlamp", kind = "COLOR", mult = 0.25 }, { name = "Handheld GPS", kind = "NONE", mult = 1.0 }, { name = "Compass", kind = "NONE", mult = 0.12 }, { name = "Power Bank", kind = "NONE", mult = 0.2 }, { name = "Satellite Messenger", kind = "NONE", mult = 0.9 }, { name = "Camp Lantern", kind = "COLOR", mult = 0.18 }]
+
+[[category]]
+code = "WIN"
+name = "Winter Sports"
+season = "WINTER"
+price_range = [20, 900]
+weight_range = [0.2, 3.8]
+demand = 0.9
+types = [{ name = "Touring Ski", kind = "LENGTH", mult = 1.0 }, { name = "Ski Poles", kind = "LENGTH", mult = 0.15 }, { name = "Snowshoes", kind = "SIZE", mult = 0.35 }, { name = "Ski Goggles", kind = "COLOR", mult = 0.2 }, { name = "Avalanche Transceiver", kind = "NONE", mult = 0.55 }, { name = "Avalanche Probe", kind = "NONE", mult = 0.1 }, { name = "Snow Shovel", kind = "COLOR", mult = 0.1 }, { name = "Climbing Skins", kind = "LENGTH", mult = 0.25 }]
+
+[[category]]
+code = "WTR"
+name = "Water Sports"
+season = "SUMMER"
+price_range = [30, 1200]
+weight_range = [0.4, 24.0]
+demand = 0.5
+types = [{ name = "Kayak Paddle", kind = "LENGTH", mult = 0.25 }, { name = "Buoyancy Aid", kind = "SIZE", mult = 0.15 }, { name = "Dry Suit", kind = "SIZE", mult = 0.9 }, { name = "Spray Skirt", kind = "SIZE", mult = 0.12 }, { name = "Touring Kayak", kind = "COLOR", mult = 1.0 }, { name = "SUP Board", kind = "COLOR", mult = 0.7 }]
+
+[[category]]
+code = "CYC"
+name = "Cycling & Bikepacking"
+season = "SUMMER"
+price_range = [15, 160]
+weight_range = [0.1, 1.5]
+demand = 0.6
+types = [{ name = "Frame Bag", kind = "LITRES_SMALL", mult = 0.6 }, { name = "Saddle Bag", kind = "LITRES_SMALL", mult = 0.5 }, { name = "Bike Light Set", kind = "NONE", mult = 0.4 }, { name = "Bike Helmet", kind = "SIZE", mult = 0.7 }, { name = "Pannier Pair", kind = "LITRES_SMALL", mult = 0.9 }, { name = "Handlebar Roll", kind = "COLOR", mult = 0.5 }]
+
+[[category]]
+code = "RUN"
+name = "Trail Running"
+season = "SPRING"
+price_range = [12, 150]
+weight_range = [0.05, 0.5]
+demand = 0.7
+types = [{ name = "Running Vest", kind = "LITRES_SMALL", mult = 1.0 }, { name = "Soft Flask", kind = "NONE", mult = 0.12 }, { name = "Trail Gaiters", kind = "SIZE", mult = 0.2 }, { name = "Trail Cap", kind = "COLOR", mult = 0.18 }, { name = "Running Socks", kind = "SIZE", mult = 0.12 }]
+
+[[category]]
+code = "ACC"
+name = "Accessories & Maintenance"
+season = "ALL"
+price_range = [3, 120]
+weight_range = [0.02, 0.6]
+demand = 1.1
+types = [{ name = "Trekking Poles", kind = "LENGTH", mult = 1.0 }, { name = "Liner Gloves", kind = "SIZE", mult = 0.25 }, { name = "Beanie", kind = "COLOR", mult = 0.2 }, { name = "Neck Gaiter", kind = "COLOR", mult = 0.12 }, { name = "Repair Kit", kind = "NONE", mult = 0.15 }, { name = "Seam Sealer", kind = "NONE", mult = 0.08 }, { name = "Waterproofing Spray", kind = "NONE", mult = 0.1 }, { name = "First Aid Kit", kind = "SIZE", mult = 0.3 }, { name = "Map Case", kind = "NONE", mult = 0.1 }]
+
+[[supplier]]
+code = "FJV"
+name = "Fjellvind AS"
+country = "NO"
+categories = ["TNT", "SLP", "PCK"]
+product_count = 240
+lead_time_days = 21
+is_case3_anchor = true
+
+[[supplier]]
+code = "AUR"
+name = "Aurora Gear AB"
+country = "SE"
+categories = ["PCK", "RUN", "ACC"]
+lead_time_days = 10
+
+[[supplier]]
+code = "SIS"
+name = "Sisu Outdoor Oy"
+country = "FI"
+categories = ["SHL", "BAS"]
+lead_time_days = 12
+
+[[supplier]]
+code = "TUN"
+name = "Tundra Works ApS"
+country = "DK"
+categories = ["KIT", "ACC"]
+lead_time_days = 14
+
+[[supplier]]
+code = "VID"
+name = "Vidda Equipment AS"
+country = "NO"
+categories = ["TNT", "SLP"]
+lead_time_days = 28
+
+[[supplier]]
+code = "HAL"
+name = "Halla Textiles Oy"
+country = "FI"
+categories = ["BAS", "ACC"]
+lead_time_days = 9
+
+[[supplier]]
+code = "BOR"
+name = "Boreal Trek GmbH"
+country = "DE"
+categories = ["PCK", "ACC", "TNT"]
+lead_time_days = 18
+
+[[supplier]]
+code = "SKV"
+name = "Skarv Climbing AS"
+country = "NO"
+categories = ["CLB"]
+lead_time_days = 16
+
+[[supplier]]
+code = "LUM"
+name = "Lumi Ski Oy"
+country = "FI"
+categories = ["WIN"]
+lead_time_days = 35
+
+[[supplier]]
+code = "KAJ"
+name = "Kajakk & Co AS"
+country = "NO"
+categories = ["WTR"]
+lead_time_days = 40
+
+[[supplier]]
+code = "NVD"
+name = "Nordvind Apparel AB"
+country = "SE"
+categories = ["SHL", "BAS"]
+lead_time_days = 12
+
+[[supplier]]
+code = "RUS"
+name = "Ruska Footwear Oy"
+country = "FI"
+categories = ["FTW"]
+lead_time_days = 21
+
+[[supplier]]
+code = "GRA"
+name = "Granit Boots AB"
+country = "SE"
+categories = ["FTW"]
+lead_time_days = 21
+
+[[supplier]]
+code = "KEL"
+name = "Kelo Kitchen Oy"
+country = "FI"
+categories = ["KIT"]
+lead_time_days = 10
+
+[[supplier]]
+code = "BRE"
+name = "Brenner Gas GmbH"
+country = "DE"
+categories = ["KIT"]
+lead_time_days = 7
+
+[[supplier]]
+code = "POL"
+name = "Polarlys Electronics AS"
+country = "NO"
+categories = ["NAV"]
+lead_time_days = 20
+
+[[supplier]]
+code = "KOM"
+name = "Kompass Navigation GmbH"
+country = "DE"
+categories = ["NAV", "ACC"]
+lead_time_days = 14
+
+[[supplier]]
+code = "ISB"
+name = "Isbre Winter AS"
+country = "NO"
+categories = ["WIN", "ACC"]
+lead_time_days = 30
+
+[[supplier]]
+code = "FJP"
+name = "Fjord Paddle AS"
+country = "NO"
+categories = ["WTR"]
+lead_time_days = 25
+
+[[supplier]]
+code = "VEL"
+name = "Velo Nord ApS"
+country = "DK"
+categories = ["CYC"]
+lead_time_days = 12
+
+[[supplier]]
+code = "STG"
+name = "Stig Trail Running AB"
+country = "SE"
+categories = ["RUN", "FTW"]
+lead_time_days = 12
+
+[[supplier]]
+code = "MYR"
+name = "Myrsky Rainwear Oy"
+country = "FI"
+categories = ["SHL"]
+lead_time_days = 14
+
+[[supplier]]
+code = "BGT"
+name = "Bergtatt Packs AS"
+country = "NO"
+categories = ["PCK"]
+lead_time_days = 18
+
+[[supplier]]
+code = "HYG"
+name = "Hygge Camp ApS"
+country = "DK"
+categories = ["KIT", "SLP", "TNT"]
+lead_time_days = 14
+
+[[supplier]]
+code = "TAI"
+name = "Taiga Merino Oy"
+country = "FI"
+categories = ["BAS"]
+lead_time_days = 10
+
+[[supplier]]
+code = "ALV"
+name = "Älv Outdoor AB"
+country = "SE"
+categories = ["TNT", "PCK", "KIT"]
+lead_time_days = 16
+
+[[supplier]]
+code = "SAR"
+name = "Sarek Hardware AB"
+country = "SE"
+categories = ["CLB", "ACC"]
+lead_time_days = 12
+
+[[supplier]]
+code = "KIA"
+name = "Kiruna Alpine AB"
+country = "SE"
+categories = ["WIN", "CLB"]
+lead_time_days = 28
+
+[[supplier]]
+code = "RON"
+name = "Rondane Sleep Systems AS"
+country = "NO"
+categories = ["SLP"]
+lead_time_days = 20
+
+[[supplier]]
+code = "SAI"
+name = "Saimaa Water Gear Oy"
+country = "FI"
+categories = ["WTR", "ACC"]
+lead_time_days = 18
+
+[[supplier]]
+code = "PEH"
+name = "Peak Hütte GmbH"
+country = "DE"
+categories = ["SHL", "FTW"]
+lead_time_days = 16
+
+[[supplier]]
+code = "BAL"
+name = "Baltic Trail OÜ"
+country = "EE"
+categories = ["ACC", "RUN", "BAS"]
+lead_time_days = 8
+
+[[supplier]]
+code = "ORE"
+name = "Øresund Cycle A/S"
+country = "DK"
+categories = ["CYC", "NAV"]
+lead_time_days = 10
+
+[[supplier]]
+code = "LOF"
+name = "Lofoten Wool AS"
+country = "NO"
+categories = ["BAS", "ACC"]
+lead_time_days = 12
+
+[[supplier]]
+code = "HEL"
+name = "Helios Optics AB"
+country = "SE"
+categories = ["NAV", "WIN"]
+lead_time_days = 14
+
+[[supplier]]
+code = "KAA"
+name = "Kaamos Outdoor Oy"
+country = "FI"
+categories = ["TNT", "SLP", "NAV"]
+lead_time_days = 15
+
+[[warehouse]]
+id = 1
+code = "VAN"
+name = "Vantaa Central Warehouse"
+country = "FI"
+city = "Vantaa"
+postal_code = "01510"
+
+[[warehouse]]
+id = 2
+code = "GOT"
+name = "Göteborg Distribution Centre"
+country = "SE"
+city = "Göteborg"
+postal_code = "418 78"
+
+[[warehouse]]
+id = 3
+code = "OSL"
+name = "Oslo Cross-dock"
+country = "NO"
+city = "Oslo"
+postal_code = "0668"
+
+[[user]]
+username = "test.user"
+full_name = "Test User"
+role = "ADMIN"
+
+[[user]]
+username = "anna.lindqvist"
+full_name = "Anna Lindqvist"
+role = "ANALYST"
+
+[[user]]
+username = "mikko.rantanen"
+full_name = "Mikko Rantanen"
+role = "SUPPORT_AGENT"
+
+[[user]]
+username = "sofie.bakke"
+full_name = "Sofie Bakke"
+role = "SUPPORT_AGENT"
+
+[[user]]
+username = "jonas.holm"
+full_name = "Jonas Holm"
+role = "SUPPORT_AGENT"
+
+[[user]]
+username = "kaisa.virtanen"
+full_name = "Kaisa Virtanen"
+role = "CATALOGUE_MANAGER"
+
+[[user]]
+username = "erik.strand"
+full_name = "Erik Strand"
+role = "CATALOGUE_MANAGER"
+
+[[user]]
+username = "lars.nygaard"
+full_name = "Lars Nygaard"
+role = "ACCOUNT_MANAGER"
+
+[[user]]
+username = "helmi.saari"
+full_name = "Helmi Saari"
+role = "ACCOUNT_MANAGER"
+
+[[user]]
+username = "oskar.berg"
+full_name = "Oskar Berg"
+role = "ACCOUNT_MANAGER"
+
+[[user]]
+username = "marit.dahl"
+full_name = "Marit Dahl"
+role = "WAREHOUSE"
+
+[[user]]
+username = "petra.koch"
+full_name = "Petra Koch"
+role = "WAREHOUSE"

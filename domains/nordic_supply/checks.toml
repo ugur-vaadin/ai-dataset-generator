@@ -1,0 +1,23 @@
+# Nordic Supply checks. [[check]] entries are SQLite SQL that must return 0 rows/count; {as_of} is substituted.
+# [[smoke]] entries run against the real database as the read-only AI user (sql = H2; sql_postgres overrides).
+
+[[check]]
+name = "no orders placed after as_of"
+sql = "SELECT COUNT(*) FROM orders WHERE date(placed_at) > {as_of}"
+
+[[check]]
+name = "free-text PII present but bounded (orders.notes with a phone number: 2%..12% of orders)"
+sql = "SELECT CASE WHEN n BETWEEN 0.02 * total AND 0.12 * total THEN 0 ELSE 1 END FROM (SELECT (SELECT COUNT(*) FROM orders WHERE notes LIKE '%+3%' OR notes LIKE '%+4%') AS n, (SELECT COUNT(*) FROM orders) AS total)"
+
+[[check]]
+name = "contacts have a retention date after today"
+sql = "SELECT COUNT(*) FROM customer_contacts WHERE retention_until IS NULL OR retention_until <= {as_of}"
+
+[[smoke]]
+name = "widget: late shipments last month by week"
+sql = "SELECT 'W' || wk AS week, n AS late_shipments FROM (SELECT ISO_WEEK(CAST(s.shipped_at AS DATE)) AS wk, COUNT(*) AS n FROM shipments s JOIN orders o ON o.id = s.order_id WHERE CAST(s.shipped_at AS DATE) > o.promised_ship_date GROUP BY ISO_WEEK(CAST(s.shipped_at AS DATE))) t ORDER BY wk"
+sql_postgres = "SELECT 'W' || wk AS week, n AS late_shipments FROM (SELECT EXTRACT(WEEK FROM s.shipped_at) AS wk, COUNT(*) AS n FROM shipments s JOIN orders o ON o.id = s.order_id WHERE CAST(s.shipped_at AS DATE) > o.promised_ship_date GROUP BY EXTRACT(WEEK FROM s.shipped_at)) t ORDER BY wk"
+
+[[smoke]]
+name = "widget: claims open over 7 days"
+sql = "SELECT c.claim_number, cu.name AS customer, c.claim_type, c.status, c.opened_at FROM claims c JOIN customers cu ON cu.id = c.customer_id WHERE c.status NOT IN ('RESOLVED', 'CLOSED', 'REJECTED') AND c.opened_at < CURRENT_TIMESTAMP - INTERVAL '7' DAY ORDER BY c.opened_at"
