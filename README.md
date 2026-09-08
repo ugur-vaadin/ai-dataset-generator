@@ -61,13 +61,25 @@ templates. Python is needed only for mechanics the flow language cannot express.
 | `db/<domain>.mv.db` | Ready-to-use H2 database (with `--h2-file`) |
 | `FACTS.md`, `REVIEW.md`, `ESTIMATE.md`, `manifest.json`, `verification.json` | The facts to present from; what to review; predicted cost; parameters, anchors, checksums; check results |
 
+## Where to find what
+
+| Question | Read |
+|---|---|
+| How do I run it, author a domain, review, hand over? | [docs/getting-started.md](docs/getting-started.md) |
+| What exactly goes into a pack, and what does the validator enforce? | [DOMAIN_GUIDE.md](DOMAIN_GUIDE.md) |
+| What must my coding assistant do? | [AGENTS.md](AGENTS.md) (imported by `CLAUDE.md`, pointed to by `GEMINI.md` and the Copilot instructions) |
+| How does generation work, and who does what? | [docs/generation-model.md](docs/generation-model.md), with the workflow drawing |
+| Why is it built this way? | [docs/design-decisions.md](docs/design-decisions.md) |
+| How does the Vaadin application use the output? | [docs/integration-guide.md](docs/integration-guide.md) |
+| Which image provider, at what cost? | [docs/image-providers.md](docs/image-providers.md) |
+| What is in the Nordic Supply data, table by table, and what should each demo prompt find? | [domains/nordic_supply/docs/](domains/nordic_supply/docs/) and the generated `FACTS.md` in [datasets/nordic_supply/](datasets/nordic_supply/) |
+| What changed? | [CHANGELOG.md](CHANGELOG.md) |
+
 ## Using it in an application
 
 [docs/integration-guide.md](docs/integration-guide.md): two data sources (application and read-only AI user),
 a `DatabaseProvider` returning the schema text plus today's date, saved widgets, claim-form lookups, the frozen
-demo clock, price-change SQL, activity log. [docs/generation-model.md](docs/generation-model.md) is the process on
-one page; [docs/design-decisions.md](docs/design-decisions.md) says why the generator is built this way, with the
-end-to-end workflow drawn; [docs/image-providers.md](docs/image-providers.md) compares image providers for demo photos.
+demo clock, price-change SQL, activity log.
 
 ## Layout
 

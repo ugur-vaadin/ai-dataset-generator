@@ -2,10 +2,10 @@
 
 A *domain pack* is everything dsgen needs to generate a demo dataset for one business case:
 what the world looks like (entities, vocabularies, rules), who is in it (name pools), what
-story the demo tells (scenarios), and how records flow through their life (one small Python
-module). Everything except the flow is data a human can read and edit. This guide is written
-for a Claude Code session as much as for a person; `python3 -m dsgen <name> validate` is the
-referee.
+story the demo tells (scenarios), and how records flow through their life (`flow.toml`). All of it is
+data a person can read and edit; Python appears only for a mechanic the flow language cannot express.
+This guide is the reference for the pack format, for a coding assistant as much as for a person. The
+order of work and the rules are in `AGENTS.md`; `python3 -m dsgen <name> validate` is the referee.
 
 ## Layout
 
@@ -26,7 +26,7 @@ Start from `python3 -m dsgen <name> new-domain --company "..." --description "..
 declarative pack (two entities, one anchor, one document) that validates and passes `check` immediately. Replace the example entities step by step;
 keep it green after every step.
 
-## Step 1 — from the business case to entities
+## Entities: from the business case to `domain.toml`
 
 Read the business-case text and answer, in the pack's `domain.toml`:
 
@@ -47,21 +47,21 @@ foreign key; referenced entities defined *before* the entities that reference th
 insert in file order); `desc` on every column whose meaning is not obvious from its name; one of
 `INT, BIGINT, VARCHAR(n), CHAR(n), DECIMAL(p,s), DATE, TIMESTAMP, BOOLEAN, {TEXT}`.
 
-## Step 2 — the model-facing text
+## The model-facing text
 
 `[ai_schema].intro` and `.hints` are what `DatabaseProvider.getSchema()` returns. The table and
 column lines are generated; you write the framing: what the company is, the definitions the
 business uses ("a claim is OPEN when…"), join keys, units, and the dynamic `{context}` the
 lifecycle fills (an outage week, a storm). Keep dialect idioms in `[ai_schema.dialects.*]`.
 
-## Step 3 — pools
+## Pools
 
 Name pools in the culture of the domain (Nordic, German, whatever the demo is). Product or item
 templates as `type × model × variant`. Vocabularies as lists with weights. Avoid real companies,
 brands, and people; use `.example` e-mail domains. Lists must be non-empty; order matters for
 reproducibility, so append rather than reorder.
 
-## Step 4 — the flow (`flow.toml`)
+## The flow (`flow.toml`)
 
 Describe how many rows each entity has and how each field is produced; the framework generates the
 tables in file order, keeps dates inside the as-of window, formats values by column type and builds
@@ -124,7 +124,7 @@ When a mechanic cannot be expressed — stock that reacts to orders, a partial s
 hooks `after_<entity>(ctx)` / `after_anchors(ctx)` next to a flow. Reporting hooks (`schema_context`,
 `manifest_extra`, `run_checks`, `facts_sections`, `document_context`) work with both.
 
-## Step 5 — scenarios and documents
+## Scenarios and documents
 
 One `[[scenario]]` per demo moment. Give it a `key` (the anchor key), `title`, `exercises`,
 `expected`, a `document` (rendered from `documents/<document>.tmpl` with `{placeholders}` from the
@@ -135,13 +135,13 @@ verifier checks: `sql_zero`, `sql_one`, `sql_positive` (SQLite SQL with placehol
 `weekday`, `min`, `before_as_of`, `document_contains` (`must` / `must_not`). Make at least one
 document withhold the obvious key (no order number) so the demo must search.
 
-## Step 6 — checks
+## Checks
 
 `checks.toml`: `[[check]]` SQL (SQLite) that must return 0 — chronology, status consistency,
 amounts adding up, bounds on PII in free text. `[[smoke]]` queries run as the read-only AI user on
 H2 and PostgreSQL (`sql_postgres` overrides the dialect). Anything complex goes in `checks.py`.
 
-## Step 6b — review and cost
+## Review and cost
 
 Tag columns an LLM could author with `text_asset = true` (names, descriptions, notes); `estimate`
 prices them. Mark non-English documents with `language = "sv"` on the scenario; the review queue puts
@@ -149,19 +149,11 @@ them first. After a run, read `out/<name>/REVIEW.md` and answer in `review/overr
 `approve` (a human looked), `reject` (blank the field), `replace` (set `value`). Overrides apply on the
 next generation, before files are written, and the manifest lists what was applied.
 
-## Step 7 — run
+## Running
 
-```bash
-python3 -m dsgen <name> validate          # structure and references
-python3 -m dsgen <name> check             # generate + verify + H2 smoke test + FACTS.md
-python3 -m dsgen <name> check --pg        # also PostgreSQL in Docker
-python3 -m dsgen <name> check --h2-file   # also a ready-to-use H2 database file
-python3 -m dsgen <name> estimate          # predict LLM/image cost by mode and model, no API calls
-python3 -m dsgen <name> review            # print the review queue
-```
-
-Read `out/<name>/FACTS.md`: if the numbers do not tell the story the demo needs, adjust `config.toml`
-and the anchors, not the docs.
+The commands and their flags are listed once, in the README ("Quick start") and in `AGENTS.md`. After a
+green `check`, read `out/<name>/FACTS.md`: if the numbers do not tell the story the demo needs, adjust
+`config.toml` and the anchors, not the documentation.
 
 ## What never goes into a pack
 

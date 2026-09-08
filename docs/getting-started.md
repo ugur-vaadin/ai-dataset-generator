@@ -41,24 +41,12 @@ open out/nordic_supply/FACTS.md
 4. Optional photos: put your key in the environment (never in the repo; see `.env.example`) and run
    `python3 -m dsgen <name> check --images openai` once. Generated images are kept across later runs.
 
-Expect a few hours of assisted work for a rich domain (Nordic Supply: three business cases, nineteen
-tables, six documents) and about an hour for a small one (the insurance pack: eight tables, one document).
+Measured: the property-maintenance pack (eight tables, one document) took the assistant 3 min 43 s from the
+paragraph to a green check. A rich pack like Nordic Supply (nineteen tables, six documents, three business
+cases) takes longer, mostly in the review of texts and anchors, not in generation.
 
 ## 4. Hand the output to the application
 
-`out/<name>/` holds CSVs, DDL, loaders and read-only accounts for H2 and PostgreSQL, the model-facing
-schema text, the documents with provenance, and the facts. `docs/integration-guide.md` shows the Java
-wiring.
-
-## What is and is not automated
-
-| Step | Automated? |
-|---|---|
-| Pack structure check, generation, verification, H2/PostgreSQL smoke tests, facts, review queue, cost estimate | Yes, one command |
-| Regenerating for a new date or scale | Yes, a flag |
-| Applying review answers | Yes, on the next run |
-| Image generation | Yes, given a key; one flag you run yourself (it costs money); kept afterwards |
-| Deciding entities, vocabularies, stories, texts for a new domain | No — your assistant, following `AGENTS.md` and `DOMAIN_GUIDE.md`, with `validate` and `check` as referees |
-| Writing `flow.toml` (how records flow), or Python for a mechanic it cannot express | The assistant writes it; the flow language covers the business-case patterns |
-| Reading the review queue | No — that is the point of it |
-| Fictional names | Denylist and generic-name heuristic run in `verify`; the web check of the remaining names is the assistant's, the final scan yours |
+The output folder is described file by file in the README ("What a run produces"). For the dataset the
+application is built on, publish it with `scripts/snapshot.sh <name>` into `datasets/<name>/`; the Java wiring is
+in [integration-guide.md](integration-guide.md).

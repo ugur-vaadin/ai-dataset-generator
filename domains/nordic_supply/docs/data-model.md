@@ -182,11 +182,10 @@ proposed, what a person approved or rejected and by which rule; case 3's review 
 
 ## Volumes and shape
 
-Exact numbers for the current generation are in [`out/nordic_supply/FACTS.md`](../../../out/nordic_supply/FACTS.md) (rendered by
-`--check`). Orders of magnitude at scale 1: ~244,000 rows, 15 MB of CSV, ~4 s to generate,
-~2 s to load into H2; 560–1,180 orders per month with spring and autumn peaks; ~4 lines per order;
-late-dispatch rate 10–25% in normal months and ~33% in the outage month (deliberately pessimistic,
-`config.toml → [late]`); a few dozen open claims; backorder lines in most categories.
+Exact numbers for the current generation are in [`out/nordic_supply/FACTS.md`](../../../datasets/nordic_supply/FACTS.md) (rendered by
+`check`), including row counts, the late-dispatch rate per month and the case 3 counts. Shape at scale 1: about
+240,000 rows and 19 MB of CSV in a few seconds; orders peak in spring and autumn; the late-dispatch rate is
+deliberately pessimistic (`config.toml → [late]`) and spikes in the outage month.
 
 ## What the model sees
 

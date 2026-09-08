@@ -1,8 +1,8 @@
 # Design decisions
 
-Why the generator is built the way it is, one decision per row, with what was considered instead. The
-"how" is in [getting-started.md](getting-started.md) and [DOMAIN_GUIDE.md](../DOMAIN_GUIDE.md); the process
-on one page is [generation-model.md](generation-model.md). Update this file when a decision changes, and say
+Why the generator is built the way it is, one decision per row, with what was considered instead. How it
+works is in [generation-model.md](generation-model.md), how to use it in [getting-started.md](getting-started.md),
+how to write a pack in [DOMAIN_GUIDE.md](../DOMAIN_GUIDE.md). Update this file when a decision changes, and say
 what changed the mind.
 
 | Choice | Why | Considered and set aside |
@@ -26,12 +26,8 @@ what changed the mind.
 
 ## The process, end to end
 
-![Dataset generation workflow: a person describes a domain; the coding assistant writes a TOML pack and loops on validate and check; dsgen renders rows into CSV and SQL and verifies them; a person runs paid image generation once and answers the review queue; a snapshot is committed and served; the demo application loads the CSVs and gives the AI a read-only connection](workflow.svg)
-
-Orange boxes are steps a person takes, blue boxes are dsgen, green is the demo application at demo time.
-Two steps cost money or judgment and stay with a person: generating the photo and answering the review
-queue. Everything between the pack and the facts is deterministic code; the assistant writes data and
-reacts to what `validate` and `check` report. The source of the drawing is `workflow.svg` in this folder.
+The workflow these decisions produce is drawn once, in [generation-model.md](generation-model.md)
+(`workflow.svg`), next to the description of who does what.
 
 ## Open decisions
 

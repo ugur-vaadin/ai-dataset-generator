@@ -1,7 +1,7 @@
 # Demo scenarios: what each prompt should find
 
 The concrete numbers for the current generation (row counts, weekly late shipments, open claims,
-the six anchor orders, the case 3 counts) are rendered into **[`out/nordic_supply/FACTS.md`](../../../out/nordic_supply/FACTS.md)**
+the six anchor orders, the case 3 counts) are rendered into **[`out/nordic_supply/FACTS.md`](../../../datasets/nordic_supply/FACTS.md)**
 by `python3 -m dsgen nordic_supply check`. This file explains what to ask and what kind of answer the data
 holds; read the two side by side. "Today" is the as-of date, "last month" the calendar month
 before it, "the first of next month" the next month start.

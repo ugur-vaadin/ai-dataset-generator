@@ -7,6 +7,9 @@ in each `domain.toml`; both are written to `manifest.json`.
 
 Response to the independent audit (AUDIT.md) and to a reviewer's list of company names too close to real ones.
 
+Documentation:
+* Documentation consolidated to one home per topic: the README gains a "Where to find what" map; the workflow drawing lives in `docs/generation-model.md` (design-decisions links to it); getting-started is the journey only; DOMAIN_GUIDE is the pack-format reference (headings by topic, procedure in `AGENTS.md`); image-providers describes what we run instead of a dated log; pack docs point at the published FACTS.md.
+
 Framework:
 * `verify` checks every company-like name in the pools and the data against a denylist of real Nordic and outdoor brands,
   retailers and carriers (`dsgen/names.py`; packs extend it with `[names] deny` / `allow`), and flags generic shop words next
@@ -23,7 +26,7 @@ Nordic Supply data:
 * No order line after a product's discontinued date; delay events precede delivery, attempts follow dispatch, damage reports
   follow delivery (six new chronology checks); contact e-mails unique; users exist before the price rows they signed;
   anchor quantities are multiples of the case pack.
-* `docs/data-model.md`, `docs/demo-scenarios.md` and the generated pallet photo are now in the repository.
+* The pack docs `domains/nordic_supply/docs/{data-model,demo-scenarios}.md` and the generated pallet photo are now in the repository.
 
 ## docs — 2026-09-08
 
