@@ -107,8 +107,9 @@ def gen_claims(ctx: Ctx):
                                               "issue_note": _line_note(rng, ctype)})
         if ctype == "DAMAGED" and rng.random() < 0.5:
             ctx.tables["delivery_events"].append({"id": len(ctx.tables["delivery_events"]) + 1, "shipment_id": s["id"],
-                                                  "event_time": iso(min(opened_at + dt.timedelta(hours=rng.randint(1, 30)),
-                                                                        TS.combine(ctx.as_of, dt.time(17, 0)))),
+                                                  "event_time": iso(max(TS.fromisoformat(s["delivered_at"]) + dt.timedelta(hours=1),
+                                                                        min(opened_at + dt.timedelta(hours=rng.randint(1, 30)),
+                                                                            TS.combine(ctx.as_of, dt.time(17, 0))))),
                                                   "event_type": "DAMAGE_REPORTED", "location": o["_customer"]["city"],
                                                   "note": f"Receiver reports damage, claim {ctx.tables['claims'][-1]['claim_number']}"})
 

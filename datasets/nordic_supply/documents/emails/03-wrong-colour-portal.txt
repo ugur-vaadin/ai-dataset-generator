@@ -1,8 +1,8 @@
 Channel: CUSTOMER PORTAL message
-Customer: Nordkapp Sports Tromsø (C-10004)
-Sent by: Vegard Olsen <vegard.olsen@nordkapp.sports.example>
+Customer: Fjellkroken Sport Tromsø (C-10004)
+Sent by: Vegard Olsen <vegard.olsen@fjellkroken.sport.example>
 Sent: 2026-09-07 09:02
-Reference: SO-2026-007393
+Reference: SO-2026-007367
 
 20 jackets came in Moss Green, we ordered Midnight Blue (Nordvind Kaldo Lite Insulated Jacket XXL Midnight Blue).
 Beanies are fine. We need the blue ones for the window display, can we keep the

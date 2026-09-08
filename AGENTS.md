@@ -1,4 +1,4 @@
-# ai-demo-datasets — instructions for coding assistants
+# ai-dataset-generator — instructions for coding assistants
 
 This repository generates deterministic demo datasets for Vaadin AI business-case applications.
 `dsgen/` is the framework; `domains/<name>/` are domain packs (TOML data files; Python only for special mechanics).
@@ -69,6 +69,11 @@ Read before other work on the framework: `docs/generation-model.md` (the process
 - Never put API keys in files under this repository; they come from the environment (see `.env.example`).
 - Never call the API or the network from `lifecycle.py`; generation is deterministic and offline.
 - Everything domain-specific is data in the pack; Python holds only mechanics the flow language lacks.
+- Every company, brand, chain, carrier and person is invented. Never use a real brand or retailer as a stem, never a
+  real carrier, never a generic shop word next to a real town as a business name. Before finalising the pools, search
+  the web for each brand, chain, supplier and carrier name and replace any that matches a real company in the same
+  sector; add real names you find to `[names] deny` in a pools file. `verify` runs the offline denylist check and
+  `REVIEW.md` lists every name for a person to scan (see `DOMAIN_GUIDE.md`, "Names").
 - Every column the model can see needs a `desc` unless the name says everything. Personal data goes where real
   systems have it and is tagged; free text may contain it on purpose, bounded by a check.
 - Keep `CHANGELOG.md` and the pack's `README.md` current when you change behaviour.

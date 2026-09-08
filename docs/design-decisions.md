@@ -22,6 +22,7 @@ what changed the mind.
 | **Review queue with stable answers** | Text the demo reads aloud, anchor records and personal data in free text are scored and listed in `REVIEW.md`. A person answers approve, reject or replace in `overrides.toml`; answers apply on every later generation, so review work survives regeneration. | Reviewing everything (18,000 text items) or nothing. |
 | **Generated photos, run by a person** | The one photo the message-to-claim case needs is generated from the anchor record (gpt-image-1.5, about $0.04) with a provenance file, then stored in the pack and reused. Default is a labelled placeholder; the paid command is run by a human, never by the assistant. | Stock photos (licensing, never matching the record); asking the assistant to spend money on its own. |
 | **Committed snapshot and a page** | `datasets/nordic_supply/` holds the published build the app team works from, produced only by `scripts/snapshot.sh`; the test suite fails when it is stale. The one-page `summary.html` is served by GitHub Pages. The 28 MB H2 file is rebuilt, not committed. | Committing every output including binaries (history bloat); committing nothing (the app team has to run Python). |
+| **Names checked, not hoped** | A reviewer found chain and supplier names too close to real companies (a real Finnish brand as a stem, a generic shop word next to a real town) and real carriers shown with invented late rates. Now every company-like name is checked offline against a denylist of real Nordic and outdoor brands, retailers and carriers, generic-word-plus-town names fail, and `REVIEW.md` lists every name for a human pass. All carriers are fictional. | Trusting invented-sounding names; a web check by the assistant alone (still required, as the second layer). |
 
 ## The process, end to end
 
@@ -40,3 +41,4 @@ reacts to what `validate` and `check` report. The source of the drawing is `work
 - **Where the video lives.** The quickstart video is produced from real output but not committed (binary,
   re-rendered often). A GitHub Release asset is the leading option.
 - **Swedish review.** The Swedish e-mail in Nordic Supply was reviewed by the author, not a native speaker.
+- **Clock strategy and employee visibility.** Whether the demo app freezes its clock to the snapshot's as-of date, and whether the `users` table (employee names and e-mails) should stay visible to the model, are the application team's calls.

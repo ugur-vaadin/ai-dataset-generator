@@ -167,3 +167,16 @@ and the anchors, not the docs.
 
 Real people, real companies, real brands or logos in prompts, real phone numbers or e-mail
 domains, API keys, and anything that would need a licence.
+
+## Names: fictional means checked, not hoped
+
+Every company, brand, chain, carrier and person in a pack is invented. Three rules, enforced in this order:
+
+1. **Denylist (`verify`).** `dsgen/names.py` holds real Nordic and outdoor brands, retailers and carriers; a pack adds
+   its own under `[names] deny = [...]` in any `pools/*.toml` and exempts deliberate values with `[names] allow`
+   (the demo company itself is always allowed). Matching is at word start, so "Haltigear" fails on "halti".
+2. **Heuristic (`verify`).** A business name whose non-town words are all generic shop words ("Fjällbutiken Östersund",
+   "Sportmagasinet Aarhus") reads as a real local shop and fails.
+3. **Inventory (`REVIEW.md`).** Every company-like name, by source, for a person to scan. Search the web for the ones
+   you do not recognise; a real brand reused as a model name ("Abisko", "Vidda") is the typical miss, and real
+   carriers must never appear with invented performance numbers.

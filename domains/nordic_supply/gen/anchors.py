@@ -12,9 +12,18 @@ from dataclasses import dataclass, field, asdict
 from typing import Optional
 
 from .catalogue import _pretty_price, current_price, promo_price_on, ean13, product_description
-from dsgen.model import last_weekday_before, next_weekday_after, D, TS, add_business_days, iso, money, months_back
+from dsgen.model import cfg, last_weekday_before, next_weekday_after, D, TS, add_business_days, iso, money, months_back
 from .ctx import Ctx
 from .orders import build_order, to_weekday, ts_on
+
+def fit_pack(specs):
+    """Anchor quantities are quoted in the e-mails, so the catalogue adapts: a product whose case pack does
+    not divide the quantity gets the largest common pack that does (12, 10, 8, 6, 5, 4, 3, 2, 1)."""
+    for p, qty, _ in specs:
+        pack = int(p["case_pack"])
+        if pack > 1 and qty % pack:
+            p["case_pack"] = next(k for k in (12, 10, 8, 6, 5, 4, 3, 2, 1) if qty % k == 0)
+    return specs
 
 def find_customer(ctx, name):
     return next(c for c in ctx.customers if c["name"] == name)
@@ -40,18 +49,18 @@ def gen_case2_anchors(ctx: Ctx):
     as_of = ctx.as_of
 
     # A1: "the second pallet from Tuesday's delivery arrived damaged, we need replacements before Friday"
-    cust = find_customer(ctx, "Retkiaitta Tampere")
+    cust = find_customer(ctx, "Erävakka Tampere")
     tuesday = last_weekday_before(as_of, 1)
     tents = find_products(ctx, sup="FJV", cat="TNT", ptype="Tent", n=2)
     bags = find_products(ctx, sup="FJV", cat="SLP", n=2)
     mats = find_products(ctx, sup="FJV", cat="SLP", ptype="Sleeping Mat", n=1)
-    specs = [(tents[0], 24, False), (tents[1], 18, False), (bags[0], 30, False), (bags[1], 24, False), (mats[0], 36, False)]
+    specs = fit_pack([(tents[0], 24, False), (tents[1], 18, False), (bags[0], 30, False), (bags[1], 24, False), (mats[0], 36, False)])
     placed = ts_on(rng, add_business_days(tuesday, -5), 9, 11)
     promised_ship = add_business_days(placed.date(), 2)
     ship_date = add_business_days(tuesday, -1)  # Monday
     order = build_order(ctx, cust, placed, specs, {
         "promised_ship": promised_ship, "ship_delay": (ship_date - promised_ship).days,
-        "transit_extra": 0, "carrier": "PostNord", "warehouse_id": 1, "channel": "PORTAL",
+        "transit_extra": 0, "carrier": "Nordfrakt", "warehouse_id": 1, "channel": "PORTAL",
         "force_pallets": 2, "price_mode": None, "no_claim": True})
     # make sure the delivery landed exactly on Tuesday: FI transit is 1-2 days; fix the shipment row
     ship = ctx.tables["shipments"][-1]
@@ -63,7 +72,7 @@ def gen_case2_anchors(ctx: Ctx):
         "pallet_1_lines": [l["_p"]["name"] for l in order["_lines"] if l.get("_pallet") == 1]})
 
     # A2: missing cartons, no order number in the message, refers to "last Friday" and the store
-    cust = find_customer(ctx, "Trailhead Umeå")
+    cust = find_customer(ctx, "Stigfinnare Umeå")
     friday = last_weekday_before(as_of, 4)
     boots = find_products(ctx, sup="RUS", cat="FTW", ptype="Hiking Boot", n=1)  # fallback: any FTW
     six = [p for p in ctx.products if p["_sup"] == boots[0]["_sup"] and p["product_type"] == boots[0]["product_type"]
@@ -73,13 +82,13 @@ def gen_case2_anchors(ctx: Ctx):
     boots[0]["case_pack"] = 6          # the e-mail counts cartons of 6 pairs; make the catalogue agree
     socks = find_products(ctx, cat="BAS", ptype="Hiking Socks 2-pack", n=1)
     poles = find_products(ctx, cat="ACC", ptype="Trekking Poles", n=1)
-    specs = [(boots[0], 48, False), (socks[0], 60, False), (poles[0], 12, False)]
+    specs = fit_pack([(boots[0], 48, False), (socks[0], 60, False), (poles[0], 12, False)])
     placed = ts_on(rng, add_business_days(friday, -6), 8, 16)
     promised_ship = add_business_days(placed.date(), 2)
     ship_date = add_business_days(friday, -2)
     order = build_order(ctx, cust, placed, specs, {
         "promised_ship": promised_ship, "ship_delay": (ship_date - promised_ship).days, "transit_extra": 0,
-        "carrier": "DB Schenker", "warehouse_id": 2, "channel": "EDI", "no_claim": True})
+        "carrier": "Polarpost", "warehouse_id": 2, "channel": "EDI", "no_claim": True})
     ship = ctx.tables["shipments"][-1]
     _force_delivery_date(ctx, ship, friday)
     A["A2_missing_cartons"] = _anchor_info(ctx, order, ship, extra={
@@ -87,18 +96,18 @@ def gen_case2_anchors(ctx: Ctx):
         "cartons_ordered": 48 // 6, "cartons_received": 30 // 6, "cartons_missing": (48 - 30) // 6})
 
     # A3: wrong colour delivered (portal message, terse)
-    cust = find_customer(ctx, "Nordkapp Sports Tromsø")
+    cust = find_customer(ctx, "Fjellkroken Sport Tromsø")
     jackets_blue = [p for p in ctx.products if p["_sup"] == "NVD" and "Jacket" in p["product_type"]
                     and p["colour"] == "Midnight Blue" and p["active"] == "true"]
     jacket = jackets_blue[0] if jackets_blue else find_products(ctx, sup="NVD", cat="SHL", ptype="Rain Jacket", n=1)[0]
     wrong_colour = "Moss Green" if jacket["colour"] != "Moss Green" else "Slate Grey"
     beanies = find_products(ctx, cat="ACC", ptype="Beanie", n=1)
-    specs = [(jacket, 20, False), (beanies[0], 40, False)]
+    specs = fit_pack([(jacket, 20, False), (beanies[0], 40, False)])
     deliv = add_business_days(as_of, -2)
     placed = ts_on(rng, add_business_days(deliv, -6), 8, 16)
     promised_ship = add_business_days(placed.date(), 2)
     order = build_order(ctx, cust, placed, specs, {
-        "promised_ship": promised_ship, "ship_delay": 0, "transit_extra": 0, "carrier": "Bring",
+        "promised_ship": promised_ship, "ship_delay": 0, "transit_extra": 0, "carrier": "Kalott Freight",
         "warehouse_id": 3, "channel": "PORTAL", "no_claim": True})
     ship = ctx.tables["shipments"][-1]
     _force_delivery_date(ctx, ship, deliv)
@@ -109,41 +118,44 @@ def gen_case2_anchors(ctx: Ctx):
                                                                  "received_sku": received["sku"]})
 
     # A4: late delivery for Kiruna season opening, credit request; message contains personal data
-    cust = find_customer(ctx, "Fjällbutiken Kiruna")
+    cust = find_customer(ctx, "Vidderna Sport Kiruna")
     skis = find_products(ctx, sup="LUM", cat="WIN", ptype="Touring Ski", n=2)
     skins = find_products(ctx, sup="LUM", cat="WIN", ptype="Climbing Skins", n=1)
     if skins[0]["id"] in (skis[0]["id"], skis[1]["id"]):
         skins = find_products(ctx, cat="WIN", n=1)
     goggles = find_products(ctx, cat="WIN", ptype="Ski Goggles", n=1)
-    specs = [(skis[0], 12, False), (skis[1], 8, False), (skins[0], 20, False), (goggles[0], 30, False)]
-    promised_delivery = to_weekday(months_back(as_of, 1) + dt.timedelta(days=23))   # ~24th of last month
+    specs = fit_pack([(skis[0], 12, False), (skis[1], 8, False), (skins[0], 20, False), (goggles[0], 30, False)])
+    # delivered a week ago, seven days after the promised date: independent of where in the month "today" is
+    delivered = add_business_days(as_of, -5)
+    promised_delivery = to_weekday(delivered - dt.timedelta(days=7))
     placed = ts_on(rng, add_business_days(promised_delivery, -8), 8, 16)
     promised_ship = add_business_days(promised_delivery, -2)
     actual_ship = add_business_days(promised_ship, 4)
     order = build_order(ctx, cust, placed, specs, {
         "promised_ship": promised_ship, "ship_delay": (actual_ship - promised_ship).days, "transit_extra": 3,
-        "carrier": "Baltic Freight Line", "warehouse_id": 2, "channel": "EMAIL", "no_claim": True})
+        "carrier": cfg("carriers", "bad_carrier"), "warehouse_id": 2, "channel": "EMAIL", "no_claim": True})
     ship = ctx.tables["shipments"][-1]
+    _force_delivery_date(ctx, ship, delivered)
     order["promised_delivery_date"] = iso(promised_delivery)
     A["A4_late_delivery"] = _anchor_info(ctx, order, ship, extra={"promised_delivery": iso(promised_delivery),
                                                                   "season_opening": iso(to_weekday(promised_delivery + dt.timedelta(days=3)))})
 
     # A5: quality defect, written in Swedish, ~3 weeks after delivery
-    cust = find_customer(ctx, "Trailhead Umeå")
+    cust = find_customer(ctx, "Stigfinnare Umeå")
     jackets = find_products(ctx, sup="NVD", cat="SHL", ptype="Softshell Jacket", n=1)
     fleece = find_products(ctx, cat="BAS", ptype="Fleece Jacket", n=1)
-    specs = [(jackets[0], 24, False), (fleece[0], 18, False)]
+    specs = fit_pack([(jackets[0], 24, False), (fleece[0], 18, False)])
     deliv = add_business_days(as_of, -16)
     placed = ts_on(rng, add_business_days(deliv, -5), 8, 16)
     promised_ship = add_business_days(placed.date(), 2)
     order = build_order(ctx, cust, placed, specs, {"promised_ship": promised_ship, "ship_delay": 0, "transit_extra": 0,
-                                                    "carrier": "PostNord", "warehouse_id": 2, "channel": "PORTAL", "no_claim": True})
+                                                    "carrier": "Nordfrakt", "warehouse_id": 2, "channel": "PORTAL", "no_claim": True})
     ship = ctx.tables["shipments"][-1]
     _force_delivery_date(ctx, ship, deliv)
     A["A5_quality_defect_sv"] = _anchor_info(ctx, order, ship, extra={"defective_qty": 6})
 
     # A6: pricing dispute — promotion existed but list price was charged
-    cust = find_customer(ctx, "Sportmagasinet Aarhus")
+    cust = find_customer(ctx, "Kystlinje Sport Aarhus")
     placed6 = add_business_days(as_of, -6)
     promo_headlamps = [p for p in ctx.products if p["product_type"] == "Headlamp" and p["active"] == "true"
                        and any(s <= placed6 <= e for s, e, _ in ctx.promos_by_product.get(p["id"], []))]
@@ -161,11 +173,11 @@ def gen_case2_anchors(ctx: Ctx):
         promo_headlamps = [p]
     lamp = promo_headlamps[0]
     lantern = find_products(ctx, cat="NAV", ptype="Camp Lantern", n=1)
-    specs = [(lamp, 36, False), (lantern[0], 12, False)]
+    specs = fit_pack([(lamp, 36, False), (lantern[0], 12, False)])
     placed = ts_on(rng, placed6, 9, 12)
     promised_ship = add_business_days(placed.date(), 1)
     order = build_order(ctx, cust, placed, specs, {"promised_ship": promised_ship, "ship_delay": 0, "transit_extra": 0,
-                                                    "carrier": "DSV", "warehouse_id": 2, "channel": "EMAIL",
+                                                    "carrier": "Havnelast", "warehouse_id": 2, "channel": "EMAIL",
                                                     "price_mode": "list", "no_claim": True})
     ship = ctx.tables["shipments"][-1] if ctx.tables["shipments"][-1]["order_id"] == order["id"] else None
     if ship:
@@ -217,10 +229,14 @@ def _force_delivery_date(ctx, ship, day: D):
     if ship["delivered_at"]:
         old = TS.fromisoformat(ship["delivered_at"])
         ship["delivered_at"] = iso(TS.combine(day, old.time()))
+        new_delivered = TS.combine(day, old.time())
         for e in ctx.tables["delivery_events"]:
             if e["shipment_id"] == ship["id"] and e["event_type"] in ("OUT_FOR_DELIVERY", "DELIVERED"):
                 t = TS.fromisoformat(e["event_time"])
                 e["event_time"] = iso(TS.combine(day, t.time()))
+            elif e["shipment_id"] == ship["id"] and e["event_type"] in ("DELAYED", "HUB_SCAN", "DELIVERY_ATTEMPTED") \
+                    and TS.fromisoformat(e["event_time"]) >= new_delivered:
+                e["event_time"] = iso(new_delivered - dt.timedelta(hours=rng.randint(3, 20)))   # keep the timeline in order
         return
     delivered_at = ts_on(rng, day, 8, 15)
     ship["delivered_at"] = iso(delivered_at)

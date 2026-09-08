@@ -5,7 +5,7 @@
 # season: SPRING SUMMER AUTUMN WINTER ALL
 
 [naming]
-model_names = ["Storm", "Ridge", "Summit", "Glacier", "Tundra", "Fjord", "Nordkapp", "Kebne", "Sarek", "Halti", "Saana", "Pallas", "Ylläs", "Snøhetta", "Rondane", "Jotun", "Abisko", "Kungsleden", "Padjelanta", "Lyngen", "Senja", "Varanger", "Kilpis", "Inari", "Kaldo", "Polar", "Trail", "Ultra", "Alpine", "Nordic", "Arctic", "Boreal", "Vinter", "Kaamos", "Ruska", "Lumi", "Myrsky", "Tuuli", "Vuori", "Kallio", "Fjell", "Bre", "Elv", "Skog", "Hav", "Vidda", "Tind", "Nuten", "Kebnekaise", "Sylarna", "Helags", "Åreskutan"]
+model_names = ["Storm", "Ridge", "Summit", "Glacier", "Tundra", "Fjord", "Nordvik", "Kero", "Suvanto", "Kaira", "Selkä", "Pallas", "Ylläs", "Skare", "Rauk", "Joki", "Aapa", "Kulku", "Palsa", "Loiste", "Selja", "Varanger", "Kilpis", "Inari", "Kaldo", "Polar", "Trail", "Ultra", "Alpine", "Nordic", "Arctic", "Revontuli", "Vinter", "Kaamos", "Ruska", "Nietos", "Myrsky", "Tuuli", "Vuori", "Kallio", "Fjell", "Bre", "Elv", "Skog", "Hav", "Vuoma", "Tind", "Nuten", "Kuru", "Sylarna", "Hyrsky", "Åreskutan"]
 lines = ["", "", "", " Pro", " Lite", " XT", " Plus", " Eco", " WP", " II", " 2.0"]
 colors = ["Moss Green", "Slate Grey", "Burnt Orange", "Midnight Blue", "Sand", "Black", "Ruby Red", "Arctic White", "Forest", "Ochre", "Petrol", "Lichen", "Graphite", "Sunset Yellow", "Deep Teal"]
 
@@ -194,7 +194,7 @@ lead_time_days = 10
 
 [[supplier]]
 code = "SIS"
-name = "Sisu Outdoor Oy"
+name = "Jäkälä Outdoor Oy"
 country = "FI"
 categories = ["SHL", "BAS"]
 lead_time_days = 12
@@ -208,7 +208,7 @@ lead_time_days = 14
 
 [[supplier]]
 code = "VID"
-name = "Vidda Equipment AS"
+name = "Vuoma Equipment AS"
 country = "NO"
 categories = ["TNT", "SLP"]
 lead_time_days = 28
@@ -222,7 +222,7 @@ lead_time_days = 9
 
 [[supplier]]
 code = "BOR"
-name = "Boreal Trek GmbH"
+name = "Nordwald Trek GmbH"
 country = "DE"
 categories = ["PCK", "ACC", "TNT"]
 lead_time_days = 18
@@ -236,7 +236,7 @@ lead_time_days = 16
 
 [[supplier]]
 code = "LUM"
-name = "Lumi Ski Oy"
+name = "Nietos Ski Oy"
 country = "FI"
 categories = ["WIN"]
 lead_time_days = 35
@@ -264,7 +264,7 @@ lead_time_days = 21
 
 [[supplier]]
 code = "GRA"
-name = "Granit Boots AB"
+name = "Gråsten Boots AB"
 country = "SE"
 categories = ["FTW"]
 lead_time_days = 21
@@ -292,7 +292,7 @@ lead_time_days = 20
 
 [[supplier]]
 code = "KOM"
-name = "Kompass Navigation GmbH"
+name = "Peilung Navigation GmbH"
 country = "DE"
 categories = ["NAV", "ACC"]
 lead_time_days = 14
@@ -362,14 +362,14 @@ lead_time_days = 16
 
 [[supplier]]
 code = "SAR"
-name = "Sarek Hardware AB"
+name = "Suvanto Hardware AB"
 country = "SE"
 categories = ["CLB", "ACC"]
 lead_time_days = 12
 
 [[supplier]]
 code = "KIA"
-name = "Kiruna Alpine AB"
+name = "Isvidde Alpine AB"
 country = "SE"
 categories = ["WIN", "CLB"]
 lead_time_days = 28
@@ -411,14 +411,14 @@ lead_time_days = 10
 
 [[supplier]]
 code = "LOF"
-name = "Lofoten Wool AS"
+name = "Skjærgård Wool AS"
 country = "NO"
 categories = ["BAS", "ACC"]
 lead_time_days = 12
 
 [[supplier]]
 code = "HEL"
-name = "Helios Optics AB"
+name = "Loimu Optics AB"
 country = "SE"
 categories = ["NAV", "WIN"]
 lead_time_days = 14

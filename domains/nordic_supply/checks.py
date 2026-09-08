@@ -3,6 +3,7 @@ Signature: run(con, manifest, check, q, one) -> summaries dict for verification.
 from __future__ import annotations
 
 import datetime as dt
+import json
 import os
 
 
@@ -31,6 +32,12 @@ def run(con, manifest, check, q, one):
     check("terminal claims have resolved_at", one("SELECT COUNT(*) FROM claims WHERE status IN ('RESOLVED','CLOSED','REJECTED') AND resolved_at IS NULL") == 0)
     check("open claims have no resolved_at", one("SELECT COUNT(*) FROM claims WHERE status NOT IN ('RESOLVED','CLOSED','REJECTED') AND resolved_at IS NOT NULL") == 0)
     check("no open claim older than 120 days", one("SELECT COUNT(*) FROM claims WHERE status NOT IN ('RESOLVED','CLOSED','REJECTED') AND julianday(?) - julianday(opened_at) > 120", as_of) == 0)
+    check("DELAYED events precede DELIVERED", one("SELECT COUNT(*) FROM delivery_events d JOIN delivery_events v ON v.shipment_id=d.shipment_id AND v.event_type='DELIVERED' WHERE d.event_type='DELAYED' AND d.event_time >= v.event_time") == 0)
+    check("DELIVERY_ATTEMPTED follows DISPATCHED", one("SELECT COUNT(*) FROM delivery_events a JOIN delivery_events s ON s.shipment_id=a.shipment_id AND s.event_type='DISPATCHED' WHERE a.event_type='DELIVERY_ATTEMPTED' AND a.event_time <= s.event_time") == 0)
+    check("DAMAGE_REPORTED follows DELIVERED", one("SELECT COUNT(*) FROM delivery_events a JOIN delivery_events s ON s.shipment_id=a.shipment_id AND s.event_type='DELIVERED' WHERE a.event_type='DAMAGE_REPORTED' AND a.event_time < s.event_time") == 0)
+    check("HUB_SCAN and OUT_FOR_DELIVERY lie between DISPATCHED and DELIVERED", one("SELECT COUNT(*) FROM delivery_events e JOIN delivery_events s ON s.shipment_id=e.shipment_id AND s.event_type='DISPATCHED' LEFT JOIN delivery_events v ON v.shipment_id=e.shipment_id AND v.event_type='DELIVERED' WHERE e.event_type IN ('HUB_SCAN','OUT_FOR_DELIVERY') AND (e.event_time < s.event_time OR (v.event_time IS NOT NULL AND e.event_time > v.event_time))") == 0)
+    check("no order line after the product was discontinued", one("SELECT COUNT(*) FROM order_lines ol JOIN orders o ON o.id=ol.order_id JOIN products p ON p.id=ol.product_id WHERE p.discontinued_on IS NOT NULL AND date(o.placed_at) > p.discontinued_on") == 0)
+    check("anchor quantities are multiples of the case pack", one("SELECT COUNT(*) FROM order_lines ol JOIN orders o ON o.id=ol.order_id JOIN products p ON p.id=ol.product_id WHERE o.order_number IN (SELECT value FROM json_each(?)) AND ol.quantity % p.case_pack <> 0", json.dumps([a["order_number"] for a in manifest["anchors"]["case2"].values()])) == 0)
     check("delivered shipments have DELIVERED event", one("SELECT COUNT(*) FROM shipments s WHERE s.delivered_at IS NOT NULL AND NOT EXISTS (SELECT 1 FROM delivery_events e WHERE e.shipment_id=s.id AND e.event_type='DELIVERED')") == 0)
     check("in-transit shipments have no DELIVERED event", one("SELECT COUNT(*) FROM shipments s WHERE s.delivered_at IS NULL AND EXISTS (SELECT 1 FROM delivery_events e WHERE e.shipment_id=s.id AND e.event_type='DELIVERED')") == 0)
     check("shipped lines have a shipment line", one("SELECT COUNT(*) FROM order_lines ol WHERE ol.status='SHIPPED' AND NOT EXISTS (SELECT 1 FROM shipment_lines sl WHERE sl.order_line_id=ol.id)") == 0)
@@ -65,8 +72,12 @@ def run(con, manifest, check, q, one):
     nm = manifest["first_of_next_month"]
     promo_today = one("SELECT COUNT(DISTINCT pr.product_id) FROM promotions pr JOIN products p ON p.id=pr.product_id JOIN suppliers s ON s.id=p.supplier_id WHERE s.name='Fjellvind AS' AND ? BETWEEN pr.starts_on AND pr.ends_on", as_of)
     promo_nm = one("SELECT COUNT(DISTINCT pr.product_id) FROM promotions pr JOIN products p ON p.id=pr.product_id JOIN suppliers s ON s.id=p.supplier_id WHERE s.name='Fjellvind AS' AND ? BETWEEN pr.starts_on AND pr.ends_on", nm)
-    check("case 3: Fjellvind promotions active today = 22", promo_today == 22, str(promo_today))
-    check("case 3: Fjellvind promotions active on 1st of next month = 21", promo_nm == 21, str(promo_nm))
+    layout = manifest["anchors"]["case3_promotions"]
+    exp_today = layout["active_today_and_on_first_of_next_month"] + layout["active_today_but_ends_before_first_of_next_month"]
+    exp_nm = layout["active_today_and_on_first_of_next_month"] + layout["starts_after_today_before_first_of_next_month"]
+    check(f"case 3: Fjellvind promotions active today = {exp_today}", promo_today == exp_today, str(promo_today))
+    check(f"case 3: Fjellvind promotions active on 1st of next month = {exp_nm}", promo_nm == exp_nm, str(promo_nm))
+    check("case 3: the two readings of 'already on promotion' differ", promo_today != promo_nm)
     check("case 3: Fjellvind has no scheduled future price", one("SELECT COUNT(*) FROM price_history h JOIN products p ON p.id=h.product_id JOIN suppliers s ON s.id=p.supplier_id WHERE s.name='Fjellvind AS' AND h.valid_from > ?", as_of) == 0)
     report["summaries"]["case3"] = {"active_products_by_category": dict(fjv), "on_promotion_today": promo_today,
                                     "on_promotion_first_of_next_month": promo_nm,

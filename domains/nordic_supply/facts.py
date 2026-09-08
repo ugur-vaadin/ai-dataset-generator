@@ -30,9 +30,9 @@ def sections(m, v) -> str:
         L.append(f"| {k} | {n} | {r:.0%} |")
     L.append("\n## Case 2 — the six messages\n")
     L.append("| File | Customer | Order | Shipment | Delivered | Contact | Key facts |\n|---|---|---|---|---|---|---|")
-    files = {"A1_damaged_pallet": "01-damaged-pallet-retkiaitta-tampere.eml", "A2_missing_cartons": "02-missing-cartons-trailhead-umea.eml",
-             "A3_wrong_colour": "03-wrong-colour-nordkapp-tromso-portal.txt", "A4_late_delivery": "04-late-delivery-fjallbutiken-kiruna.eml",
-             "A5_quality_defect_sv": "05-quality-defect-trailhead-umea-sv.eml", "A6_pricing_dispute": "06-pricing-dispute-sportmagasinet-aarhus.eml"}
+    files = {"A1_damaged_pallet": "01-damaged-pallet.eml", "A2_missing_cartons": "02-missing-cartons.eml",
+             "A3_wrong_colour": "03-wrong-colour-portal.txt", "A4_late_delivery": "04-late-delivery.eml",
+             "A5_quality_defect_sv": "05-quality-defect-sv.eml", "A6_pricing_dispute": "06-pricing-dispute.eml"}
     for key, a in A.items():
         facts = []
         if key == "A1_damaged_pallet":

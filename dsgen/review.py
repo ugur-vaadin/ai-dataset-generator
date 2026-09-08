@@ -122,11 +122,12 @@ def build_queue(domain, ctx, out, manifest) -> list:
     items.sort(key=lambda i: (-i["score"], i["id"]))
     with open(os.path.join(out, "review-queue.json"), "w", encoding="utf-8") as f:
         json.dump(items, f, indent=2, ensure_ascii=False)
-    _render(items, out, domain)
+    from .names import inventory
+    _render(items, out, domain, inventory(domain, out))
     return items
 
 
-def _render(items, out, domain):
+def _render(items, out, domain, names=None):
     total = len(items)
     high = [i for i in items if i["score"] >= 80]
     approved = [i for i in items if i["status"] == "approve"]
@@ -139,5 +140,14 @@ def _render(items, out, domain):
         sample = i["sample"].replace("|", "\\|").replace("\n", " ")[:140]
         L.append(f"| {i['score']} | {i['status']} | `{i['id']}` | {i['reason']} | {sample} |")
     L.append("\nScores: 100 non-English document · 90 document · 80 anchor record · 60 personal data in free text · 50 repeated template · 40 numeric outlier.")
+    if names:
+        L.append("\n## Name inventory\n\nEvery company-like name in the pack and the data, by source. All must be fictional: no real brand, retailer or "
+                 "carrier, not even as a stem, and no generic shop word next to a real town. The offline denylist check ran in `verify`; "
+                 "search the web for the ones you do not recognise and add real ones to `[names] deny` in a pools file.\n")
+        for where, (vals, n) in names.items():
+            if vals is None:
+                L.append(f"* **{where}** — {n:,} distinct values, built from the pools above")
+            else:
+                L.append(f"* **{where}** ({n}): " + ", ".join(vals))
     with open(os.path.join(out, "REVIEW.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(L) + "\n")

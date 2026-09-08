@@ -34,6 +34,7 @@ def gen_customers(ctx: Ctx):
     rng = ctx.rng
     ams = ctx.users_by_role["ACCOUNT_MANAGER"]
     used = set()
+    used_emails = set()
     target = int(cfg("volume", "customers") * ctx.scale)
 
     def add_customer(name, chain, segment, country, city, postal, is_anchor=False):
@@ -64,11 +65,18 @@ def gen_customers(ctx: Ctx):
         n_contacts = rng.choice([1, 1, 2, 2, 3])
         for k in range(n_contacts):
             fn, ln = _person(rng, country)
+            email = f"{slug(fn)}.{slug(ln)}@{domain}"
+            if email in used_emails:                      # same name at the same chain: distinguish by the store's city
+                email = f"{slug(fn)}.{slug(ln)}.{slug(city)}@{domain}"
+            n = 2
+            while email in used_emails:
+                email = f"{slug(fn)}.{slug(ln)}{n}@{domain}"; n += 1
+            used_emails.add(email)
             cont_id = len(ctx.tables["customer_contacts"]) + 1
             ctx.tables["customer_contacts"].append({
                 "id": cont_id, "customer_id": cid, "first_name": fn, "last_name": ln,
                 "role": CONTACT_ROLES[0] if k == 0 else rng.choice(CONTACT_ROLES[1:]),
-                "email": f"{slug(fn)}.{slug(ln)}@{domain}", "phone": _phone(rng, country),
+                "email": email, "phone": _phone(rng, country),
                 "is_primary": "true" if k == 0 else "false", "language": {"FI": "fi", "SE": "sv", "NO": "nb",
                                                                            "DK": "da", "DE": "de", "EE": "et"}[country],
                 "marketing_consent": "true" if rng.random() < cfg("pii", "marketing_consent_share") else "false",

@@ -71,7 +71,7 @@ def document_context(ctx, key, a):
     elif key == "A4_late_delivery":
         mgr = contacts[-1]
         d["manager_name"] = f"{mgr['first_name']} {mgr['last_name']}"
-        d["late_days"] = (D.fromisoformat(a["delivered_at"][:10]) - D.fromisoformat(a["promised_delivery"])).days
+        d["late_days"] = (D.fromisoformat(a["delivered_at"][:10]) - D.fromisoformat(a["promised_delivery"])).days if a.get("delivered_at") else "several"
         d["personal_mobile"] = _phone(ctx.rng, "SE")
         am = next(u for u in ctx.tables["users"] if u["id"] == cust["account_manager_id"])
         d["account_manager_email"] = am["email"]

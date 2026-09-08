@@ -1,4 +1,4 @@
-# ai-demo-datasets
+# ai-dataset-generator
 
 The instructions for every coding assistant live in one file, imported here:
 

@@ -210,12 +210,14 @@ def build_order(ctx: Ctx, customer, placed_at: TS, line_specs, ov=None):
         if extra > 0:
             reason = rng.choice(DELAY_REASONS[:-1] if country != "NO" else DELAY_REASONS)
             dt_delay = ts_on(rng, to_weekday(ship_date + dt.timedelta(days=1 + rng.randint(0, max(0, extra - 1)))), 6, 20)
-            if dt_delay <= TS.combine(ctx.as_of, dt.time(23, 59)):
+            if delivered and dt_delay >= delivered_at:
+                dt_delay = delivered_at - dt.timedelta(hours=rng.randint(3, 20))   # a delay is reported before the goods arrive
+            if shipped_at < dt_delay <= TS.combine(ctx.as_of, dt.time(23, 59)):
                 ev.append((dt_delay, "DELAYED", HUBS[country], reason))
         if delivered:
-            if rng.random() < 0.03:
-                ev.append((ts_on(rng, add_business_days(delivered_date, -1), 9, 16), "DELIVERY_ATTEMPTED",
-                           customer["city"], "Receiver closed, new attempt next working day"))
+            attempt = ts_on(rng, add_business_days(delivered_date, -1), 9, 16)
+            if rng.random() < 0.03 and attempt > shipped_at + dt.timedelta(hours=6):
+                ev.append((attempt, "DELIVERY_ATTEMPTED", customer["city"], "Receiver closed, new attempt next working day"))
             ev.append((TS.combine(delivered_date, dt.time(7, rng.randint(0, 59))), "OUT_FOR_DELIVERY", customer["city"], ""))
             contact = ctx.contacts_by_customer[customer["id"]][0]
             ev.append((delivered_at, "DELIVERED", customer["city"],
@@ -293,8 +295,8 @@ def gen_orders(ctx: Ctx):
             created = D.fromisoformat(p["created_at"])
             if created > month:
                 continue
-            if p["discontinued_on"] and D.fromisoformat(p["discontinued_on"]) < month:
-                continue
+            if p["discontinued_on"] and D.fromisoformat(p["discontinued_on"]) < first_of_next_month(month):
+                continue   # discontinued during or before this month: not orderable this month
             cands.append(p)
             ws.append(p["_demand"] * season_factor(p["_season"], month.month) * pop[p["id"]])
         for _ in range(n):

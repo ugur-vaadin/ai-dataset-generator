@@ -1,4 +1,4 @@
-# ai-demo-datasets — deterministic demo datasets for Vaadin AI business-case apps
+# ai-dataset-generator — deterministic demo datasets for Vaadin AI business-case apps
 
 `dsgen` generates realistic, consistent, reproducible datasets for demo applications from a **domain pack**:
 a handful of data files that describe a fictional company, its entities, its people, how records flow, and

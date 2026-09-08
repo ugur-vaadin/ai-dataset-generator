@@ -12,6 +12,7 @@ insurance and property packs show the declarative form.
 * Case 3 (bulk change): supplier Fjellvind AS has exactly 240 active products in three categories, some on promotion
   today and some on the first of next month.
 
+Docs: `docs/data-model.md` (every table and why), `docs/demo-scenarios.md` (what each demo prompt should find).
 Files: `domain.toml` (entities, model-facing text), `config.toml` (volumes, rates), `pools/`, `scenarios.toml`,
 `checks.toml`, `review/overrides.toml`, `lifecycle.py` + `gen/`, `checks.py`, `facts.py`. Run
 `python3 -m dsgen nordic_supply check --pg --h2-file` and read `out/nordic_supply/FACTS.md`.

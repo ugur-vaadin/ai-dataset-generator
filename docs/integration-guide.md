@@ -166,10 +166,10 @@ Useful search predicates the data supports: `customer_contacts.email = sender`,
 promised vs. actual dates for LATE_DELIVERY, invoiced vs. expected price for PRICING_DISPUTE) are
 plain `setVisible()` on the form layout; the controller only sees visible fields.
 
-Personal data: the e-mails contain names, phone numbers and one personal mobile. The request
-interceptor (`RequestInterceptor`) is where a masking step goes today; `sql/pii-columns.json` lists the
-columns and classes to mask; the prompt-preprocessing
-hook proposed in the business-case document does not exist yet.
+Personal data: the e-mails contain names, phone numbers and one personal mobile. The masking step goes
+into a `RequestInterceptor` registered on the orchestrator: it receives the request before it leaves and can
+rewrite the user message with `setUserMessage(...)` (the prompt-preprocessing hook the business-case document
+asked for; it exists in the AI core module). `sql/pii-columns.json` lists the columns and classes to mask.
 
 ## 6. Freezing "today"
 
@@ -203,6 +203,7 @@ for the same product needs the manager's decision.
 ## 8. Activity log
 
 `activity_log` columns map to the hooks: `RequestListener` (prompt, prompt_sent, data_scope),
-`ResponseListener` (`ResponseEvent.getMetadata()` → finish_reason, tokens, model_name),
+`ResponseListener` (`ResponseEvent.getMetadata()` → finish reason and token usage; `ResponseMetadata` carries
+no model name, so take `model_name` from the provider you configured),
 controller state-change listeners (proposal, decision), form validation rejections
 (rejection_rule). One row per turn, `user_id` from the signed-in user.

@@ -57,7 +57,7 @@ inventory(id, product_id, warehouse_id, on_hand, reserved, reorder_point, next_i
 customers(id, customer_number, name, chain_name, segment, country, city, postal_code, street, vat_number, email_domain, phone, credit_limit, payment_terms_days, customer_discount_pct, account_manager_id, created_at, active)
   One row per retail company we sell to.
   - customer_number: business key, e.g. 'C-10001'
-  - chain_name: groups stores of the same chain (e.g. 'Retkiaitta'); NULL for independents
+  - chain_name: groups stores of the same chain (e.g. 'Erävakka'); NULL for independents
   - segment: CHAIN_STORE, INDEPENDENT, ONLINE, DEPARTMENT_STORE, RENTAL_OUTFITTER, CLUB_OR_SCHOOL
   - country: ISO-2: FI, SE, NO, DK, DE, EE
   - credit_limit: EUR
@@ -100,7 +100,7 @@ shipments(id, shipment_number, order_id, warehouse_id, delivery_address_id, carr
   - order_id: -> orders.id
   - warehouse_id: -> warehouses.id
   - delivery_address_id: -> delivery_addresses.id
-  - carrier: PostNord, DB Schenker, Bring, DHL Freight, DSV, Baltic Freight Line
+  - carrier: Nordfrakt, Polarpost, Kalott Freight, Botnia Cargo, Havnelast, Baltic Freight Line
   - delivered_at: NULL while in transit
   - status: IN_TRANSIT, DELIVERED, EXCEPTION
   - pallet_count: 0 = parcel shipment

@@ -1,0 +1,28 @@
+# Validate and check every domain pack, the snapshot staleness rule and the as-of date matrix, on two Python versions.
+name: tests
+on:
+  push:
+    branches: [master]
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Fetch the H2 jar (for the smoke test and --h2-file)
+        run: |
+          mkdir -p ~/.m2/repository/com/h2database/h2/2.4.240
+          curl -sSfL -o ~/.m2/repository/com/h2database/h2/2.4.240/h2-2.4.240.jar \
+            https://repo1.maven.org/maven2/com/h2database/h2/2.4.240/h2-2.4.240.jar
+      - run: python3 -m dsgen doctor
+      - run: scripts/test.sh

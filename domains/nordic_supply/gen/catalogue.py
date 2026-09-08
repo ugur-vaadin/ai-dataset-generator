@@ -19,7 +19,7 @@ def gen_users(ctx: Ctx):
     for i, (username, full_name, role) in enumerate(USERS, start=1):
         row = {"id": i, "username": username, "full_name": full_name,
                "email": f"{username}@nordicsupply.example", "role": role, "active": "true",
-               "created_at": iso(TS(2024, 1, 8, 9, 0, 0) + dt.timedelta(days=i * 11))}
+               "created_at": iso(TS(2018, 6, 4, 9, 0, 0) + dt.timedelta(days=i * 37))}
         ctx.tables["users"].append(row)
         ctx.users_by_role[role].append(i)
 
@@ -241,9 +241,11 @@ def gen_promotions(ctx: Ctx):
     rng.shuffle(anchor)
     # 18 running now and past the 1st of next month; 4 running now but ending before it;
     # 3 starting after today but before the 1st; 5 ended last month (not "on promotion" in any reading)
+    # windows are clamped so the four readings hold for any "today": group 2 ends between today and the day
+    # before the 1st; group 3 starts after today and no later than the 1st (on the last day of a month that is the 1st)
     groups = [(18, lambda: (today - dt.timedelta(days=rng.randint(5, 25)), nm + dt.timedelta(days=rng.randint(10, 40)))),
-              (4, lambda: (today - dt.timedelta(days=rng.randint(10, 30)), nm - dt.timedelta(days=rng.randint(2, 12)))),
-              (3, lambda: (today + dt.timedelta(days=rng.randint(3, 12)), nm + dt.timedelta(days=rng.randint(14, 45)))),
+              (4, lambda: (today - dt.timedelta(days=rng.randint(10, 30)), max(today, nm - dt.timedelta(days=rng.randint(2, 12))))),
+              (3, lambda: (min(nm, today + dt.timedelta(days=rng.randint(3, 12))), nm + dt.timedelta(days=rng.randint(14, 45)))),
               (5, lambda: (today - dt.timedelta(days=rng.randint(60, 90)), today - dt.timedelta(days=rng.randint(8, 30))))]
     idx = 0
     anchor_counts = {}

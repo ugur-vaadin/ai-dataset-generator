@@ -6,7 +6,7 @@
 # changes them, template ids do not.
 
 [[override]]
-id = "doc:emails/01-damaged-pallet-retkiaitta-tampere.eml"
+id = "doc:emails/01-damaged-pallet.eml"
 action = "approve"
 note = "Reviewed 2026-09-07 (author). Finnish sign-off 'Terveisin' is correct."
 
@@ -26,27 +26,27 @@ note = "Example of a template replacement: every row that carried 'Product scrat
 # carrier delay events, account manager, promotion name and price, credit arithmetic).
 
 [[override]]
-id = "doc:emails/02-missing-cartons-trailhead-umea.eml"
+id = "doc:emails/02-missing-cartons.eml"
 action = "approve"
 note = "Friday delivery, EDI order, 8 cartons of 6 = 48 pairs, 5 received = 30; the boots' case_pack is 6 in the catalogue."
 
 [[override]]
-id = "doc:emails/03-wrong-colour-nordkapp-tromso-portal.txt"
+id = "doc:emails/03-wrong-colour-portal.txt"
 action = "approve"
 note = "Ordered Midnight Blue; the Moss Green jacket exists as a real SKU with a price, so the received item can be looked up."
 
 [[override]]
-id = "doc:emails/04-late-delivery-fjallbutiken-kiruna.eml"
+id = "doc:emails/04-late-delivery.eml"
 action = "approve"
 note = "Promised 24th, delivered 31st (7 days), Baltic Freight Line DELAYED event at Örebro, Lars Nygaard is the account manager. Personal mobile in the text is intended (masking demo)."
 
 [[override]]
-id = "doc:emails/05-quality-defect-trailhead-umea-sv.eml"
+id = "doc:emails/05-quality-defect-sv.eml"
 action = "approve"
 note = "Swedish reviewed: idiomatic (reklamation, dragkedja, slidern spricker, returetikett). 6 of 24 returned, 18 left; delivery date matches. A native speaker's read-through before a Swedish audience is still cheap insurance."
 
 [[override]]
-id = "doc:emails/06-pricing-dispute-sportmagasinet-aarhus.eml"
+id = "doc:emails/06-pricing-dispute.eml"
 action = "approve"
 note = "Promotion named in the text is the one covering the order date; 51.90 - 38.92 = 12.98 x 36 = 467.28; line was charged list price."
 

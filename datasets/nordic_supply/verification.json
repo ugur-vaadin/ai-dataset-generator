@@ -110,6 +110,10 @@
       "ok": true,
       "detail": "0 dangling"
     },
+    "unique customer_contacts.email": {
+      "ok": true,
+      "detail": "0 duplicates"
+    },
     "unique delivery_addresses.id": {
       "ok": true,
       "detail": "0 duplicates"
@@ -246,6 +250,14 @@
       "ok": true,
       "detail": "0 dangling"
     },
+    "no real-world company, brand or carrier names in pools or data": {
+      "ok": true,
+      "detail": ""
+    },
+    "no generic shop words next to a real town as a business name": {
+      "ok": true,
+      "detail": ""
+    },
     "every exposed column is described for the model": {
       "ok": true,
       "detail": "[]"
@@ -344,7 +356,7 @@
     },
     "scenario A1_damaged_pallet: document rendered": {
       "ok": true,
-      "detail": "emails/01-damaged-pallet-retkiaitta-tampere.eml"
+      "detail": "emails/01-damaged-pallet.eml"
     },
     "scenario A1_damaged_pallet: order exists": {
       "ok": true,
@@ -360,7 +372,7 @@
     },
     "scenario A1_damaged_pallet: before_as_of delivered_at": {
       "ok": true,
-      "detail": "2026-09-01 12:35:58"
+      "detail": "2026-09-01 13:29:33"
     },
     "scenario A1_damaged_pallet: weekday delivered_at": {
       "ok": true,
@@ -384,7 +396,7 @@
     },
     "scenario A2_missing_cartons: document rendered": {
       "ok": true,
-      "detail": "emails/02-missing-cartons-trailhead-umea.eml"
+      "detail": "emails/02-missing-cartons.eml"
     },
     "scenario A2_missing_cartons: order exists": {
       "ok": true,
@@ -396,7 +408,7 @@
     },
     "scenario A2_missing_cartons: before_as_of delivered_at": {
       "ok": true,
-      "detail": "2026-09-04 09:17:25"
+      "detail": "2026-09-04 12:47:15"
     },
     "scenario A2_missing_cartons: weekday delivered_at": {
       "ok": true,
@@ -412,7 +424,7 @@
     },
     "scenario A3_wrong_colour: document rendered": {
       "ok": true,
-      "detail": "emails/03-wrong-colour-nordkapp-tromso-portal.txt"
+      "detail": "emails/03-wrong-colour-portal.txt"
     },
     "scenario A3_wrong_colour: order exists": {
       "ok": true,
@@ -424,7 +436,7 @@
     },
     "scenario A3_wrong_colour: before_as_of delivered_at": {
       "ok": true,
-      "detail": "2026-09-03 10:05:45"
+      "detail": "2026-09-03 11:56:24"
     },
     "scenario A3_wrong_colour: document_contains": {
       "ok": true,
@@ -436,7 +448,7 @@
     },
     "scenario A4_late_delivery: document rendered": {
       "ok": true,
-      "detail": "emails/04-late-delivery-fjallbutiken-kiruna.eml"
+      "detail": "emails/04-late-delivery.eml"
     },
     "scenario A4_late_delivery: order exists": {
       "ok": true,
@@ -448,7 +460,7 @@
     },
     "scenario A4_late_delivery: before_as_of delivered_at": {
       "ok": true,
-      "detail": "2026-08-31 11:46:57"
+      "detail": "2026-08-31 14:19:43"
     },
     "scenario A4_late_delivery: delivered after the promised date": {
       "ok": true,
@@ -464,7 +476,7 @@
     },
     "scenario A5_quality_defect_sv: document rendered": {
       "ok": true,
-      "detail": "emails/05-quality-defect-trailhead-umea-sv.eml"
+      "detail": "emails/05-quality-defect-sv.eml"
     },
     "scenario A5_quality_defect_sv: order exists": {
       "ok": true,
@@ -476,7 +488,7 @@
     },
     "scenario A5_quality_defect_sv: before_as_of delivered_at": {
       "ok": true,
-      "detail": "2026-08-14 10:21:01"
+      "detail": "2026-08-14 14:00:29"
     },
     "scenario A5_quality_defect_sv: document_contains": {
       "ok": true,
@@ -488,7 +500,7 @@
     },
     "scenario A6_pricing_dispute: document rendered": {
       "ok": true,
-      "detail": "emails/06-pricing-dispute-sportmagasinet-aarhus.eml"
+      "detail": "emails/06-pricing-dispute.eml"
     },
     "scenario A6_pricing_dispute: order exists": {
       "ok": true,
@@ -500,7 +512,7 @@
     },
     "scenario A6_pricing_dispute: before_as_of delivered_at": {
       "ok": true,
-      "detail": "2026-09-04 12:36:37"
+      "detail": "2026-09-04 14:26:58"
     },
     "scenario A6_pricing_dispute: a promotion covered the order date": {
       "ok": true,
@@ -547,6 +559,30 @@
       "detail": ""
     },
     "no open claim older than 120 days": {
+      "ok": true,
+      "detail": ""
+    },
+    "DELAYED events precede DELIVERED": {
+      "ok": true,
+      "detail": ""
+    },
+    "DELIVERY_ATTEMPTED follows DISPATCHED": {
+      "ok": true,
+      "detail": ""
+    },
+    "DAMAGE_REPORTED follows DELIVERED": {
+      "ok": true,
+      "detail": ""
+    },
+    "HUB_SCAN and OUT_FOR_DELIVERY lie between DISPATCHED and DELIVERED": {
+      "ok": true,
+      "detail": ""
+    },
+    "no order line after the product was discontinued": {
+      "ok": true,
+      "detail": ""
+    },
+    "anchor quantities are multiples of the case pack": {
       "ok": true,
       "detail": ""
     },
@@ -638,17 +674,21 @@
       "ok": true,
       "detail": "21"
     },
+    "case 3: the two readings of 'already on promotion' differ": {
+      "ok": true,
+      "detail": ""
+    },
     "case 3: Fjellvind has no scheduled future price": {
       "ok": true,
       "detail": ""
     },
     "case 1: late shipments in every week of last month": {
       "ok": true,
-      "detail": "[('W32', 249, 50), ('W33', 189, 53), ('W34', 397, 170), ('W35', 288, 63), ('W36', 64, 18)]"
+      "detail": "[('W32', 251, 60), ('W33', 166, 53), ('W34', 349, 162), ('W35', 316, 62), ('W36', 67, 24)]"
     },
     "case 1: a visible spike week (rate > 35%)": {
       "ok": true,
-      "detail": "week W34: 170/397"
+      "detail": "week W34: 162/349"
     },
     "case 1: claims open over 7 days (scale-adjusted 12..250)": {
       "ok": true,
@@ -656,11 +696,11 @@
     },
     "case 1: backorder lines in several categories": {
       "ok": true,
-      "detail": "[('Shell & Insulated Apparel', 27), ('Tents & Shelters', 26), ('Backpacks & Bags', 25)]"
+      "detail": "[('Tents & Shelters', 28), ('Base & Mid Layers', 25), ('Accessories & Maintenance', 24)]"
     },
     "case 1: the document's example query has a spread of customers": {
       "ok": true,
-      "detail": "291"
+      "detail": "298"
     },
     "e-mail 02: boots really come in cartons of six": {
       "ok": true,
@@ -696,59 +736,55 @@
       "late_by_week": [
         {
           "week": "W32",
-          "shipments": 249,
-          "late": 50
+          "shipments": 251,
+          "late": 60
         },
         {
           "week": "W33",
-          "shipments": 189,
+          "shipments": 166,
           "late": 53
         },
         {
           "week": "W34",
-          "shipments": 397,
-          "late": 170
+          "shipments": 349,
+          "late": 162
         },
         {
           "week": "W35",
-          "shipments": 288,
-          "late": 63
+          "shipments": 316,
+          "late": 62
         },
         {
           "week": "W36",
-          "shipments": 64,
-          "late": 18
+          "shipments": 67,
+          "late": 24
         }
       ],
-      "late_orders": 345,
-      "late_customers": 291,
+      "late_orders": 347,
+      "late_customers": 298,
       "late_by_customer": [
         [
-          "Viddegear GmbH",
-          9
-        ],
-        [
-          "Haltigear Oy",
-          5
-        ],
-        [
-          "Arcticstore AB",
+          "Stigfinnare Aalborg Industrivej",
           4
         ],
         [
-          "Compassshop ApS",
+          "Vinter Camping ApS",
+          4
+        ],
+        [
+          "Andersson Outdoor AB",
           3
         ],
         [
-          "Fjäll24 ApS",
+          "Arcticstore AB",
           3
         ],
         [
-          "Fjällbutiken Östersund",
+          "Erä Trekking Oy",
           3
         ],
         [
-          "Halti Turutstyr AB",
+          "Fjällshop AB",
           3
         ],
         [
@@ -756,117 +792,120 @@
           3
         ],
         [
-          "Ruska24 ApS",
+          "Nietosshop AB",
           3
         ],
         [
-          "Vinter Camping ApS",
+          "Vidderna Sport Östersund",
           3
+        ],
+        [
+          "Aalborg Outfitters ApS",
+          2
         ]
       ],
       "claims_open_over_7_days": 34,
       "backorder_lines_by_category": {
-        "Shell & Insulated Apparel": 27,
-        "Tents & Shelters": 26,
-        "Backpacks & Bags": 25,
-        "Base & Mid Layers": 24,
-        "Footwear": 17,
-        "Winter Sports": 16,
-        "Accessories & Maintenance": 16,
-        "Navigation & Electronics": 11,
-        "Camp Kitchen": 11,
+        "Tents & Shelters": 28,
+        "Base & Mid Layers": 25,
+        "Accessories & Maintenance": 24,
+        "Backpacks & Bags": 23,
+        "Shell & Insulated Apparel": 22,
+        "Footwear": 16,
+        "Camp Kitchen": 15,
+        "Winter Sports": 9,
+        "Trail Running": 6,
         "Sleeping Bags & Mats": 6,
-        "Trail Running": 5,
-        "Cycling & Bikepacking": 3,
-        "Water Sports": 2,
-        "Climbing": 2
+        "Navigation & Electronics": 5,
+        "Climbing": 4,
+        "Water Sports": 2
       }
     },
     "distributions": {
       "order_status": {
-        "DELIVERED": 12009,
-        "CANCELLED": 250,
-        "PARTIALLY_SHIPPED": 146,
-        "SHIPPED": 42,
-        "OPEN": 34,
-        "CONFIRMED": 24
+        "DELIVERED": 11924,
+        "CANCELLED": 274,
+        "PARTIALLY_SHIPPED": 142,
+        "SHIPPED": 37,
+        "CONFIRMED": 29,
+        "OPEN": 20
       },
       "claim_status": {
-        "CLOSED": 481,
-        "RESOLVED": 216,
-        "REJECTED": 90,
-        "UNDER_REVIEW": 31,
-        "AWAITING_CUSTOMER": 14,
-        "APPROVED": 10,
-        "NEW": 7
+        "CLOSED": 455,
+        "RESOLVED": 219,
+        "REJECTED": 103,
+        "UNDER_REVIEW": 26,
+        "AWAITING_CUSTOMER": 22,
+        "APPROVED": 13,
+        "NEW": 6
       },
       "claim_type": {
-        "DAMAGED": 240,
-        "LATE_DELIVERY": 178,
-        "MISSING_ITEMS": 133,
-        "QUALITY_DEFECT": 108,
-        "WRONG_ITEM": 103,
-        "PRICING_DISPUTE": 61,
-        "RETURN_REQUEST": 26
+        "DAMAGED": 229,
+        "LATE_DELIVERY": 201,
+        "MISSING_ITEMS": 139,
+        "WRONG_ITEM": 97,
+        "QUALITY_DEFECT": 86,
+        "PRICING_DISPUTE": 60,
+        "RETURN_REQUEST": 32
       },
       "orders_per_month": {
-        "2025-07": 587,
-        "2025-08": 928,
-        "2025-09": 1084,
-        "2025-10": 914,
-        "2025-11": 914,
-        "2025-12": 682,
-        "2026-01": 682,
-        "2026-02": 756,
-        "2026-03": 980,
-        "2026-04": 1035,
-        "2026-05": 1044,
-        "2026-06": 991,
-        "2026-07": 681,
-        "2026-08": 1145,
-        "2026-09": 82
+        "2025-07": 583,
+        "2025-08": 888,
+        "2025-09": 1081,
+        "2025-10": 926,
+        "2025-11": 917,
+        "2025-12": 661,
+        "2026-01": 674,
+        "2026-02": 776,
+        "2026-03": 963,
+        "2026-04": 1034,
+        "2026-05": 1045,
+        "2026-06": 992,
+        "2026-07": 680,
+        "2026-08": 1151,
+        "2026-09": 55
       },
       "late_ship_rate_per_month": {
-        "2025-07": 0.105,
-        "2025-08": 0.133,
-        "2025-09": 0.175,
+        "2025-07": 0.098,
+        "2025-08": 0.144,
+        "2025-09": 0.167,
         "2025-10": 0.175,
-        "2025-11": 0.22,
-        "2025-12": 0.233,
-        "2026-01": 0.159,
-        "2026-02": 0.161,
-        "2026-03": 0.159,
-        "2026-04": 0.151,
-        "2026-05": 0.169,
-        "2026-06": 0.159,
-        "2026-07": 0.213,
-        "2026-08": 0.298,
-        "2026-09": 0.359
+        "2025-11": 0.222,
+        "2025-12": 0.232,
+        "2026-01": 0.156,
+        "2026-02": 0.153,
+        "2026-03": 0.169,
+        "2026-04": 0.134,
+        "2026-05": 0.165,
+        "2026-06": 0.168,
+        "2026-07": 0.232,
+        "2026-08": 0.314,
+        "2026-09": 0.308
       },
       "late_delivery_rate_by_carrier_last_month": {
-        "PostNord": [
+        "Nordfrakt": [
           348,
-          0.319
+          0.385
         ],
-        "DB Schenker": [
-          262,
-          0.309
+        "Polarpost": [
+          266,
+          0.293
         ],
-        "Bring": [
-          218,
-          0.349
+        "Kalott Freight": [
+          222,
+          0.356
         ],
-        "DHL Freight": [
-          169,
-          0.308
+        "Botnia Cargo": [
+          150,
+          0.367
         ],
-        "DSV": [
-          110,
-          0.409
+        "Havnelast": [
+          114,
+          0.298
         ],
         "Baltic Freight Line": [
-          69,
-          0.667
+          65,
+          0.662
         ]
       },
       "customers_by_country": {
@@ -893,9 +932,9 @@
         "Water Sports": 71,
         "Cycling & Bikepacking": 56
       },
-      "avg_lines_per_order": 4.09,
-      "orders_with_multiple_shipments": 838,
-      "pallet_shipments": 4292
+      "avg_lines_per_order": 4.11,
+      "orders_with_multiple_shipments": 858,
+      "pallet_shipments": 4200
     }
   }
 }

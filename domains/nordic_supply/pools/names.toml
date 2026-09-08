@@ -68,7 +68,7 @@ DE = "Hamburg hub"
 EE = "Tallinn terminal"
 
 [customers]
-independent_words = ["Fjäll", "Tunturi", "Vidde", "Nordlys", "Peak", "Trail", "Summit", "Ridge", "Polar", "Arctic", "Fjord", "Lake", "Forest", "Metsä", "Skog", "Vinter", "Aurora", "Compass", "Basecamp", "Hiker's", "Kayak", "Erä", "Kalotti", "Ruska", "Lumi", "Kaamos", "Vaara", "Saana", "Halti", "Kebne", "Sarek", "Abisko", "Lyngen"]
+independent_words = ["Fjäll", "Rakka", "Vidde", "Nordlys", "Nietos", "Trail", "Summit", "Ridge", "Polar", "Arctic", "Fjord", "Lake", "Forest", "Metsä", "Skog", "Vinter", "Aurora", "Compass", "Basecamp", "Hiker's", "Kayak", "Erä", "Kalotti", "Ruska", "Vuoma", "Kaamos", "Vaara", "Selkä", "Kaira", "Kero", "Suvanto", "Aapa", "Loiste"]
 independent_suffix = ["Sport", "Outdoor", "Sports", "Urheilu", "Fritid", "Friluft", "Outfitters", "Trekking", "Adventure", "Camping", "Sport & Fritid", "Retki", "Turutstyr"]
 segments = ["INDEPENDENT", "ONLINE", "DEPARTMENT_STORE", "RENTAL_OUTFITTER", "CLUB_OR_SCHOOL"]
 segment_weights = [58, 16, 8, 12, 6]
@@ -77,31 +77,31 @@ contact_roles = ["Store Manager", "Purchasing", "Owner", "Warehouse", "Assistant
 # Stores the case 2 e-mails come from. Created first, stable ids 1..n.
 
 [[anchor_store]]
-chain = "Retkiaitta"
+chain = "Erävakka"
 country = "FI"
 city = "Tampere"
 
 [[anchor_store]]
-chain = "Fjällbutiken"
+chain = "Vidderna Sport"
 country = "SE"
 city = "Kiruna"
 
 [[anchor_store]]
-chain = "Trailhead"
+chain = "Stigfinnare"
 country = "SE"
 city = "Umeå"
 
 [[anchor_store]]
-chain = "Nordkapp Sports"
+chain = "Fjellkroken Sport"
 country = "NO"
 city = "Tromsø"
 
 [[anchor_store]]
-chain = "Sportmagasinet"
+chain = "Kystlinje Sport"
 country = "DK"
 city = "Aarhus"
 
 [[anchor_store]]
-chain = "Kompassi Sport"
+chain = "Suuntima Sport"
 country = "FI"
 city = "Rovaniemi"

@@ -65,6 +65,14 @@ def run(domain, out: str, quiet: bool = False):
                 if nulls:
                     check(f"not null {t}.{c.name}", False, f"{nulls} nulls")
 
+    # --- generic: names must not collide with real companies (see dsgen/names.py)
+    from .names import scan
+    denied, generic = scan(domain, out)
+    check("no real-world company, brand or carrier names in pools or data", not denied,
+          "; ".join(f"{v} ({r}, {w})" for v, r, w in denied[:6]) + (f" … +{len(denied) - 6}" if len(denied) > 6 else ""))
+    check("no generic shop words next to a real town as a business name", not generic,
+          "; ".join(f"{v} ({w})" for v, _, w in generic[:6]) + (f" … +{len(generic) - 6}" if len(generic) > 6 else ""))
+
     # --- generic: the model-facing schema text is complete and hides what it should
     missing = spec.undocumented_columns()
     check("every exposed column is described for the model", not missing, str(missing[:5]))

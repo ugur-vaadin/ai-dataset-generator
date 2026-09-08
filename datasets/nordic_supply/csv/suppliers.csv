@@ -1,21 +1,21 @@
 id,code,name,country,city,contact_email,lead_time_days,active
 1,FJV,Fjellvind AS,NO,Stavanger,orders@fjellvind.example,21,true
 2,AUR,Aurora Gear AB,SE,Falun,orders@aurora.example,10,true
-3,SIS,Sisu Outdoor Oy,FI,Kuopio,orders@sisu.example,12,true
+3,SIS,Jäkälä Outdoor Oy,FI,Kuopio,orders@jakala.example,12,true
 4,TUN,Tundra Works ApS,DK,Aalborg,orders@tundra.example,14,true
-5,VID,Vidda Equipment AS,NO,Stavanger,orders@vidda.example,28,true
+5,VID,Vuoma Equipment AS,NO,Stavanger,orders@vuoma.example,28,true
 6,HAL,Halla Textiles Oy,FI,Lahti,orders@halla.example,9,true
-7,BOR,Boreal Trek GmbH,DE,Kiel,orders@boreal.example,18,true
+7,BOR,Nordwald Trek GmbH,DE,Kiel,orders@nordwald.example,18,true
 8,SKV,Skarv Climbing AS,NO,Tromsø,orders@skarv.example,16,true
-9,LUM,Lumi Ski Oy,FI,Turku,orders@lumi.example,35,true
+9,LUM,Nietos Ski Oy,FI,Turku,orders@nietos.example,35,true
 10,KAJ,Kajakk & Co AS,NO,Stavanger,orders@kajakk.example,40,true
 11,NVD,Nordvind Apparel AB,SE,Malmö,orders@nordvind.example,12,true
 12,RUS,Ruska Footwear Oy,FI,Kuusamo,orders@ruska.example,21,true
-13,GRA,Granit Boots AB,SE,Falun,orders@granit.example,21,true
+13,GRA,Gråsten Boots AB,SE,Falun,orders@grasten.example,21,true
 14,KEL,Kelo Kitchen Oy,FI,Vaasa,orders@kelo.example,10,true
 15,BRE,Brenner Gas GmbH,DE,Flensburg,orders@brenner.example,7,true
 16,POL,Polarlys Electronics AS,NO,Bodø,orders@polarlys.example,20,true
-17,KOM,Kompass Navigation GmbH,DE,Hamburg,orders@kompass.example,14,true
+17,KOM,Peilung Navigation GmbH,DE,Hamburg,orders@peilung.example,14,true
 18,ISB,Isbre Winter AS,NO,Stavanger,orders@isbre.example,30,true
 19,FJP,Fjord Paddle AS,NO,Bodø,orders@fjord.example,25,true
 20,VEL,Velo Nord ApS,DK,Roskilde,orders@velo.example,12,true
@@ -25,13 +25,13 @@ id,code,name,country,city,contact_email,lead_time_days,active
 24,HYG,Hygge Camp ApS,DK,Copenhagen,orders@hygge.example,14,true
 25,TAI,Taiga Merino Oy,FI,Espoo,orders@taiga.example,10,true
 26,ALV,Älv Outdoor AB,SE,Linköping,orders@alv.example,16,true
-27,SAR,Sarek Hardware AB,SE,Stockholm,orders@sarek.example,12,true
-28,KIA,Kiruna Alpine AB,SE,Malmö,orders@kiruna.example,28,true
+27,SAR,Suvanto Hardware AB,SE,Stockholm,orders@suvanto.example,12,true
+28,KIA,Isvidde Alpine AB,SE,Malmö,orders@isvidde.example,28,true
 29,RON,Rondane Sleep Systems AS,NO,Bergen,orders@rondane.example,20,true
 30,SAI,Saimaa Water Gear Oy,FI,Kittilä,orders@saimaa.example,18,true
 31,PEH,Peak Hütte GmbH,DE,Kiel,orders@peak.example,16,true
 32,BAL,Baltic Trail OÜ,EE,Tallinn,orders@baltic.example,8,true
 33,ORE,Øresund Cycle A/S,DK,Copenhagen,orders@oresund.example,10,true
-34,LOF,Lofoten Wool AS,NO,Drammen,orders@lofoten.example,12,true
-35,HEL,Helios Optics AB,SE,Umeå,orders@helios.example,14,true
+34,LOF,Skjærgård Wool AS,NO,Drammen,orders@skjaergard.example,12,true
+35,HEL,Loimu Optics AB,SE,Umeå,orders@loimu.example,14,true
 36,KAA,Kaamos Outdoor Oy,FI,Tampere,orders@kaamos.example,15,true

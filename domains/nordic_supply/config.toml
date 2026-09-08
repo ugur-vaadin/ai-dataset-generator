@@ -1,7 +1,7 @@
 # Nordic Supply dataset — story tunables.
-# Copy this file, change values, run: python3 generate_dataset.py --config my.toml
-# Structural definitions (categories, suppliers, product templates, users, warehouses, anchor
-# stores) live in nordicsupply/pools.py because the e-mails and the demo script depend on them.
+# Copy this file, change values, run: python3 -m dsgen nordic_supply check --config my.toml
+# Structural definitions (categories, suppliers, product templates, anchor stores, name pools) live in pools/*.toml;
+# the e-mails and the demo script depend on them.
 
 [generation]
 as_of = "2026-09-07"        # the demo's "today"; command-line --as-of overrides
@@ -40,40 +40,40 @@ EE = 3
 
 # Retail chains; each gets `stores` store customers named "<chain> <city>".
 [[chains]]
-name = "Retkiaitta"
+name = "Erävakka"
 countries = ["FI"]
 stores = 38
 [[chains]]
-name = "Nordkapp Sports"
+name = "Fjellkroken Sport"
 countries = ["NO", "SE"]
 stores = 46
 [[chains]]
-name = "Trailhead"
+name = "Stigfinnare"
 countries = ["SE", "DK"]
 stores = 34
 [[chains]]
-name = "Villmark & Fjell"
+name = "Brevidde Friluft"
 countries = ["NO"]
 stores = 22
 [[chains]]
-name = "Kompassi Sport"
+name = "Suuntima Sport"
 countries = ["FI"]
 stores = 27
 [[chains]]
-name = "Sportmagasinet"
+name = "Kystlinje Sport"
 countries = ["DK"]
 stores = 15
 [[chains]]
-name = "Fjällbutiken"
+name = "Vidderna Sport"
 countries = ["SE"]
 stores = 19
 [[chains]]
-name = "Tunturikauppa"
+name = "Kairankulma"
 countries = ["FI"]
 stores = 12
 
 [carriers]
-names = ["PostNord", "DB Schenker", "Bring", "DHL Freight", "DSV", "Baltic Freight Line"]
+names = ["Nordfrakt", "Polarpost", "Kalott Freight", "Botnia Cargo", "Havnelast", "Baltic Freight Line"]   # all fictional; real carriers must not be shown with invented late rates
 weights = [30, 22, 18, 14, 10, 6]
 bad_carrier = "Baltic Freight Line"     # transit delays since last month (case 1 second cause)
 bad_carrier_delay_prob = 0.6

@@ -3,6 +3,28 @@
 Framework (`dsgen`) and domain packs are versioned separately: `dsgen.VERSION` and `[domain].version`
 in each `domain.toml`; both are written to `manifest.json`.
 
+## dsgen 2.4.0 / nordic_supply 1.3.0 — 2026-09-08
+
+Response to the independent audit (AUDIT.md) and to a reviewer's list of company names too close to real ones.
+
+Framework:
+* `verify` checks every company-like name in the pools and the data against a denylist of real Nordic and outdoor brands,
+  retailers and carriers (`dsgen/names.py`; packs extend it with `[names] deny` / `allow`), and flags generic shop words next
+  to a real town. `REVIEW.md` ends with a name inventory by source for a person to scan. Rule added to `AGENTS.md`.
+* `scripts/test.sh` runs every pack for three more as-of dates (first working day, month end, a Monday the 1st) so the
+  "move the demo in time" promise is tested. A GitHub Actions workflow runs the suite on Python 3.11 and 3.13.
+* `contact` e-mail addresses are unique per pack rule (`unique = true`), enforced by the generic check.
+
+Nordic Supply data:
+* All chains, several suppliers and model words, and every carrier renamed to invented names (Halti, Retkiaitta, Trailhead,
+  Boreal, Granit, Kompass, Lofoten, Abisko, Vidda and the real carriers are gone). E-mail templates now have neutral file names.
+* Regeneration works for any as-of date: anchor A4 is placed relative to today; the case 3 promotion windows are clamped and
+  the checks derive the expected counts from the constructed layout instead of the literals 22/21.
+* No order line after a product's discontinued date; delay events precede delivery, attempts follow dispatch, damage reports
+  follow delivery (six new chronology checks); contact e-mails unique; users exist before the price rows they signed;
+  anchor quantities are multiples of the case pack.
+* `docs/data-model.md`, `docs/demo-scenarios.md` and the generated pallet photo are now in the repository.
+
 ## docs — 2026-09-08
 
 * `docs/design-decisions.md` records every design decision with its rationale and alternatives, plus the end-to-end workflow as `docs/workflow.svg`.
