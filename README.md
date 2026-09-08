@@ -66,7 +66,8 @@ templates. Python is needed only for mechanics the flow language cannot express.
 [docs/integration-guide.md](docs/integration-guide.md): two data sources (application and read-only AI user),
 a `DatabaseProvider` returning the schema text plus today's date, saved widgets, claim-form lookups, the frozen
 demo clock, price-change SQL, activity log. [docs/generation-model.md](docs/generation-model.md) is the process on
-one page; [docs/image-providers.md](docs/image-providers.md) compares image providers for demo photos.
+one page; [docs/design-decisions.md](docs/design-decisions.md) says why the generator is built this way, with the
+end-to-end workflow drawn; [docs/image-providers.md](docs/image-providers.md) compares image providers for demo photos.
 
 ## Layout
 
@@ -76,7 +77,7 @@ one page; [docs/image-providers.md](docs/image-providers.md) compares image prov
 | `domains/<name>/` | Domain packs; `domains/_engine_smoke/` pins engine behaviour for `scripts/test.sh` |
 | `datasets/<name>/` | Published snapshots of generated data (Nordic Supply today), with `README.md` and `summary.html` |
 | `DOMAIN_GUIDE.md`, `AGENTS.md` (+ `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`, `.claude/skills/`) | Authoring guide; the one instruction file for assistants and its per-tool pointers |
-| `docs/` | Getting started, integration guide, generation model, image providers |
+| `docs/` | Getting started, integration guide, generation model, design decisions and workflow diagram, image providers |
 | `.env.example` | Environment variables (keys stay outside the repository) |
 
 ## Reproducibility

@@ -5,6 +5,7 @@ in each `domain.toml`; both are written to `manifest.json`.
 
 ## docs — 2026-09-08
 
+* `docs/design-decisions.md` records every design decision with its rationale and alternatives, plus the end-to-end workflow as `docs/workflow.svg`.
 * `AGENTS.md` is now the single instruction file for every assistant and carries the whole authoring procedure: the
   user only pastes a domain description; the assistant derives the pack name, reads the guide and example, validates
   after every edit, checks until green, reports, and never runs paid image generation on its own. `CLAUDE.md` imports

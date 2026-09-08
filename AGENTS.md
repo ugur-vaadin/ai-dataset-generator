@@ -49,7 +49,8 @@ the description names no company and no domain.
     `REVIEW.md` (what a person should look at), and the cost table from `ESTIMATE.md`. If a scenario has an
     image, say that it is a placeholder and give the command that generates it and its estimated cost.
 
-Read before other work on the framework: `docs/generation-model.md` (the process on one page).
+Read before other work on the framework: `docs/generation-model.md` (the process on one page) and
+`docs/design-decisions.md` (why it is built this way; change a decision there before changing the code).
 
 ## Commands (Python 3.11+, no packages)
 

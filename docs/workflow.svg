@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 690" role="img" aria-label="Swimlane diagram of dataset generation: a person describes a domain, a coding assistant writes a TOML pack and loops on validate and check, dsgen renders rows into CSV and SQL and verifies them, a person runs paid image generation once and answers the review queue, a snapshot is committed and served, and the demo application loads the CSVs and gives the AI a read-only connection." font-family="'Source Sans 3', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5">
+<rect width="1500" height="690" fill="#FFFFFF"/>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#16232A"/></marker>
+</defs>
+<g fill="none" stroke="#D3DCDF">
+<line x1="150" y1="140" x2="1500" y2="140"/><line x1="150" y1="260" x2="1500" y2="260"/><line x1="150" y1="430" x2="1500" y2="430"/><line x1="150" y1="560" x2="1500" y2="560"/>
+<line x1="150" y1="20" x2="150" y2="680"/>
+</g>
+<g font-family="Manrope, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="700" font-size="13" fill="#16232A">
+<text x="14" y="80">You</text><text x="14" y="98" font-weight="400" font-size="11.5" fill="#5A6A72">a person, any role</text>
+<text x="14" y="200">Coding assistant</text><text x="14" y="218" font-weight="400" font-size="11.5" fill="#5A6A72">the LLM, your subscription</text>
+<text x="14" y="340">dsgen</text><text x="14" y="358" font-weight="400" font-size="11.5" fill="#5A6A72">Python, deterministic,</text><text x="14" y="373" font-weight="400" font-size="11.5" fill="#5A6A72">no LLM calls</text>
+<text x="14" y="490">Files and databases</text>
+<text x="14" y="615">Demo application</text><text x="14" y="633" font-weight="400" font-size="11.5" fill="#5A6A72">Vaadin, Spring Boot</text>
+</g>
+
+<g stroke="#16232A" stroke-width="1.2">
+<rect x="170" y="50" width="200" height="66" rx="4" fill="#F6E7D2"/>
+<rect x="630" y="42" width="200" height="82" rx="4" fill="#F6E7D2"/>
+<rect x="1090" y="50" width="180" height="66" rx="4" fill="#F6E7D2"/>
+<rect x="1300" y="50" width="180" height="66" rx="4" fill="#F6E7D2"/>
+<rect x="170" y="166" width="200" height="72" rx="4" fill="#FFFFFF"/>
+<rect x="400" y="166" width="200" height="72" rx="4" fill="#FFFFFF"/>
+<rect x="1090" y="166" width="180" height="72" rx="4" fill="#FFFFFF"/>
+<rect x="400" y="300" width="200" height="60" rx="4" fill="#DCEAF0"/>
+<rect x="630" y="290" width="200" height="90" rx="4" fill="#DCEAF0"/>
+<rect x="860" y="290" width="200" height="90" rx="4" fill="#DCEAF0"/>
+<rect x="1090" y="300" width="180" height="60" rx="4" fill="#DCEAF0"/>
+<rect x="630" y="450" width="200" height="90" rx="4" fill="#FFFFFF"/>
+<rect x="880" y="458" width="180" height="74" rx="4" fill="#FFFFFF"/>
+<rect x="1300" y="450" width="180" height="90" rx="4" fill="#FFFFFF"/>
+<rect x="1300" y="580" width="180" height="82" rx="4" fill="#FFFFFF"/>
+<rect x="630" y="580" width="640" height="82" rx="4" fill="#DDEEE4"/>
+</g>
+
+<g fill="#16232A">
+<text x="270" y="78" text-anchor="middle" font-weight="600">Describe the domain</text>
+<text x="270" y="96" text-anchor="middle" fill="#5A6A72">one paragraph, or a file</text>
+<text x="730" y="66" text-anchor="middle" font-weight="600">Generate the photo, once</text>
+<text x="730" y="84" text-anchor="middle" fill="#5A6A72">check --images openai</text>
+<text x="730" y="102" text-anchor="middle" fill="#B8701C">paid · key from the environment</text>
+<text x="1180" y="78" text-anchor="middle" font-weight="600">Answer the review queue</text>
+<text x="1180" y="96" text-anchor="middle" fill="#5A6A72">review/overrides.toml</text>
+<text x="1390" y="78" text-anchor="middle" font-weight="600">Publish the snapshot</text>
+<text x="1390" y="96" text-anchor="middle" fill="#5A6A72">scripts/snapshot.sh · commit</text>
+<text x="270" y="190" text-anchor="middle" font-weight="600">Reads AGENTS.md</text>
+<text x="270" y="207" text-anchor="middle" fill="#5A6A72">guide + worked example</text>
+<text x="270" y="224" text-anchor="middle" fill="#5A6A72">names the pack</text>
+<text x="500" y="190" text-anchor="middle" font-weight="600">Writes the pack (data, not code)</text>
+<text x="500" y="207" text-anchor="middle" fill="#5A6A72">domain · flow · pools · scenarios</text>
+<text x="500" y="224" text-anchor="middle" fill="#5A6A72">checks · document templates</text>
+<text x="1180" y="190" text-anchor="middle" font-weight="600">Reports</text>
+<text x="1180" y="207" text-anchor="middle" fill="#5A6A72">facts, review items,</text>
+<text x="1180" y="224" text-anchor="middle" fill="#5A6A72">the image command and its cost</text>
+<text x="500" y="324" text-anchor="middle" font-weight="600">validate</text>
+<text x="500" y="342" text-anchor="middle" fill="#5A6A72">pack structure and expressions</text>
+<text x="730" y="313" text-anchor="middle" font-weight="600">generate</text>
+<text x="730" y="331" text-anchor="middle" fill="#5A6A72">seeded RNG → rows, anchors</text>
+<text x="730" y="348" text-anchor="middle" fill="#5A6A72">documents from templates</text>
+<text x="730" y="365" text-anchor="middle" fill="#5A6A72">placeholder image unless kept</text>
+<text x="960" y="313" text-anchor="middle" font-weight="600">verify + smoke tests</text>
+<text x="960" y="331" text-anchor="middle" fill="#5A6A72">SQLite: rules, scenario facts</text>
+<text x="960" y="348" text-anchor="middle" fill="#5A6A72">real H2 and PostgreSQL</text>
+<text x="960" y="365" text-anchor="middle" fill="#5A6A72">as the read-only AI user</text>
+<text x="1180" y="324" text-anchor="middle" font-weight="600">FACTS · REVIEW · ESTIMATE</text>
+<text x="1180" y="342" text-anchor="middle" fill="#5A6A72">numbers, risks, predicted cost</text>
+<text x="730" y="473" text-anchor="middle" font-weight="600">out/&lt;domain&gt;/</text>
+<text x="730" y="491" text-anchor="middle" fill="#5A6A72">csv/ one file per table</text>
+<text x="730" y="508" text-anchor="middle" fill="#5A6A72">sql/ DDL, loaders, ai_reader,</text>
+<text x="730" y="525" text-anchor="middle" fill="#5A6A72">schema text · documents · manifest</text>
+<text x="970" y="481" text-anchor="middle" font-weight="600">Image provider</text>
+<text x="970" y="499" text-anchor="middle" fill="#5A6A72">gpt-image-1.5 + provenance</text>
+<text x="970" y="516" text-anchor="middle" fill="#5A6A72">stored in the pack</text>
+<text x="1390" y="473" text-anchor="middle" font-weight="600">datasets/&lt;domain&gt;/</text>
+<text x="1390" y="491" text-anchor="middle" fill="#5A6A72">csv · sql · documents · FACTS</text>
+<text x="1390" y="508" text-anchor="middle" fill="#5A6A72">summary.html → GitHub Pages</text>
+<text x="1390" y="525" text-anchor="middle" fill="#5A6A72">H2 file rebuilt, not committed</text>
+<text x="1390" y="604" text-anchor="middle" font-weight="600">Loads the CSVs</text>
+<text x="1390" y="622" text-anchor="middle" fill="#5A6A72">H2 CSVREAD or psql \copy</text>
+<text x="1390" y="639" text-anchor="middle" fill="#5A6A72">app user + ai_reader</text>
+<text x="950" y="604" text-anchor="middle" font-weight="600">Vaadin AI components at demo time</text>
+<text x="950" y="622" text-anchor="middle" fill="#5A6A72">model gets the schema text and today's date, writes SQL over the read-only connection</text>
+<text x="950" y="639" text-anchor="middle" fill="#5A6A72">rows go to the grid or chart, never back to the model · contacts and widgets stay hidden</text>
+</g>
+
+<g fill="none" stroke="#16232A" stroke-width="1.4" marker-end="url(#ar)">
+<line x1="270" y1="116" x2="270" y2="164"/>
+<line x1="370" y1="202" x2="398" y2="202"/>
+<line x1="470" y1="238" x2="470" y2="298"/>
+<line x1="600" y1="215" x2="628" y2="300"/>
+<line x1="830" y1="335" x2="858" y2="335"/>
+<line x1="730" y1="380" x2="730" y2="448"/>
+<line x1="1060" y1="335" x2="1088" y2="335"/>
+<line x1="1180" y1="300" x2="1180" y2="240"/>
+<line x1="1180" y1="166" x2="1180" y2="118"/>
+<line x1="700" y1="124" x2="700" y2="288"/>
+<path d="M1150,116 L1150,150 L770,150 L770,288"/>
+<path d="M810,380 L810,420 L970,420 L970,456"/>
+<line x1="1390" y1="116" x2="1390" y2="448"/>
+<line x1="1390" y1="540" x2="1390" y2="578"/>
+<line x1="1298" y1="621" x2="1272" y2="621"/>
+<line x1="730" y1="540" x2="730" y2="578"/>
+</g>
+<g fill="none" stroke="#16232A" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#ar)">
+<line x1="530" y1="298" x2="530" y2="240"/>
+<path d="M960,290 L960,250 L560,250 L560,240"/>
+<path d="M880,510 L832,510"/>
+</g>
+<g fill="#5A6A72" font-size="11.5">
+<text x="278" y="145">paste</text>
+<text x="462" y="270" text-anchor="end">after every edit</text>
+<text x="538" y="270" fill="#1F6E8C">problems</text>
+<text x="634" y="282">check</text>
+<text x="955" y="243" text-anchor="end" fill="#1F6E8C">failing checks → fix and rerun</text>
+<text x="692" y="205" text-anchor="end" fill="#B8701C">paid, once</text>
+<text x="960" y="144" text-anchor="middle" fill="#B8701C">overrides applied on the next run</text>
+<text x="700" y="418">writes</text>
+<text x="1188" y="278">reads</text>
+<text x="962" y="441" text-anchor="end" fill="#B8701C">calls the provider only with --images</text>
+<text x="855" y="555" text-anchor="middle">kept image restored into out/ every run</text>
+<text x="1398" y="282" transform="rotate(90 1398 282)" text-anchor="middle">tool-produced · test fails if stale</text>
+<text x="1353" y="565">git clone</text>
+<text x="722" y="565" text-anchor="end" font-size="11">schema text + ai_reader account</text>
+</g>
+</svg>

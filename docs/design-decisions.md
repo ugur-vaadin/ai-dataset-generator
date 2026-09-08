@@ -1,0 +1,42 @@
+# Design decisions
+
+Why the generator is built the way it is, one decision per row, with what was considered instead. The
+"how" is in [getting-started.md](getting-started.md) and [DOMAIN_GUIDE.md](../DOMAIN_GUIDE.md); the process
+on one page is [generation-model.md](generation-model.md). Update this file when a decision changes, and say
+what changed the mind.
+
+| Choice | Why | Considered and set aside |
+|---|---|---|
+| **LLM authors, code renders** | An LLM is good at deciding entities, vocabularies, stories and text; it is slow, expensive and inconsistent at 240,000 rows with matching totals and foreign keys. So the assistant writes a small *domain pack* and deterministic code renders the rows. Generation itself never calls a model: no key, no cost, same bytes every run. | Letting an LLM emit the data (estimated $5–25 per run just for the text items, and never twice the same); hand-listing (the case document forbids it). |
+| **Subscription, not API** | Authoring happens in whatever coding assistant the person already pays for. `AGENTS.md` carries the whole procedure, so the user pastes only the domain description. Works with Claude Code, Cursor, Copilot, Codex, Gemini, local models. | A Vaadin app with an embedded LLM for authoring: reverses this, doubles the runtime stack, and rebuilds a coding agent. Parked until the demo app is domain-generic. |
+| **Framework / pack split** | `dsgen/` is the engine; `domains/<name>/` holds everything specific to one domain as data. A new business case is a new folder, no engine change. Four packs exist; one pins engine behaviour for the test suite. | One generator script per dataset (the first version): every new domain meant new code. |
+| **Python, standard library only** | Runs anywhere Python 3.11+ exists, no build, no dependencies to approve; the engine is about 800 lines. The generator is independent of the app on purpose: the data has to exist as reviewable files before an app loads it. The CSV files are the contract, so a Java port stays possible. | Java Faker / Datafaker at application start-up: data would live only in memory, anchors could not be verified offline, and every run could differ. |
+| **TOML for packs** | Packs are data an LLM writes and a validator checks before anything runs. TOML is typed (dates, numbers, booleans), allows comments, has no indentation traps, diffs cleanly and parses with the standard library. Python is written only for a mechanic the flow language cannot express, and the author must say which. | YAML (indentation errors from a model are common), JSON (no comments, noisy diffs), Python DSL (code, so the validator cannot reason about it). |
+| **Declarative flow engine** | Rows, fields, statuses, seasonal bursts and demo anchors are expressions in `flow.toml`. Authoring a domain went from hours to under four minutes measured, and a wrong expression is a validate error, not a crash at row 30,000. | Requiring a `lifecycle.py` per domain (still allowed for special mechanics; Nordic Supply uses it for inventory reacting to orders). |
+| **Fixed seed and as-of date** | "Last month", "open over 7 days" and "the first of next month" only work around a known today. Everything derives from `--as-of`; move the demo in time by regenerating, never by shifting dates in SQL. Same inputs give byte-identical files, with a SHA-256 per table in the manifest. | Generating relative to the real clock at start-up: the story decays day by day and no two people see the same data. |
+| **Anchors built on purpose** | Random data has no story. The outage week, the Tuesday pallet with no claim yet, the supplier with exactly 240 products are constructed, and scenario expectations verify each fact the e-mails state. | Hoping a good example turns up in random data and hard-coding it into the demo script. |
+| **CSV as the delivery format** | One file per table in DDL column order. Readable, diffable, tool-agnostic: H2 reads it with `CSVREAD`, PostgreSQL with `\copy`, anyone with a spreadsheet. Loaders, DDL and a Spring classpath variant are generated next to it. | INSERT scripts (about 40 MB, slow); a binary database as the only artefact (not reviewable, not diffable). |
+| **H2 first, PostgreSQL second** | The case document's starting position is data seeded in memory so the project runs with one command; H2 loads the whole set in about two seconds and a ready `.mv.db` file is one flag away. PostgreSQL DDL, loader and read-only account come from the same spec and are smoke-tested in Docker for a hosted instance. | PostgreSQL only (needs Docker for every developer); in-memory Java objects (no SQL for the AI to query). |
+| **Schema text from the same spec as the DDL** | What the model may see is one list in `domain.toml`: exposed tables, column descriptions, PII tags. The DDL, the model-facing schema text, the PII report and the read-only `ai_reader` account are all generated from it, so "what leaves the network" is enforced by the database, not by hope. | Hand-written prompt text kept in the app, drifting from the schema. |
+| **Four layers of checking** | `validate` checks the pack before anything runs; `verify` checks the data in SQLite (generic rules, the pack's SQL, scenario expectations); smoke tests run the real H2 and PostgreSQL as the AI user; `FACTS.md` writes down the numbers to present from. 169 checks for Nordic Supply, in about ten seconds. | Trusting the generator; eyeballing CSVs. |
+| **Review queue with stable answers** | Text the demo reads aloud, anchor records and personal data in free text are scored and listed in `REVIEW.md`. A person answers approve, reject or replace in `overrides.toml`; answers apply on every later generation, so review work survives regeneration. | Reviewing everything (18,000 text items) or nothing. |
+| **Generated photos, run by a person** | The one photo the message-to-claim case needs is generated from the anchor record (gpt-image-1.5, about $0.04) with a provenance file, then stored in the pack and reused. Default is a labelled placeholder; the paid command is run by a human, never by the assistant. | Stock photos (licensing, never matching the record); asking the assistant to spend money on its own. |
+| **Committed snapshot and a page** | `datasets/nordic_supply/` holds the published build the app team works from, produced only by `scripts/snapshot.sh`; the test suite fails when it is stale. The one-page `summary.html` is served by GitHub Pages. The 28 MB H2 file is rebuilt, not committed. | Committing every output including binaries (history bloat); committing nothing (the app team has to run Python). |
+
+## The process, end to end
+
+![Dataset generation workflow: a person describes a domain; the coding assistant writes a TOML pack and loops on validate and check; dsgen renders rows into CSV and SQL and verifies them; a person runs paid image generation once and answers the review queue; a snapshot is committed and served; the demo application loads the CSVs and gives the AI a read-only connection](workflow.svg)
+
+Orange boxes are steps a person takes, blue boxes are dsgen, green is the demo application at demo time.
+Two steps cost money or judgment and stay with a person: generating the photo and answering the review
+queue. Everything between the pack and the facts is deterministic code; the assistant writes data and
+reacts to what `validate` and `check` report. The source of the drawing is `workflow.svg` in this folder.
+
+## Open decisions
+
+- **Domain-generic demo application.** Today the claim form and catalogue views are built for the order desk
+  schema. If the application learns to adapt to any pack, a sales engineer could generate a prospect's domain
+  in a meeting, and an authoring UI inside the app becomes worth building. Parked until the app team decides.
+- **Where the video lives.** The quickstart video is produced from real output but not committed (binary,
+  re-rendered often). A GitHub Release asset is the leading option.
+- **Swedish review.** The Swedish e-mail in Nordic Supply was reviewed by the author, not a native speaker.
