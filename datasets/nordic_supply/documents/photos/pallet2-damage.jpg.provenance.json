@@ -1,0 +1,37 @@
+{
+  "scenario": "A1_damaged_pallet",
+  "file": "photos/pallet2-damage.jpg",
+  "prompt": "Realistic smartphone photo taken inside a small sports shop's back room in Finland. A wooden EUR pallet\nwith cardboard cartons of camping tents; the stretch wrap is torn open and the bottom cartons are crushed and\ndented, one carton split showing a green tent bag. Cartons carry a plain fictional brand label 'Fjellvind'\nand no other readable text or logos. Fluorescent lighting, slightly tilted framing, no people.",
+  "caption": "Pallet 2 of SH-2026-007849, delivered 2026-09-01 to Retkiaitta Tampere",
+  "generated_at": "2026-09-07T15:31:56+00:00",
+  "requested_provider": "openai",
+  "anchor": {
+    "order_number": "SO-2026-007391",
+    "customer": "Retkiaitta Tampere",
+    "customer_number": "C-10001",
+    "shipment_number": "SH-2026-007849"
+  },
+  "terms_note": "OpenAI API: output rights assigned to the customer; images carry C2PA Content Credentials. Terms checked 2026-09-07 (docs/image-providers.md).",
+  "model": "gpt-image-1.5",
+  "provider": "openai",
+  "quality": "medium",
+  "size": "1024x1024",
+  "output_format": "jpeg",
+  "revised_prompt": null,
+  "usage": {
+    "input_tokens": 94,
+    "input_tokens_details": {
+      "image_tokens": 0,
+      "text_tokens": 94
+    },
+    "output_tokens": 1415,
+    "output_tokens_details": {
+      "image_tokens": 1056,
+      "text_tokens": 359
+    },
+    "total_tokens": 1509
+  },
+  "status": "kept",
+  "kept_at": "2026-09-07T20:48:46+00:00",
+  "current_prompt_matches": true
+}

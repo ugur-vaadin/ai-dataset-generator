@@ -1,0 +1,21 @@
+-- Same loader for a Spring Boot app: copy out/csv/* to src/main/resources/data/ and run this as
+-- spring.sql.init.data-locations=classpath:load-h2-classpath.sql (H2 resolves classpath: URLs).
+INSERT INTO users SELECT * FROM CSVREAD('classpath:/data/users.csv', NULL, 'charset=UTF-8');
+INSERT INTO warehouses SELECT * FROM CSVREAD('classpath:/data/warehouses.csv', NULL, 'charset=UTF-8');
+INSERT INTO categories SELECT * FROM CSVREAD('classpath:/data/categories.csv', NULL, 'charset=UTF-8');
+INSERT INTO suppliers SELECT * FROM CSVREAD('classpath:/data/suppliers.csv', NULL, 'charset=UTF-8');
+INSERT INTO products SELECT * FROM CSVREAD('classpath:/data/products.csv', NULL, 'charset=UTF-8');
+INSERT INTO price_history SELECT * FROM CSVREAD('classpath:/data/price_history.csv', NULL, 'charset=UTF-8');
+INSERT INTO promotions SELECT * FROM CSVREAD('classpath:/data/promotions.csv', NULL, 'charset=UTF-8');
+INSERT INTO inventory SELECT * FROM CSVREAD('classpath:/data/inventory.csv', NULL, 'charset=UTF-8');
+INSERT INTO customers SELECT * FROM CSVREAD('classpath:/data/customers.csv', NULL, 'charset=UTF-8');
+INSERT INTO customer_contacts SELECT * FROM CSVREAD('classpath:/data/customer_contacts.csv', NULL, 'charset=UTF-8');
+INSERT INTO delivery_addresses SELECT * FROM CSVREAD('classpath:/data/delivery_addresses.csv', NULL, 'charset=UTF-8');
+INSERT INTO orders SELECT * FROM CSVREAD('classpath:/data/orders.csv', NULL, 'charset=UTF-8');
+INSERT INTO order_lines SELECT * FROM CSVREAD('classpath:/data/order_lines.csv', NULL, 'charset=UTF-8');
+INSERT INTO shipments SELECT * FROM CSVREAD('classpath:/data/shipments.csv', NULL, 'charset=UTF-8');
+INSERT INTO shipment_lines SELECT * FROM CSVREAD('classpath:/data/shipment_lines.csv', NULL, 'charset=UTF-8');
+INSERT INTO delivery_events SELECT * FROM CSVREAD('classpath:/data/delivery_events.csv', NULL, 'charset=UTF-8');
+INSERT INTO claims SELECT * FROM CSVREAD('classpath:/data/claims.csv', NULL, 'charset=UTF-8');
+INSERT INTO claim_lines SELECT * FROM CSVREAD('classpath:/data/claim_lines.csv', NULL, 'charset=UTF-8');
+INSERT INTO saved_widgets SELECT * FROM CSVREAD('classpath:/data/saved_widgets.csv', NULL, 'charset=UTF-8');

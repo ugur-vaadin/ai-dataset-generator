@@ -91,8 +91,23 @@ def run(con, manifest, check, q, one):
     check("case 1: claims open over 7 days (scale-adjusted 12..250)", 12 * scale <= open7 <= 250 * scale, str(open7))
     bo = q("SELECT cat.name, COUNT(*) FROM order_lines ol JOIN products p ON p.id=ol.product_id JOIN categories cat ON cat.id=p.category_id WHERE ol.status='BACKORDERED' GROUP BY cat.name ORDER BY 2 DESC")
     check("case 1: backorder lines in several categories", len(bo) >= 5, str(bo[:3]))
+    by_cust = q("SELECT c.name, COUNT(DISTINCT o.id) FROM shipments s JOIN orders o ON o.id=s.order_id JOIN customers c ON c.id=o.customer_id "
+                "WHERE date(s.shipped_at) > o.promised_ship_date AND strftime('%Y-%m', s.shipped_at)=? GROUP BY c.name ORDER BY 2 DESC, 1 LIMIT 10", lm)
+    late_orders = one("SELECT COUNT(DISTINCT o.id) FROM shipments s JOIN orders o ON o.id=s.order_id WHERE date(s.shipped_at) > o.promised_ship_date AND strftime('%Y-%m', s.shipped_at)=?", lm)
+    late_customers = one("SELECT COUNT(DISTINCT o.customer_id) FROM shipments s JOIN orders o ON o.id=s.order_id WHERE date(s.shipped_at) > o.promised_ship_date AND strftime('%Y-%m', s.shipped_at)=?", lm)
+    check("case 1: the document's example query has a spread of customers", late_customers >= 20, str(late_customers))
     report["summaries"]["case1"] = {"last_month": lm, "late_by_week": [{"week": w[0], "shipments": w[1], "late": w[2]} for w in weeks],
+                                    "late_orders": late_orders, "late_customers": late_customers, "late_by_customer": by_cust,
                                     "claims_open_over_7_days": open7, "backorder_lines_by_category": dict(bo)}
+    # --- e-mail facts that must agree with the records
+    A2 = manifest["anchors"]["case2"]["A2_missing_cartons"]
+    check("e-mail 02: boots really come in cartons of six", one("SELECT case_pack FROM products WHERE sku=?", A2["lines"][0]["sku"]) == A2["cartons_of"])
+    A3 = manifest["anchors"]["case2"]["A3_wrong_colour"]
+    check("e-mail 03: the received colour exists as a real SKU", one("SELECT COUNT(*) FROM products WHERE sku=? AND colour=?", A3["received_sku"], A3["received_colour"]) == 1)
+    check("e-mail 03: the received SKU has a current price", one("SELECT COUNT(*) FROM price_history ph JOIN products p ON p.id=ph.product_id WHERE p.sku=? AND ph.valid_to IS NULL", A3["received_sku"]) == 1)
+    A6 = manifest["anchors"]["case2"]["A6_pricing_dispute"]
+    check("e-mail 06: the promotion it names covered the order date", one("SELECT COUNT(*) FROM promotions pr JOIN products p ON p.id=pr.product_id WHERE p.sku=? AND pr.name=? AND pr.starts_on<=? AND pr.ends_on>=?",
+          A6["lines"][0]["sku"], A6["promo_name"], A6["placed_at"][:10], A6["placed_at"][:10]) == 1)
     report["summaries"]["distributions"] = {
         "order_status": dict(q("SELECT status, COUNT(*) FROM orders GROUP BY status ORDER BY 2 DESC")),
         "claim_status": dict(q("SELECT status, COUNT(*) FROM claims GROUP BY status ORDER BY 2 DESC")),

@@ -15,3 +15,8 @@ docs/video/build*/
 out/
 node_modules/
 !.env.example
+# published snapshots (datasets/): keep data, docs and facts; not the binary H2 file or per-run cost/queue/usage files
+datasets/*/db/
+datasets/*/ESTIMATE.md
+datasets/*/review-queue.json
+datasets/*/llm-usage.jsonl

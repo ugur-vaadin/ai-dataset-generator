@@ -9,9 +9,11 @@ the pack, code does the rest.
 Three packs ship as worked examples: **Nordic Supply** (outdoor-equipment wholesaler; the three Vaadin AI
 business cases — self-service dashboard, message-to-claim, supervised bulk change), **Fennoskandia Insurance**
 (claims desk), and **Fjordhem Property Management** (service desk; authored from one paragraph in under four
-minutes). The repository holds only these pack definitions — fictional companies, entity specs, pools, templates
-and checks — never generated data: every table, document and database is produced locally into `out/` (ignored by
-git) and regenerated identically from the pack. Teams create their own packs with `new-domain`.
+minutes). The packs are the source of truth: fictional companies, entity specs, pools, templates and checks. A run
+produces every table, document and database locally into `out/` (ignored by git). For the dataset the demo
+application is built on, a published snapshot is committed under `datasets/nordic_supply/` (CSV, SQL, documents,
+FACTS.md and a one-page `summary.html`; not the H2 file), produced only by `scripts/snapshot.sh` and checked for
+staleness by `scripts/test.sh`. Teams create their own packs with `new-domain`.
 
 ## Quick start
 
@@ -25,7 +27,8 @@ python3 -m dsgen nordic_supply check                 # generate out/nordic_suppl
 python3 -m dsgen nordic_supply check --pg --h2-file  # + PostgreSQL in Docker, + ready-to-use out/nordic_supply/db/nordic_supply.mv.db
 python3 -m dsgen my_domain new-domain --company "…"  # scaffold a pack that already passes check
 python3 -m dsgen my_domain validate                  # pack structure only
-scripts/test.sh                                      # validate + check every pack
+scripts/test.sh                                      # validate + check every pack; fails if datasets/ is stale
+scripts/snapshot.sh nordic_supply                    # regenerate the committed snapshot in datasets/nordic_supply
 ```
 
 Flags for `check`/`generate`: `--as-of` (the demo's "today"), `--seed`, `--scale`, `--months`, `--config`
@@ -68,6 +71,7 @@ one page; [docs/image-providers.md](docs/image-providers.md) compares image prov
 |---|---|
 | `dsgen/` | Framework: spec, flow engine, schema and dialects, output, documents, verify, facts, smoke tests, validate, scaffold, review, estimate, CLI |
 | `domains/<name>/` | Domain packs; `domains/_engine_smoke/` pins engine behaviour for `scripts/test.sh` |
+| `datasets/<name>/` | Published snapshots of generated data (Nordic Supply today), with `README.md` and `summary.html` |
 | `DOMAIN_GUIDE.md`, `CLAUDE.md`, `AGENTS.md`, `.claude/skills/` | Authoring guide, assistant instructions, Claude Code skill |
 | `docs/` | Getting started, integration guide, generation model, image providers |
 | `.env.example` | Environment variables (keys stay outside the repository) |

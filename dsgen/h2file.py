@@ -21,8 +21,9 @@ def build(domain, out: str) -> dict:
         if os.path.exists(f):
             os.remove(f)
     url = f"jdbc:h2:{base}"
-    for script in ("schema-h2.sql", "load-h2.sql", "readonly-user-h2.sql"):
-        r = subprocess.run(["java", "-cp", jar, "org.h2.tools.RunScript", "-url", url, "-user", "sa", "-script", os.path.join(out, "sql", script)],
+    from .h2check import absolute_loader
+    for script in (os.path.join(out, "sql", "schema-h2.sql"), absolute_loader(out), os.path.join(out, "sql", "readonly-user-h2.sql")):
+        r = subprocess.run(["java", "-cp", jar, "org.h2.tools.RunScript", "-url", url, "-user", "sa", "-script", script],
                            capture_output=True, text=True, timeout=600)
         if r.returncode != 0:
             return {"status": "failed", "detail": f"{script}: {r.stderr.strip()[:300]}"}

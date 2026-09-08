@@ -11,7 +11,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field, asdict
 from typing import Optional
 
-from .catalogue import _pretty_price, current_price, promo_price_on
+from .catalogue import _pretty_price, current_price, promo_price_on, ean13, product_description
 from dsgen.model import last_weekday_before, next_weekday_after, D, TS, add_business_days, iso, money, months_back
 from .ctx import Ctx
 from .orders import build_order, to_weekday, ts_on
@@ -66,6 +66,11 @@ def gen_case2_anchors(ctx: Ctx):
     cust = find_customer(ctx, "Trailhead Umeå")
     friday = last_weekday_before(as_of, 4)
     boots = find_products(ctx, sup="RUS", cat="FTW", ptype="Hiking Boot", n=1)  # fallback: any FTW
+    six = [p for p in ctx.products if p["_sup"] == boots[0]["_sup"] and p["product_type"] == boots[0]["product_type"]
+           and p["active"] == "true" and int(p["case_pack"]) == 6]
+    if six:
+        boots = [rng.choice(six)]
+    boots[0]["case_pack"] = 6          # the e-mail counts cartons of 6 pairs; make the catalogue agree
     socks = find_products(ctx, cat="BAS", ptype="Hiking Socks 2-pack", n=1)
     poles = find_products(ctx, cat="ACC", ptype="Trekking Poles", n=1)
     specs = [(boots[0], 48, False), (socks[0], 60, False), (poles[0], 12, False)]
@@ -78,7 +83,8 @@ def gen_case2_anchors(ctx: Ctx):
     ship = ctx.tables["shipments"][-1]
     _force_delivery_date(ctx, ship, friday)
     A["A2_missing_cartons"] = _anchor_info(ctx, order, ship, extra={
-        "friday": iso(friday), "boots_ordered": 48, "boots_received": 30, "cartons_of": 6})
+        "friday": iso(friday), "boots_ordered": 48, "boots_received": 30, "cartons_of": 6,
+        "cartons_ordered": 48 // 6, "cartons_received": 30 // 6, "cartons_missing": (48 - 30) // 6})
 
     # A3: wrong colour delivered (portal message, terse)
     cust = find_customer(ctx, "Nordkapp Sports Tromsø")
@@ -96,8 +102,11 @@ def gen_case2_anchors(ctx: Ctx):
         "warehouse_id": 3, "channel": "PORTAL", "no_claim": True})
     ship = ctx.tables["shipments"][-1]
     _force_delivery_date(ctx, ship, deliv)
+    received = _ensure_colour_sibling(ctx, jacket, wrong_colour)
     A["A3_wrong_colour"] = _anchor_info(ctx, order, ship, extra={"ordered_colour": jacket["colour"],
-                                                                 "received_colour": wrong_colour})
+                                                                 "received_colour": wrong_colour,
+                                                                 "received_product": received["name"],
+                                                                 "received_sku": received["sku"]})
 
     # A4: late delivery for Kiruna season opening, credit request; message contains personal data
     cust = find_customer(ctx, "Fjällbutiken Kiruna")
@@ -163,11 +172,40 @@ def gen_case2_anchors(ctx: Ctx):
         deliv6 = add_business_days(as_of, -1)
         _force_delivery_date(ctx, ship, deliv6)
         order["promised_delivery_date"] = iso(deliv6)
+    promo_row = next((r for r in ctx.tables["promotions"] if r["product_id"] == lamp["id"]
+                      and D.fromisoformat(r["starts_on"]) <= placed.date() <= D.fromisoformat(r["ends_on"])), None)
     A["A6_pricing_dispute"] = _anchor_info(ctx, order, ship, extra={
+        "promo_name": promo_row["name"] if promo_row else "promotion",
         "invoiced_unit_price": order["_lines"][0]["unit_price"],
         "expected_promo_price": money(promo_price_on(ctx, lamp["id"], placed.date()) or 0)})
 
     ctx.anchors["case2"] = A
+
+def _ensure_colour_sibling(ctx, product, colour):
+    """Return the same model/variant in another colour; create the SKU (with price history) if the
+    catalogue lacks it, so a wrong-colour claim can point at a real product. Inventory is generated later."""
+    base = product["name"].replace(product["colour"], "").strip() if product["colour"] else product["name"]
+    for p in ctx.products:
+        if p["colour"] == colour and p["name"].replace(colour, "").strip() == base:
+            return p
+    rng = ctx.rng
+    prefix = product["sku"].rsplit("-", 1)[0]
+    seq = max(int(p["sku"].rsplit("-", 1)[1]) for p in ctx.products if p["sku"].startswith(prefix + "-")) + 1
+    pid = max(p["id"] for p in ctx.products) + 1
+    row = dict(product)
+    row.update({"id": pid, "sku": f"{prefix}-{seq:04d}", "ean": ean13(pid), "colour": colour,
+                "name": product["name"].replace(product["colour"], colour) if product["colour"] else f"{product['name']} {colour}"})
+    brand = row["name"].split()[0]
+    row["description"] = product_description(pid, brand, row["name"].split()[1] if len(row["name"].split()) > 1 else "",
+                                             product["product_type"], "", product["variant"], colour)
+    ctx.tables["products"].append(row)
+    ctx.products.append(row)
+    hid = max(r["id"] for r in ctx.tables["price_history"])
+    for r in [r for r in ctx.tables["price_history"] if r["product_id"] == product["id"]]:
+        hid += 1
+        ctx.tables["price_history"].append(dict(r, id=hid, product_id=pid))
+    ctx.price_at[pid] = list(ctx.price_at[product["id"]])
+    return row
 
 def _force_delivery_date(ctx, ship, day: D):
     """Move a freshly built shipment's delivery to an exact day (keeps events consistent).

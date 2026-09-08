@@ -15,6 +15,18 @@ def find_h2_jar():
     cands = [c for c in glob.glob(os.path.expanduser("~/.m2/repository/com/h2database/h2/*/h2-*.jar")) if "sources" not in c and "javadoc" not in c]
     return sorted(cands)[-1] if cands else None
 
+def absolute_loader(out: str) -> str:
+    """The committed loader may reference the CSV directory by a relative path (--csv-path-prefix); the
+    smoke test and the H2 file builder run Java elsewhere, so they load through a temporary copy that
+    points at the absolute csv/ directory of this output folder."""
+    import re
+    src = os.path.join(out, "sql", "load-h2.sql")
+    csv_dir = os.path.abspath(os.path.join(out, "csv")).replace("\\", "/")
+    text = re.sub(r"CSVREAD\('[^']*/([^/']+\.csv)'", lambda m: f"CSVREAD('{csv_dir}/{m.group(1)}'", open(src, encoding="utf-8").read())
+    tmp = os.path.join(tempfile.mkdtemp(prefix="dsgen-load-"), "load-h2.sql")
+    open(tmp, "w", encoding="utf-8").write(text)
+    return tmp
+
 def _run(jar, args, cwd):
     return subprocess.run(["java", "-cp", jar] + args, cwd=cwd, capture_output=True, text=True, timeout=600)
 
@@ -28,8 +40,8 @@ def run(domain, out: str) -> dict:
     url = f"jdbc:h2:{tmp}/db"
     out = os.path.abspath(out)
     try:
-        for name, script in (("schema", "sql/schema-h2.sql"), ("load", "sql/load-h2.sql"), ("readonly-user", "sql/readonly-user-h2.sql")):
-            r = _run(jar, ["org.h2.tools.RunScript", "-url", url, "-user", "sa", "-script", os.path.join(out, script)], out)
+        for name, script in (("schema", os.path.join(out, "sql/schema-h2.sql")), ("load", absolute_loader(out)), ("readonly-user", os.path.join(out, "sql/readonly-user-h2.sql"))):
+            r = _run(jar, ["org.h2.tools.RunScript", "-url", url, "-user", "sa", "-script", script], out)
             if r.returncode != 0:
                 return {"status": "failed", "detail": f"{name}: {r.stderr.strip()[:500]}"}
         queries = {f"count {t}": f"SELECT COUNT(*) FROM {t}" for t in spec.exposed_tables[:3]}

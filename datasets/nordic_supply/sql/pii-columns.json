@@ -1,0 +1,56 @@
+{
+  "classes": {
+    "name": "a person's name",
+    "contact": "e-mail address or phone number of a person",
+    "identifier": "a value that identifies or describes a person indirectly",
+    "free-text": "free text that may contain personal data written by people"
+  },
+  "columns": {
+    "users.username": "name",
+    "users.full_name": "name",
+    "users.email": "contact",
+    "suppliers.contact_email": "contact",
+    "customers.phone": "contact",
+    "customer_contacts.first_name": "name",
+    "customer_contacts.last_name": "name",
+    "customer_contacts.role": "identifier",
+    "customer_contacts.email": "contact",
+    "customer_contacts.phone": "contact",
+    "customer_contacts.language": "identifier",
+    "customer_contacts.marketing_consent": "identifier",
+    "customer_contacts.consent_source": "identifier",
+    "customer_contacts.retention_until": "identifier",
+    "delivery_addresses.delivery_instructions": "free-text",
+    "orders.customer_reference": "free-text",
+    "orders.notes": "free-text",
+    "delivery_events.note": "free-text",
+    "claims.reported_by_contact_id": "identifier",
+    "claims.description": "free-text",
+    "claims.resolution_note": "free-text",
+    "claim_lines.issue_note": "free-text",
+    "saved_widgets.description": "free-text"
+  },
+  "hidden_from_ai": [
+    "customer_contacts",
+    "saved_widgets"
+  ],
+  "exposed_to_ai": [
+    "users",
+    "warehouses",
+    "categories",
+    "suppliers",
+    "products",
+    "price_history",
+    "promotions",
+    "inventory",
+    "customers",
+    "delivery_addresses",
+    "orders",
+    "order_lines",
+    "shipments",
+    "shipment_lines",
+    "delivery_events",
+    "claims",
+    "claim_lines"
+  ]
+}

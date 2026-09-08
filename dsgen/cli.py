@@ -201,4 +201,9 @@ def main(argv=None):
         return 0
     if args.command == "check" or args.check:
         return check(domain, args)
+    if args.h2_file:   # plain generate --h2-file: build the database file without the smoke tests
+        from . import h2file
+        hf = h2file.build(domain, args.out)
+        print(f"H2 database file: {hf['status']}: {hf['detail']}")
+        return 1 if hf["status"] == "failed" else 0
     return 0

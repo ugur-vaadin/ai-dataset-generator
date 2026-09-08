@@ -20,3 +20,57 @@ id = "template:claim_lines.issue_note:dd23b695"
 action = "replace"
 value = "Product surface scratched"
 note = "Example of a template replacement: every row that carried 'Product scratched' now carries this text."
+
+# Review pass 2026-09-07: every fact in the six messages cross-checked against the records with SQL
+# (delivery weekdays, pallet contents, quantities, carton maths, colours, promised vs delivered dates,
+# carrier delay events, account manager, promotion name and price, credit arithmetic).
+
+[[override]]
+id = "doc:emails/02-missing-cartons-trailhead-umea.eml"
+action = "approve"
+note = "Friday delivery, EDI order, 8 cartons of 6 = 48 pairs, 5 received = 30; the boots' case_pack is 6 in the catalogue."
+
+[[override]]
+id = "doc:emails/03-wrong-colour-nordkapp-tromso-portal.txt"
+action = "approve"
+note = "Ordered Midnight Blue; the Moss Green jacket exists as a real SKU with a price, so the received item can be looked up."
+
+[[override]]
+id = "doc:emails/04-late-delivery-fjallbutiken-kiruna.eml"
+action = "approve"
+note = "Promised 24th, delivered 31st (7 days), Baltic Freight Line DELAYED event at Örebro, Lars Nygaard is the account manager. Personal mobile in the text is intended (masking demo)."
+
+[[override]]
+id = "doc:emails/05-quality-defect-trailhead-umea-sv.eml"
+action = "approve"
+note = "Swedish reviewed: idiomatic (reklamation, dragkedja, slidern spricker, returetikett). 6 of 24 returned, 18 left; delivery date matches. A native speaker's read-through before a Swedish audience is still cheap insurance."
+
+[[override]]
+id = "doc:emails/06-pricing-dispute-sportmagasinet-aarhus.eml"
+action = "approve"
+note = "Promotion named in the text is the one covering the order date; 51.90 - 38.92 = 12.98 x 36 = 467.28; line was charged list price."
+
+[[override]]
+id = "anchor:case2.A2_missing_cartons"
+action = "approve"
+note = "See e-mail 02."
+
+[[override]]
+id = "anchor:case2.A3_wrong_colour"
+action = "approve"
+note = "See e-mail 03."
+
+[[override]]
+id = "anchor:case2.A4_late_delivery"
+action = "approve"
+note = "See e-mail 04."
+
+[[override]]
+id = "anchor:case2.A5_quality_defect_sv"
+action = "approve"
+note = "See e-mail 05."
+
+[[override]]
+id = "anchor:case2.A6_pricing_dispute"
+action = "approve"
+note = "See e-mail 06."

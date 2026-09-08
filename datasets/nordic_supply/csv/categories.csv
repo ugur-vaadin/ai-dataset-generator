@@ -1,0 +1,15 @@
+id,code,name,season
+1,TNT,Tents & Shelters,SUMMER
+2,SLP,Sleeping Bags & Mats,ALL
+3,PCK,Backpacks & Bags,ALL
+4,FTW,Footwear,ALL
+5,SHL,Shell & Insulated Apparel,AUTUMN
+6,BAS,Base & Mid Layers,ALL
+7,CLB,Climbing,SUMMER
+8,KIT,Camp Kitchen,SUMMER
+9,NAV,Navigation & Electronics,ALL
+10,WIN,Winter Sports,WINTER
+11,WTR,Water Sports,SUMMER
+12,CYC,Cycling & Bikepacking,SUMMER
+13,RUN,Trail Running,SPRING
+14,ACC,Accessories & Maintenance,ALL

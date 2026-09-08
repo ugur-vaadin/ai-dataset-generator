@@ -1,0 +1,23 @@
+-- Load the CSV files into PostgreSQL with psql's client-side \copy. Run after schema-postgres.sql:
+--   psql -h host -U user -d db -f load-postgres.sql
+-- CSV directory (on the machine running psql): ./datasets/nordic_supply/csv. Empty fields become NULL.
+-- For server-side COPY (file on the database host / a mounted volume) replace \copy with COPY.
+\copy users FROM './datasets/nordic_supply/csv/users.csv' WITH (FORMAT csv, HEADER true)
+\copy warehouses FROM './datasets/nordic_supply/csv/warehouses.csv' WITH (FORMAT csv, HEADER true)
+\copy categories FROM './datasets/nordic_supply/csv/categories.csv' WITH (FORMAT csv, HEADER true)
+\copy suppliers FROM './datasets/nordic_supply/csv/suppliers.csv' WITH (FORMAT csv, HEADER true)
+\copy products FROM './datasets/nordic_supply/csv/products.csv' WITH (FORMAT csv, HEADER true)
+\copy price_history FROM './datasets/nordic_supply/csv/price_history.csv' WITH (FORMAT csv, HEADER true)
+\copy promotions FROM './datasets/nordic_supply/csv/promotions.csv' WITH (FORMAT csv, HEADER true)
+\copy inventory FROM './datasets/nordic_supply/csv/inventory.csv' WITH (FORMAT csv, HEADER true)
+\copy customers FROM './datasets/nordic_supply/csv/customers.csv' WITH (FORMAT csv, HEADER true)
+\copy customer_contacts FROM './datasets/nordic_supply/csv/customer_contacts.csv' WITH (FORMAT csv, HEADER true)
+\copy delivery_addresses FROM './datasets/nordic_supply/csv/delivery_addresses.csv' WITH (FORMAT csv, HEADER true)
+\copy orders FROM './datasets/nordic_supply/csv/orders.csv' WITH (FORMAT csv, HEADER true)
+\copy order_lines FROM './datasets/nordic_supply/csv/order_lines.csv' WITH (FORMAT csv, HEADER true)
+\copy shipments FROM './datasets/nordic_supply/csv/shipments.csv' WITH (FORMAT csv, HEADER true)
+\copy shipment_lines FROM './datasets/nordic_supply/csv/shipment_lines.csv' WITH (FORMAT csv, HEADER true)
+\copy delivery_events FROM './datasets/nordic_supply/csv/delivery_events.csv' WITH (FORMAT csv, HEADER true)
+\copy claims FROM './datasets/nordic_supply/csv/claims.csv' WITH (FORMAT csv, HEADER true)
+\copy claim_lines FROM './datasets/nordic_supply/csv/claim_lines.csv' WITH (FORMAT csv, HEADER true)
+\copy saved_widgets FROM './datasets/nordic_supply/csv/saved_widgets.csv' WITH (FORMAT csv, HEADER true)

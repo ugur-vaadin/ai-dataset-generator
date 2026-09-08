@@ -23,3 +23,4 @@ Rules:
 - Everything domain-specific is data in the pack; `lifecycle.py` holds only the flow.
 - Generated images are kept across runs; only `--images <provider>` replaces them (and costs money).
 - Keep `CHANGELOG.md` and the pack's `README.md` current when you change behaviour.
+- `datasets/<name>/` is a published build of a pack. Never edit it by hand; after changing a pack that has one, run `scripts/snapshot.sh <name>` (`scripts/test.sh` fails while it is stale).

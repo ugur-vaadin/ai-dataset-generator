@@ -3,6 +3,24 @@
 Framework (`dsgen`) and domain packs are versioned separately: `dsgen.VERSION` and `[domain].version`
 in each `domain.toml`; both are written to `manifest.json`.
 
+## dsgen 2.3.2 — 2026-09-07
+
+* `scripts/snapshot.sh <domain>` publishes a generated dataset into `datasets/<domain>/` (CSV, SQL, documents, FACTS, REVIEW, manifest, verification) with a generated `README.md`; the H2 file and per-run cost/queue/usage files are git-ignored there.
+* `scripts/test.sh` fails when a committed snapshot's per-table SHA-256 no longer matches what the pack generates.
+* The H2 smoke test and `--h2-file` load through a copy of `load-h2.sql` with the CSV path made absolute, so a loader written with a relative `--csv-path-prefix` (as in snapshots) still runs. `generate --h2-file` now builds the file too (before, only `check` honoured the flag).
+* First snapshot: `datasets/nordic_supply/`, with `summary.html`, a one-page overview of the data behind the three business cases.
+
+## nordic_supply 1.2.2 — 2026-09-07
+
+Final data pass for the three business cases; every fact in the six customer messages is now cross-checked against the records.
+
+* E-mail 02 counted cartons of six but the boots' `case_pack` was 1; the anchor now picks (or sets) a six-pack SKU and the template takes the carton numbers from the anchor.
+* E-mail 03 named a colour that did not exist as a product; the received colour is now a real SKU with price history (inventory follows), recorded in the anchor as `received_sku`.
+* E-mail 06 named a fixed promotion; it now names the promotion that actually covered the order date.
+* Four new checks pin these facts, plus one for the spread of customers behind the document's case 1 example query.
+* FACTS.md gains the case 1 example "orders shipped after the promised date last month, by customer" (totals and top ten).
+* All six messages and anchors reviewed and approved in `review/overrides.toml`.
+
 ## dsgen 2.3.1 · property_maintenance 0.1.0 — 2026-09-07
 
 * Third domain pack `property_maintenance` (Fjordhem), authored from a one-paragraph brief in 3 min 43 s to first green.

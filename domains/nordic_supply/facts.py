@@ -13,6 +13,11 @@ def sections(m, v) -> str:
     L.append("| Week | Shipments | Late | Rate |\n|---|---:|---:|---:|")
     for w in c1["late_by_week"]:
         L.append(f"| {w['week']} | {w['shipments']} | {w['late']} | {w['late'] / w['shipments']:.0%} |")
+    L.append(f"\nThe document's example, \"orders shipped after the promised date last month, by customer\": "
+             f"**{c1['late_orders']}** orders from **{c1['late_customers']}** customers. Top ten:\n")
+    L.append("| Customer | Late orders |\n|---|---:|")
+    for name, n in c1["late_by_customer"]:
+        L.append(f"| {name} | {n} |")
     L.append(f"\nClaims open for more than 7 days: **{c1['claims_open_over_7_days']}** "
              f"(open in total: {sum(s['distributions']['claim_status'].get(k, 0) for k in ('NEW', 'UNDER_REVIEW', 'AWAITING_CUSTOMER', 'APPROVED'))}).\n")
     L.append("Backorder lines by category:\n")
@@ -35,13 +40,13 @@ def sections(m, v) -> str:
         elif key == "A2_missing_cartons":
             facts.append(f"no order number in the text; Friday {a['friday']}; {a['boots_ordered']} ordered, {a['boots_received']} received")
         elif key == "A3_wrong_colour":
-            facts.append(f"ordered {a['ordered_colour']}, received {a['received_colour']}")
+            facts.append(f"ordered {a['ordered_colour']}, received {a['received_colour']} ({a['received_sku']}, a real SKU)")
         elif key == "A4_late_delivery":
             facts.append(f"promised {a['promised_delivery']}, season opening {a['season_opening']}; personal data in the text")
         elif key == "A5_quality_defect_sv":
             facts.append(f"Swedish; {a['defective_qty']} of {a['lines'][0]['qty']} defective")
         elif key == "A6_pricing_dispute":
-            facts.append(f"invoiced {a['invoiced_unit_price']} vs promo {a['expected_promo_price']} on {a['lines'][0]['qty']} pcs")
+            facts.append(f"invoiced {a['invoiced_unit_price']} vs '{a['promo_name']}' promo {a['expected_promo_price']} on {a['lines'][0]['qty']} pcs")
         L.append(f"| {files[key]} | {a['customer']} ({a['customer_number']}) | {a['order_number']} | {a.get('shipment_number', '')} | "
                  f"{(a.get('delivered_at') or '')[:10]} | {a['contact']} | {'; '.join(facts)} |")
     L.append("\nOrder lines behind each message:\n")
