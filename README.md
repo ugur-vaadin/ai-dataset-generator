@@ -40,8 +40,9 @@ Flags for `check`/`generate`: `--as-of` (the demo's "today"), `--seed`, `--scale
 ## Authoring a domain
 
 Write your domain in a paragraph, scaffold a pack, and let your coding assistant fill it in following
-[DOMAIN_GUIDE.md](DOMAIN_GUIDE.md); `validate` and `check` are the referees. `CLAUDE.md` / `AGENTS.md` carry
-the instructions any assistant picks up; Claude Code users can type `/author-domain`. A pack is mostly TOML:
+[DOMAIN_GUIDE.md](DOMAIN_GUIDE.md); `validate` and `check` are the referees. You only paste the description of the
+domain: `AGENTS.md` (imported by `CLAUDE.md`, pointed to by `GEMINI.md` and the Copilot instructions) carries the
+whole procedure for any assistant; Claude Code users can also type `/author-domain`. A pack is mostly TOML:
 `domain.toml` (entities, columns, what the model may see, personal-data tags), `flow.toml` (how rows and fields
 are generated, story bursts, anchors), `config.toml`, `pools/`, `scenarios.toml`, `checks.toml`, and document
 templates. Python is needed only for mechanics the flow language cannot express.
@@ -74,7 +75,7 @@ one page; [docs/image-providers.md](docs/image-providers.md) compares image prov
 | `dsgen/` | Framework: spec, flow engine, schema and dialects, output, documents, verify, facts, smoke tests, validate, scaffold, review, estimate, CLI |
 | `domains/<name>/` | Domain packs; `domains/_engine_smoke/` pins engine behaviour for `scripts/test.sh` |
 | `datasets/<name>/` | Published snapshots of generated data (Nordic Supply today), with `README.md` and `summary.html` |
-| `DOMAIN_GUIDE.md`, `CLAUDE.md`, `AGENTS.md`, `.claude/skills/` | Authoring guide, assistant instructions, Claude Code skill |
+| `DOMAIN_GUIDE.md`, `AGENTS.md` (+ `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`, `.claude/skills/`) | Authoring guide; the one instruction file for assistants and its per-tool pointers |
 | `docs/` | Getting started, integration guide, generation model, image providers |
 | `.env.example` | Environment variables (keys stay outside the repository) |
 

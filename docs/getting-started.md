@@ -26,16 +26,15 @@ open out/nordic_supply/FACTS.md
 
 1. Scaffold: `python3 -m dsgen <name> new-domain --company "..." --description "..."`. The result
    already validates and passes `check`.
-2. Open the repository in your assistant (Claude Code, Cursor, Copilot, Codex, anything that reads
-   `AGENTS.md` / `CLAUDE.md` and runs commands). Paste the business-case text and this instruction:
+2. Open the repository in your assistant (Claude Code, Cursor, Copilot, Codex, Gemini CLI, a local model
+   in any tool that reads `AGENTS.md` and runs commands). Paste the description of your domain, nothing more:
 
-   > Author the domain pack `domains/<name>/` for this business case following `DOMAIN_GUIDE.md`, using
-   > `domains/nordic_supply/` as the worked example. Work entity by entity, run
-   > `python3 -m dsgen <name> validate` after every edit and `python3 -m dsgen <name> check` when the
-   > pack is complete; fix until it prints ALL CHECKS PASSED. Then summarise `out/<name>/FACTS.md`, the
-   > document index and the top of `REVIEW.md`.
+   > Create a dataset using the following information about the domain: …
 
-   Claude Code users can type `/author-domain` instead; it runs the same steps.
+   or point at a file: "Author a dataset from the description in `brief.md`". `AGENTS.md` tells the
+   assistant the rest: which guide and example to read, to write data rather than code, to run `validate`
+   after every edit and `check` until it prints ALL CHECKS PASSED, and what to report. It derives the pack
+   name from the company and states it in its first reply. Claude Code users can also type `/author-domain`.
 3. Review `out/<name>/REVIEW.md`, answer in `domains/<name>/review/overrides.toml`, run `check` again.
 4. Optional photos: put your key in the environment (never in the repo; see `.env.example`) and run
    `python3 -m dsgen <name> check --images openai` once. Generated images are kept across later runs.
@@ -56,7 +55,7 @@ wiring.
 | Pack structure check, generation, verification, H2/PostgreSQL smoke tests, facts, review queue, cost estimate | Yes, one command |
 | Regenerating for a new date or scale | Yes, a flag |
 | Applying review answers | Yes, on the next run |
-| Image generation | Yes, given a key; one flag; kept afterwards |
-| Deciding entities, vocabularies, stories, texts for a new domain | No — a person with an assistant, guided by `DOMAIN_GUIDE.md` and enforced by `validate` |
-| Writing `lifecycle.py` (how records flow) | No — the one piece of Python per domain, usually written by the assistant |
+| Image generation | Yes, given a key; one flag you run yourself (it costs money); kept afterwards |
+| Deciding entities, vocabularies, stories, texts for a new domain | No — your assistant, following `AGENTS.md` and `DOMAIN_GUIDE.md`, with `validate` and `check` as referees |
+| Writing `flow.toml` (how records flow), or Python for a mechanic it cannot express | The assistant writes it; the flow language covers the business-case patterns |
 | Reading the review queue | No — that is the point of it |

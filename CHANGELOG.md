@@ -3,6 +3,15 @@
 Framework (`dsgen`) and domain packs are versioned separately: `dsgen.VERSION` and `[domain].version`
 in each `domain.toml`; both are written to `manifest.json`.
 
+## docs — 2026-09-08
+
+* `AGENTS.md` is now the single instruction file for every assistant and carries the whole authoring procedure: the
+  user only pastes a domain description; the assistant derives the pack name, reads the guide and example, validates
+  after every edit, checks until green, reports, and never runs paid image generation on its own. `CLAUDE.md` imports
+  it; `GEMINI.md` and `.github/copilot-instructions.md` point to it; the Claude Code skill is a thin trigger.
+* Getting-started, README and the quickstart video (scenes 3 and 4) use the short request instead of the long instruction.
+* Video build re-synthesises only narration paragraphs whose text changed.
+
 ## dsgen 2.3.2 — 2026-09-07
 
 * `scripts/snapshot.sh <domain>` publishes a generated dataset into `datasets/<domain>/` (CSV, SQL, documents, FACTS, REVIEW, manifest, verification) with a generated `README.md`; the H2 file and per-run cost/queue/usage files are git-ignored there.
