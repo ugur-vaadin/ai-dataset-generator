@@ -88,6 +88,6 @@ Behaviour changes are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Notes
 
-* All names, companies, addresses and domains are fictional; no real customer data.
+* All names, companies, brands, carriers, addresses and domains are fictional; `verify` checks them against a denylist of real Nordic and outdoor companies and `REVIEW.md` lists them for a human pass. No real customer data.
 * Data is anchored to the pack's as-of date; regenerate before a demo or freeze the application clock.
 * Generated images are kept in the pack and reused; only `--images <provider>` replaces them (and costs money).

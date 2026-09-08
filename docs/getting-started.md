@@ -35,7 +35,9 @@ open out/nordic_supply/FACTS.md
    assistant the rest: which guide and example to read, to write data rather than code, to run `validate`
    after every edit and `check` until it prints ALL CHECKS PASSED, and what to report. It derives the pack
    name from the company and states it in its first reply. Claude Code users can also type `/author-domain`.
-3. Review `out/<name>/REVIEW.md`, answer in `domains/<name>/review/overrides.toml`, run `check` again.
+3. Review `out/<name>/REVIEW.md`, answer in `domains/<name>/review/overrides.toml`, run `check` again. Its last
+   section lists every company-like name in the pack: search the web for the ones you do not recognise, and add real
+   ones to `[names] deny` in a pools file so the check catches them next time.
 4. Optional photos: put your key in the environment (never in the repo; see `.env.example`) and run
    `python3 -m dsgen <name> check --images openai` once. Generated images are kept across later runs.
 
@@ -59,3 +61,4 @@ wiring.
 | Deciding entities, vocabularies, stories, texts for a new domain | No — your assistant, following `AGENTS.md` and `DOMAIN_GUIDE.md`, with `validate` and `check` as referees |
 | Writing `flow.toml` (how records flow), or Python for a mechanic it cannot express | The assistant writes it; the flow language covers the business-case patterns |
 | Reading the review queue | No — that is the point of it |
+| Fictional names | Denylist and generic-name heuristic run in `verify`; the web check of the remaining names is the assistant's, the final scan yours |

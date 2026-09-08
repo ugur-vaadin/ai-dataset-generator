@@ -2,14 +2,14 @@
   "scenario": "A1_damaged_pallet",
   "file": "photos/pallet2-damage.jpg",
   "prompt": "Realistic smartphone photo taken inside a small sports shop's back room in Finland. A wooden EUR pallet\nwith cardboard cartons of camping tents; the stretch wrap is torn open and the bottom cartons are crushed and\ndented, one carton split showing a green tent bag. Cartons carry a plain fictional brand label 'Fjellvind'\nand no other readable text or logos. Fluorescent lighting, slightly tilted framing, no people.",
-  "caption": "Pallet 2 of SH-2026-007849, delivered 2026-09-01 to Retkiaitta Tampere",
+  "caption": "Pallet 2 of SH-2026-007802, delivered 2026-09-01 to Erävakka Tampere",
   "generated_at": "2026-09-07T15:31:56+00:00",
   "requested_provider": "openai",
   "anchor": {
-    "order_number": "SO-2026-007391",
-    "customer": "Retkiaitta Tampere",
+    "order_number": "SO-2026-007365",
+    "customer": "Erävakka Tampere",
     "customer_number": "C-10001",
-    "shipment_number": "SH-2026-007849"
+    "shipment_number": "SH-2026-007802"
   },
   "terms_note": "OpenAI API: output rights assigned to the customer; images carry C2PA Content Credentials. Terms checked 2026-09-07 (docs/image-providers.md).",
   "model": "gpt-image-1.5",
@@ -31,5 +31,6 @@
     },
     "total_tokens": 1509
   },
-  "status": "generated"
+  "status": "generated",
+  "kept_note": "Image generated 2026-09-07 for pack 1.2.x and kept; anchor fields refreshed 2026-09-08 after the chain was renamed (the prompt names no customer)."
 }

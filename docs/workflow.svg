@@ -60,7 +60,7 @@
 <text x="730" y="348" text-anchor="middle" fill="#5A6A72">documents from templates</text>
 <text x="730" y="365" text-anchor="middle" fill="#5A6A72">placeholder image unless kept</text>
 <text x="960" y="313" text-anchor="middle" font-weight="600">verify + smoke tests</text>
-<text x="960" y="331" text-anchor="middle" fill="#5A6A72">SQLite: rules, scenario facts</text>
+<text x="960" y="331" text-anchor="middle" fill="#5A6A72">SQLite: rules, facts, real names</text>
 <text x="960" y="348" text-anchor="middle" fill="#5A6A72">real H2 and PostgreSQL</text>
 <text x="960" y="365" text-anchor="middle" fill="#5A6A72">as the read-only AI user</text>
 <text x="1180" y="324" text-anchor="middle" font-weight="600">FACTS · REVIEW · ESTIMATE</text>

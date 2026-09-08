@@ -22,7 +22,7 @@ flowchart LR
         GEN --> OUT["out/<br/>CSV · DDL · loaders · read-only user<br/>schema text for the model · documents · manifest"]
     end
     subgraph CHECK["3 · Checking"]
-        OUT --> V["verify<br/>generic checks from the spec · checks.toml SQL<br/>scenario expectations · domain checks"]
+        OUT --> V["verify<br/>generic checks from the spec · checks.toml SQL<br/>scenario expectations · domain checks<br/>real-company name check"]
         OUT --> H2["H2 and PostgreSQL smoke tests<br/>as the read-only AI user"]
         V --> F[FACTS.md]
         H2 --> F
@@ -77,6 +77,9 @@ schema spec, so the "what leaves the network" answer is enforced by the database
 | Declarative scenarios | `scenarios.toml`, `documents/*.tmpl` | Documents, images and expectations without code |
 | Image generation with provenance | `--images openai|google` (placeholder default) | Photos that match the anchor record; `*.provenance.json` per image |
 | Reproducibility | `manifest.json`: versions, seed, as-of, config, Python, SHA-256 per table | Diff two runs, detect unintended change |
+| Fictional-name check | `dsgen/names.py` in `verify`; `[names] deny/allow` in a pools file; inventory in `REVIEW.md` | No real brand, retailer or carrier, not even as a stem; no generic shop word next to a real town |
+| Published snapshot | `scripts/snapshot.sh <domain>` → `datasets/<domain>/` | The build the app team uses; `scripts/test.sh` fails while it is stale |
+| Date matrix and CI | `scripts/test.sh` regenerates every pack for three other as-of dates; `.github/workflows/tests.yml` | The "move the demo in time" promise is tested, on Python 3.11 and 3.13 |
 
 | Review queue and overrides | `REVIEW.md`, `review-queue.json`, `review/overrides.toml` | Targeted human review with stable ids, answers applied deterministically on the next run |
 | Cost instrumentation | `llm-usage.jsonl`, `ESTIMATE.md`, `estimate` command, `dsgen/prices.toml` | Log every provider call; predict cost by authoring mode and model without calling anyone |
