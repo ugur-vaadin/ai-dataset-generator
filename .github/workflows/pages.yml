@@ -1,0 +1,53 @@
+# Publish the dataset summary pages to GitHub Pages on every push to master.
+# One-time setup in the repository: Settings → Pages → Source: "GitHub Actions".
+# Result: https://ugur-vaadin.github.io/ai-dataset-generator/  (index = Nordic Supply summary)
+name: pages
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "datasets/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble site from the committed snapshots
+        run: |
+          set -e
+          mkdir -p site
+          # every published snapshot gets <domain>/index.html from its summary page; Nordic Supply is also the root page
+          for d in datasets/*/; do
+            name=$(basename "$d")
+            [ -f "$d/summary.html" ] || continue
+            mkdir -p "site/$name"
+            cp "$d/summary.html" "site/$name/index.html"
+            [ -f "$d/FACTS.md" ] && cp "$d/FACTS.md" "site/$name/FACTS.md"
+          done
+          cp datasets/nordic_supply/summary.html site/index.html
+          touch site/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

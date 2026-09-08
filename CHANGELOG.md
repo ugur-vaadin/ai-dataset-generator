@@ -9,6 +9,7 @@ in each `domain.toml`; both are written to `manifest.json`.
 * `scripts/test.sh` fails when a committed snapshot's per-table SHA-256 no longer matches what the pack generates.
 * The H2 smoke test and `--h2-file` load through a copy of `load-h2.sql` with the CSV path made absolute, so a loader written with a relative `--csv-path-prefix` (as in snapshots) still runs. `generate --h2-file` now builds the file too (before, only `check` honoured the flag).
 * First snapshot: `datasets/nordic_supply/`, with `summary.html`, a one-page overview of the data behind the three business cases.
+* GitHub Pages workflow publishes every snapshot's `summary.html` (Nordic Supply as the site root).
 
 ## nordic_supply 1.2.2 — 2026-09-07
 

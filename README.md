@@ -13,7 +13,9 @@ minutes). The packs are the source of truth: fictional companies, entity specs, 
 produces every table, document and database locally into `out/` (ignored by git). For the dataset the demo
 application is built on, a published snapshot is committed under `datasets/nordic_supply/` (CSV, SQL, documents,
 FACTS.md and a one-page `summary.html`; not the H2 file), produced only by `scripts/snapshot.sh` and checked for
-staleness by `scripts/test.sh`. Teams create their own packs with `new-domain`.
+staleness by `scripts/test.sh`. The summary page is served at
+**https://ugur-vaadin.github.io/ai-dataset-generator/** (GitHub Pages, redeployed by `.github/workflows/pages.yml`
+on every push that touches `datasets/`). Teams create their own packs with `new-domain`.
 
 ## Quick start
 
