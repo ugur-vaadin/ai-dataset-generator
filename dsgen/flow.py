@@ -53,6 +53,7 @@ from __future__ import annotations
 
 import ast
 import datetime as dt
+import math
 import os
 import re
 import tomllib
@@ -581,7 +582,8 @@ def _aggregate(env: Env, kind: str, rest: str, entity: str):
     vals = [float(r.get(col)) for r in rows if r.get(col) not in (None, "")]
     if not vals:
         return 0 if kind in ("sum",) else None
-    return {"sum": sum(vals), "max": max(vals), "min": min(vals), "avg": sum(vals) / len(vals)}[kind]
+    # math.fsum: the same result on every Python version (3.12 changed how sum() adds floats)
+    return {"sum": math.fsum(vals), "max": max(vals), "min": min(vals), "avg": math.fsum(vals) / len(vals)}[kind]
 
 
 # ---------------------------------------------------------------------------

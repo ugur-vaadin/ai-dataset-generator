@@ -56,8 +56,8 @@ def gen_products(ctx: Ctx):
     fixed_total = sum(s.product_count for s in SUPPLIERS if s.product_count)
     flexible = [s for s in SUPPLIERS if not s.product_count]
     # weight flexible suppliers by demand of their categories
-    weights = [sum(CAT_BY_CODE[c].demand for c in s.categories) for s in flexible]
-    wsum = sum(weights)
+    weights = [math.fsum(CAT_BY_CODE[c].demand for c in s.categories) for s in flexible]
+    wsum = math.fsum(weights)
     remaining = max(0, target_total - fixed_total)
     counts = {s.code: max(12, int(round(remaining * w / wsum))) for s, w in zip(flexible, weights)}
     for s in SUPPLIERS:
@@ -79,7 +79,7 @@ def gen_products(ctx: Ctx):
             per_cat = {}
             left = n
             for c, w in zip(s.categories[:-1], ws[:-1]):
-                k = int(round(n * w / sum(ws)))
+                k = int(round(n * w / math.fsum(ws)))
                 per_cat[c] = k
                 left -= k
             per_cat[s.categories[-1]] = left

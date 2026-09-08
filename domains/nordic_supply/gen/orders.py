@@ -165,7 +165,7 @@ def build_order(ctx: Ctx, customer, placed_at: TS, line_specs, ov=None):
         delivered_date = to_weekday(ship_date + dt.timedelta(days=base_transit + extra))
         delivered = delivered_date <= ctx.as_of
         delivered_at = ts_on(rng, delivered_date, 8, 15) if delivered else None
-        weight = sum(l["quantity"] * float(l["_p"]["weight_kg"]) for l in glines)
+        weight = math.fsum(l["quantity"] * float(l["_p"]["weight_kg"]) for l in glines)   # fsum: identical on every Python (3.12 changed sum() for floats)
         units = sum(l["quantity"] for l in glines)
         pallets = 0 if weight < 40 else math.ceil(weight / 250)
         pallets = max(pallets, ov.get("force_pallets", 0)) if planned == promised_ship else pallets

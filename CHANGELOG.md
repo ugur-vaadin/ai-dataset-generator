@@ -14,6 +14,7 @@ Framework:
 * `verify` checks every company-like name in the pools and the data against a denylist of real Nordic and outdoor brands,
   retailers and carriers (`dsgen/names.py`; packs extend it with `[names] deny` / `allow`), and flags generic shop words next
   to a real town. `REVIEW.md` ends with a name inventory by source for a person to scan. Rule added to `AGENTS.md`.
+* Byte-identical output across Python 3.11–3.13: float totals (shipment weights, flow-engine `sum`/`avg`, catalogue weights) use `math.fsum`, because Python 3.12 changed how `sum()` adds floats and the last decimal of some weights flipped, which made the snapshot check fail on 3.11 in CI. Verified: all four packs hash-identical on 3.11 and 3.13.
 * `scripts/test.sh` runs every pack for three more as-of dates (first working day, month end, a Monday the 1st) so the
   "move the demo in time" promise is tested. A GitHub Actions workflow runs the suite on Python 3.11 and 3.13.
 * `contact` e-mail addresses are unique per pack rule (`unique = true`), enforced by the generic check.
