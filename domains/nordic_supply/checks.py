@@ -67,19 +67,19 @@ def run(con, manifest, check, q, one):
     check("no product is short everywhere without an inbound date", one("SELECT COUNT(*) FROM inventory WHERE on_hand < reorder_point AND next_inbound_date IS NULL") == 0)
 
     # --- case 3 anchor
-    fjv = q("SELECT cat.name, COUNT(*) FROM products p JOIN suppliers s ON s.id=p.supplier_id JOIN categories cat ON cat.id=p.category_id WHERE s.name='Fjellvind AS' AND p.active=1 GROUP BY cat.name")
-    check("case 3: Fjellvind has 240 active products", sum(n for _, n in fjv) == 240, str(fjv))
+    fjv = q("SELECT cat.name, COUNT(*) FROM products p JOIN suppliers s ON s.id=p.supplier_id JOIN categories cat ON cat.id=p.category_id WHERE s.name='Skarvind AS' AND p.active=1 GROUP BY cat.name")
+    check("case 3: Skarvind has 240 active products", sum(n for _, n in fjv) == 240, str(fjv))
     check("case 3: across exactly 3 categories", len(fjv) == 3)
     nm = manifest["first_of_next_month"]
-    promo_today = one("SELECT COUNT(DISTINCT pr.product_id) FROM promotions pr JOIN products p ON p.id=pr.product_id JOIN suppliers s ON s.id=p.supplier_id WHERE s.name='Fjellvind AS' AND ? BETWEEN pr.starts_on AND pr.ends_on", as_of)
-    promo_nm = one("SELECT COUNT(DISTINCT pr.product_id) FROM promotions pr JOIN products p ON p.id=pr.product_id JOIN suppliers s ON s.id=p.supplier_id WHERE s.name='Fjellvind AS' AND ? BETWEEN pr.starts_on AND pr.ends_on", nm)
+    promo_today = one("SELECT COUNT(DISTINCT pr.product_id) FROM promotions pr JOIN products p ON p.id=pr.product_id JOIN suppliers s ON s.id=p.supplier_id WHERE s.name='Skarvind AS' AND ? BETWEEN pr.starts_on AND pr.ends_on", as_of)
+    promo_nm = one("SELECT COUNT(DISTINCT pr.product_id) FROM promotions pr JOIN products p ON p.id=pr.product_id JOIN suppliers s ON s.id=p.supplier_id WHERE s.name='Skarvind AS' AND ? BETWEEN pr.starts_on AND pr.ends_on", nm)
     layout = manifest["anchors"]["case3_promotions"]
     exp_today = layout["active_today_and_on_first_of_next_month"] + layout["active_today_but_ends_before_first_of_next_month"]
     exp_nm = layout["active_today_and_on_first_of_next_month"] + layout["starts_after_today_before_first_of_next_month"]
-    check(f"case 3: Fjellvind promotions active today = {exp_today}", promo_today == exp_today, str(promo_today))
-    check(f"case 3: Fjellvind promotions active on 1st of next month = {exp_nm}", promo_nm == exp_nm, str(promo_nm))
+    check(f"case 3: Skarvind promotions active today = {exp_today}", promo_today == exp_today, str(promo_today))
+    check(f"case 3: Skarvind promotions active on 1st of next month = {exp_nm}", promo_nm == exp_nm, str(promo_nm))
     check("case 3: the two readings of 'already on promotion' differ", promo_today != promo_nm)
-    check("case 3: Fjellvind has no scheduled future price", one("SELECT COUNT(*) FROM price_history h JOIN products p ON p.id=h.product_id JOIN suppliers s ON s.id=p.supplier_id WHERE s.name='Fjellvind AS' AND h.valid_from > ?", as_of) == 0)
+    check("case 3: Skarvind has no scheduled future price", one("SELECT COUNT(*) FROM price_history h JOIN products p ON p.id=h.product_id JOIN suppliers s ON s.id=p.supplier_id WHERE s.name='Skarvind AS' AND h.valid_from > ?", as_of) == 0)
     report["summaries"]["case3"] = {"active_products_by_category": dict(fjv), "on_promotion_today": promo_today,
                                     "on_promotion_first_of_next_month": promo_nm,
                                     "affected_if_excluding_today": 240 - promo_today, "affected_if_excluding_next_month": 240 - promo_nm}
@@ -120,6 +120,37 @@ def run(con, manifest, check, q, one):
     A6 = manifest["anchors"]["case2"]["A6_pricing_dispute"]
     check("e-mail 06: the promotion it names covered the order date", one("SELECT COUNT(*) FROM promotions pr JOIN products p ON p.id=pr.product_id WHERE p.sku=? AND pr.name=? AND pr.starts_on<=? AND pr.ends_on>=?",
           A6["lines"][0]["sku"], A6["promo_name"], A6["placed_at"][:10], A6["placed_at"][:10]) == 1)
+    # --- after-sales
+    check("RMA authorised after the claim was opened", one("SELECT COUNT(*) FROM return_authorisations r JOIN claims c ON c.id=r.claim_id WHERE r.authorised_at < c.opened_at") == 0)
+    check("RMA received after authorised, inspected after received", one("SELECT COUNT(*) FROM return_authorisations WHERE (received_at IS NOT NULL AND received_at < authorised_at) OR (inspected_at IS NOT NULL AND inspected_at < received_at)") == 0)
+    check("RMA status agrees with its dates", one("SELECT COUNT(*) FROM return_authorisations WHERE (status IN ('RECEIVED','INSPECTED','CLOSED') AND received_at IS NULL) OR (status IN ('INSPECTED','CLOSED') AND inspected_at IS NULL) OR (status IN ('AUTHORISED','IN_TRANSIT','CANCELLED') AND received_at IS NOT NULL)") == 0)
+    check("RMAs only for claim types that send goods back", one("SELECT COUNT(*) FROM return_authorisations r JOIN claims c ON c.id=r.claim_id WHERE c.claim_type NOT IN ('RETURN_REQUEST','WRONG_ITEM','QUALITY_DEFECT','DAMAGED')") == 0)
+    check("return line quantity <= claimed quantity", one("SELECT COUNT(*) FROM return_lines rl JOIN claim_lines cl ON cl.id=rl.claim_line_id WHERE rl.quantity > cl.quantity_affected") == 0)
+    check("inspection outcome only on inspected RMAs", one("SELECT COUNT(*) FROM return_lines rl JOIN return_authorisations r ON r.id=rl.return_id WHERE (r.inspected_at IS NULL) <> (rl.disposition IS NULL)") == 0)
+    check("credit note issued after the claim was resolved", one("SELECT COUNT(*) FROM credit_notes n JOIN claims c ON c.id=n.claim_id WHERE c.resolved_at IS NOT NULL AND n.issued_at < c.resolved_at") == 0)
+    check("credit note amount = the claim's approved amount", one("SELECT COUNT(*) FROM credit_notes n JOIN claims c ON c.id=n.claim_id WHERE ABS(n.amount - c.approved_amount) > 0.005") == 0)
+    check("every approved claim amount has one credit note", one("SELECT COUNT(*) FROM claims c WHERE c.approved_amount > 0 AND c.status IN ('APPROVED','RESOLVED','CLOSED') AND (SELECT COUNT(*) FROM credit_notes n WHERE n.claim_id=c.id) <> 1 AND date(COALESCE(c.resolved_at, c.opened_at)) <= date(?, '-1 day')", as_of) == 0)
+    check("nothing after as_of in after-sales tables", one("SELECT COUNT(*) FROM (SELECT authorised_at t FROM return_authorisations UNION ALL SELECT received_at FROM return_authorisations UNION ALL SELECT inspected_at FROM return_authorisations UNION ALL SELECT issued_at FROM credit_notes UNION ALL SELECT moved_at FROM stock_movements) WHERE t IS NOT NULL AND date(t) > ?", as_of) == 0)
+    # --- stock ledger (indexes first: 60k movements against 50k shipment lines must not scan)
+    con.execute("CREATE INDEX IF NOT EXISTS ix_sm_ref ON stock_movements(reference, product_id, warehouse_id)")
+    con.execute("CREATE INDEX IF NOT EXISTS ix_sm_key ON stock_movements(product_id, warehouse_id, id)")
+    con.execute("CREATE INDEX IF NOT EXISTS ix_sl_ship ON shipment_lines(shipment_id)")
+    last = ("(SELECT product_id, warehouse_id, balance_after FROM (SELECT product_id, warehouse_id, balance_after, "
+            "ROW_NUMBER() OVER (PARTITION BY product_id, warehouse_id ORDER BY id DESC) rn FROM stock_movements) WHERE rn = 1)")
+    check("stock balance never negative", one("SELECT COUNT(*) FROM stock_movements WHERE balance_after < 0") == 0)
+    check("ledger ends at inventory.on_hand for every stocked product", one(f"SELECT COUNT(*) FROM inventory i JOIN {last} l ON l.product_id=i.product_id AND l.warehouse_id=i.warehouse_id WHERE l.balance_after <> i.on_hand") == 0)
+    check("ledger runs to zero where no inventory row exists", one(f"SELECT COUNT(*) FROM {last} l WHERE NOT EXISTS (SELECT 1 FROM inventory i WHERE i.product_id=l.product_id AND i.warehouse_id=l.warehouse_id) AND l.balance_after <> 0") == 0)
+    check("every shipment line is a SHIPMENT movement of the same quantity", one("SELECT COUNT(*) FROM shipment_lines sl JOIN shipments s ON s.id=sl.shipment_id JOIN order_lines ol ON ol.id=sl.order_line_id WHERE NOT EXISTS (SELECT 1 FROM stock_movements m WHERE m.movement_type='SHIPMENT' AND m.reference=s.shipment_number AND m.product_id=ol.product_id AND m.warehouse_id=s.warehouse_id AND m.quantity = -sl.quantity)") == 0)
+    check("ledger balances are consistent in time order", one("SELECT COUNT(*) FROM (SELECT quantity, balance_after, LAG(balance_after) OVER (PARTITION BY product_id, warehouse_id ORDER BY id) prev FROM stock_movements) WHERE prev IS NOT NULL AND prev + quantity <> balance_after") == 0)
+    check("stock-count adjustments are rare", one("SELECT COUNT(*) FROM stock_movements WHERE movement_type='ADJUSTMENT'") <= one("SELECT COUNT(*) FROM inventory") * 0.05)
+    report["summaries"]["aftersales"] = {
+        "rma_by_status": dict(q("SELECT status, COUNT(*) FROM return_authorisations GROUP BY 1 ORDER BY 2 DESC")),
+        "credit_notes_last_month_by_reason": dict(q("SELECT reason, ROUND(SUM(amount), 2) FROM credit_notes WHERE strftime('%Y-%m', issued_at)=? GROUP BY 1 ORDER BY 2 DESC", lm)),
+        "credit_notes_total": one("SELECT COUNT(*) FROM credit_notes"),
+        "movements_by_type": dict(q("SELECT movement_type, COUNT(*) FROM stock_movements GROUP BY 1 ORDER BY 2 DESC")),
+        "restocked_units": one("SELECT COALESCE(SUM(quantity),0) FROM stock_movements WHERE movement_type='RETURN'"),
+        "messy": manifest["anchors"].get("messy", {}),
+    }
     report["summaries"]["distributions"] = {
         "order_status": dict(q("SELECT status, COUNT(*) FROM orders GROUP BY status ORDER BY 2 DESC")),
         "claim_status": dict(q("SELECT status, COUNT(*) FROM claims GROUP BY status ORDER BY 2 DESC")),

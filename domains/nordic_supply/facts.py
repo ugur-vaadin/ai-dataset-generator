@@ -64,6 +64,17 @@ def sections(m, v) -> str:
     L.append(f"| Promotion layout | {p['active_today_and_on_first_of_next_month']} run now and past the 1st; {p['active_today_but_ends_before_first_of_next_month']} run now but end before; "
              f"{p['starts_after_today_before_first_of_next_month']} start after today but before the 1st; {p['ended_before_today']} ended earlier |")
     L.append(f"| Scheduled future prices (other suppliers) | {m['anchors'].get('scheduled_future_prices', 0)} |")
+    a = s.get("aftersales", {})
+    if a:
+        L.append("\n## After-sales and stock\n")
+        L.append("Return authorisations by status: " + ", ".join(f"{k} {n}" for k, n in a["rma_by_status"].items()))
+        L.append(f"\nCredit notes: {a['credit_notes_total']} in total; issued in {c1['last_month']} by reason: "
+                 + (", ".join(f"{k} {v:,.2f} EUR" for k, v in a["credit_notes_last_month_by_reason"].items()) or "none"))
+        L.append("\nStock movements: " + ", ".join(f"{k} {n:,}" for k, n in a["movements_by_type"].items())
+                 + f"; the last balance per product and warehouse equals inventory.on_hand; {a['restocked_units']} units came back into stock from returns.")
+        mz = a.get("messy") or {}
+        L.append("\nMessy-data pass: " + ("**on** — " + ", ".join(f"{k} {v}" for k, v in mz.items() if k not in ("enabled", "share")) if mz.get("enabled")
+                 else "off (enable with `--config domains/nordic_supply/config-messy.toml`)."))
     L.append("\n## Distributions\n")
     d = s["distributions"]
     L.append("Order status: " + ", ".join(f"{k} {n:,}" for k, n in d["order_status"].items()))

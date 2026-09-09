@@ -6,7 +6,7 @@ bulk change). Its flow is Python (`lifecycle.py` + `gen/`) because it uses mecha
 not express (inventory reacting to orders, partial shipments); the property and insurance packs show the
 declarative form.
 
-* `docs/data-model.md` — every table and why it exists, business rules, what the model sees.
+* `docs/data-model.md` — every table and why it exists (including returns, credit notes and the stock ledger), business rules, what the model sees.
 * `docs/demo-scenarios.md` — what each demo prompt should find, and what to check before presenting.
 * The numbers for the current generation are in the published snapshot, `datasets/nordic_supply/FACTS.md`.
 
@@ -16,4 +16,5 @@ Files: `domain.toml` (entities, model-facing text), `config.toml` (volumes, rate
 
 ```bash
 python3 -m dsgen nordic_supply check --pg --h2-file
+python3 -m dsgen nordic_supply check --config domains/nordic_supply/config-messy.toml   # roughened master data for the lookup demo
 ```

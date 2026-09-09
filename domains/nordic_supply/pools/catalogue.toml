@@ -178,7 +178,7 @@ types = [{ name = "Trekking Poles", kind = "LENGTH", mult = 1.0 }, { name = "Lin
 
 [[supplier]]
 code = "FJV"
-name = "Fjellvind AS"
+name = "Skarvind AS"
 country = "NO"
 categories = ["TNT", "SLP", "PCK"]
 product_count = 240

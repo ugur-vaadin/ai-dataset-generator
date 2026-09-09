@@ -1,13 +1,13 @@
 {
   "scenario": "A1_damaged_pallet",
   "file": "photos/pallet2-damage.jpg",
-  "prompt": "Realistic smartphone photo taken inside a small sports shop's back room in Finland. A wooden EUR pallet\nwith cardboard cartons of camping tents; the stretch wrap is torn open and the bottom cartons are crushed and\ndented, one carton split showing a green tent bag. Cartons carry a plain fictional brand label 'Fjellvind'\nand no other readable text or logos. Fluorescent lighting, slightly tilted framing, no people.",
-  "caption": "Pallet 2 of SH-2026-007802, delivered 2026-09-01 to Erävakka Tampere",
+  "prompt": "Realistic smartphone photo taken inside a small sports shop's back room in Finland. A wooden EUR pallet\nwith cardboard cartons of camping tents; the stretch wrap is torn open and the bottom cartons are crushed and\ndented, one carton split showing a green tent bag. Cartons carry a plain fictional brand label 'Skarvind'\nand no other readable text or logos. Fluorescent lighting, slightly tilted framing, no people.",
+  "caption": "Pallet 2 of SH-2026-007802, delivered 2026-09-01 to Retkivakka Tampere",
   "generated_at": "2026-09-07T15:31:56+00:00",
   "requested_provider": "openai",
   "anchor": {
     "order_number": "SO-2026-007365",
-    "customer": "Erävakka Tampere",
+    "customer": "Retkivakka Tampere",
     "customer_number": "C-10001",
     "shipment_number": "SH-2026-007802"
   },

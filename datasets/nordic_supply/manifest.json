@@ -1,7 +1,7 @@
 {
-  "framework_version": "2.4.0",
+  "framework_version": "2.5.0",
   "domain": "nordic_supply",
-  "domain_version": "1.3.0",
+  "domain_version": "1.4.0",
   "as_of": "2026-09-07",
   "seed": 20260907,
   "scale": 1.0,
@@ -42,13 +42,17 @@
     "delivery_events": 79015,
     "claims": 844,
     "claim_lines": 936,
+    "return_authorisations": 294,
+    "return_lines": 435,
+    "credit_notes": 687,
+    "stock_movements": 77081,
     "saved_widgets": 2
   },
   "anchors": {
     "case3_supplier": {
       "supplier_id": 1,
       "code": "FJV",
-      "name": "Fjellvind AS",
+      "name": "Skarvind AS",
       "categories": [
         "Tents & Shelters",
         "Sleeping Bags & Mats",
@@ -68,11 +72,11 @@
       "A1_damaged_pallet": {
         "order_number": "SO-2026-007365",
         "order_id": 12421,
-        "customer": "Erävakka Tampere",
+        "customer": "Retkivakka Tampere",
         "customer_number": "C-10001",
         "customer_id": 1,
         "contact": "Elina Järvinen",
-        "contact_email": "elina.jarvinen@eravakka.example",
+        "contact_email": "elina.jarvinen@retkivakka.example",
         "contact_phone": "+358 40 424 0335",
         "contact_id": 1,
         "placed_at": "2026-08-25 11:30:08",
@@ -80,7 +84,7 @@
         "lines": [
           {
             "line": 1,
-            "product": "Fjellvind Kaamos Lite Tent 4P Midnight Blue",
+            "product": "Skarvind Kaamos Lite Tent 4P Midnight Blue",
             "sku": "FJV-TNT-0045",
             "qty": 24,
             "unit_price": "238.90",
@@ -88,7 +92,7 @@
           },
           {
             "line": 2,
-            "product": "Fjellvind Polar Pro Tent 4P Lichen",
+            "product": "Skarvind Polar Pro Tent 4P Lichen",
             "sku": "FJV-TNT-0083",
             "qty": 18,
             "unit_price": "278.90",
@@ -96,7 +100,7 @@
           },
           {
             "line": 3,
-            "product": "Fjellvind Skog Plus Camp Pillow Moss Green",
+            "product": "Skarvind Skog Plus Camp Pillow Moss Green",
             "sku": "FJV-SLP-0052",
             "qty": 30,
             "unit_price": "62.90",
@@ -104,7 +108,7 @@
           },
           {
             "line": 4,
-            "product": "Fjellvind Hav Lite Sleeping Mat Forest",
+            "product": "Skarvind Hav Lite Sleeping Mat Forest",
             "sku": "FJV-SLP-0064",
             "qty": 24,
             "unit_price": "152.00",
@@ -112,7 +116,7 @@
           },
           {
             "line": 5,
-            "product": "Fjellvind Hav 2.0 Sleeping Mat Sunset Yellow",
+            "product": "Skarvind Hav 2.0 Sleeping Mat Sunset Yellow",
             "sku": "FJV-SLP-0069",
             "qty": 36,
             "unit_price": "112.50",
@@ -121,7 +125,7 @@
         ],
         "shipment_number": "SH-2026-007802",
         "shipment_id": 12956,
-        "carrier": "Nordfrakt",
+        "carrier": "Kalottfrakt",
         "shipped_at": "2026-08-31 12:31:04",
         "delivered_at": "2026-09-01 13:29:33",
         "pallet_count": 2,
@@ -129,13 +133,13 @@
         "tuesday": "2026-09-01",
         "needed_by": "2026-09-11",
         "pallet_2_lines": [
-          "Fjellvind Kaamos Lite Tent 4P Midnight Blue",
-          "Fjellvind Hav Lite Sleeping Mat Forest"
+          "Skarvind Kaamos Lite Tent 4P Midnight Blue",
+          "Skarvind Hav Lite Sleeping Mat Forest"
         ],
         "pallet_1_lines": [
-          "Fjellvind Polar Pro Tent 4P Lichen",
-          "Fjellvind Skog Plus Camp Pillow Moss Green",
-          "Fjellvind Hav 2.0 Sleeping Mat Sunset Yellow"
+          "Skarvind Polar Pro Tent 4P Lichen",
+          "Skarvind Skog Plus Camp Pillow Moss Green",
+          "Skarvind Hav 2.0 Sleeping Mat Sunset Yellow"
         ]
       },
       "A2_missing_cartons": {
@@ -321,7 +325,7 @@
         ],
         "shipment_number": "SH-2026-007806",
         "shipment_id": 12960,
-        "carrier": "Nordfrakt",
+        "carrier": "Kalottfrakt",
         "shipped_at": "2026-08-11 09:55:03",
         "delivered_at": "2026-08-14 14:00:29",
         "pallet_count": 0,
@@ -369,33 +373,43 @@
         "invoiced_unit_price": "51.90",
         "expected_promo_price": "38.92"
       }
+    },
+    "aftersales": {
+      "return_authorisations": 294,
+      "credit_notes": 687,
+      "stock_movements": 77081,
+      "receipts": 27496,
+      "adjustments": 4
+    },
+    "messy": {
+      "enabled": false
     }
   },
   "document_context": {
     "A1_damaged_pallet": {
       "order_number": "SO-2026-007365",
       "order_id": 12421,
-      "customer": "Erävakka Tampere",
+      "customer": "Retkivakka Tampere",
       "customer_number": "C-10001",
       "customer_id": 1,
       "contact": "Elina Järvinen",
-      "contact_email": "elina.jarvinen@eravakka.example",
+      "contact_email": "elina.jarvinen@retkivakka.example",
       "contact_phone": "+358 40 424 0335",
       "contact_id": 1,
       "placed_at": "2026-08-25 11:30:08",
       "promised_delivery_date": "2026-09-01",
-      "lines": "{\"line\": 1, \"product\": \"Fjellvind Kaamos Lite Tent 4P Midnight Blue\", \"sku\": \"FJV-TNT-0045\", \"qty\": 24, \"unit_price\": \"238.90\", \"pallet\": 2}; {\"line\": 2, \"product\": \"Fjellvind Polar Pro Tent 4P Lichen\", \"sku\": \"FJV-TNT-0083\", \"qty\": 18, \"unit_price\": \"278.90\", \"pallet\": 1}; {\"line\": 3, \"product\": \"Fjellvind Skog Plus Camp Pillow Moss Green\", \"sku\": \"FJV-SLP-0052\", \"qty\": 30, \"unit_price\": \"62.90\", \"pallet\": 1}; {\"line\": 4, \"product\": \"Fjellvind Hav Lite Sleeping Mat Forest\", \"sku\": \"FJV-SLP-0064\", \"qty\": 24, \"unit_price\": \"152.00\", \"pallet\": 2}; {\"line\": 5, \"product\": \"Fjellvind Hav 2.0 Sleeping Mat Sunset Yellow\", \"sku\": \"FJV-SLP-0069\", \"qty\": 36, \"unit_price\": \"112.50\", \"pallet\": 1}",
+      "lines": "{\"line\": 1, \"product\": \"Skarvind Kaamos Lite Tent 4P Midnight Blue\", \"sku\": \"FJV-TNT-0045\", \"qty\": 24, \"unit_price\": \"238.90\", \"pallet\": 2}; {\"line\": 2, \"product\": \"Skarvind Polar Pro Tent 4P Lichen\", \"sku\": \"FJV-TNT-0083\", \"qty\": 18, \"unit_price\": \"278.90\", \"pallet\": 1}; {\"line\": 3, \"product\": \"Skarvind Skog Plus Camp Pillow Moss Green\", \"sku\": \"FJV-SLP-0052\", \"qty\": 30, \"unit_price\": \"62.90\", \"pallet\": 1}; {\"line\": 4, \"product\": \"Skarvind Hav Lite Sleeping Mat Forest\", \"sku\": \"FJV-SLP-0064\", \"qty\": 24, \"unit_price\": \"152.00\", \"pallet\": 2}; {\"line\": 5, \"product\": \"Skarvind Hav 2.0 Sleeping Mat Sunset Yellow\", \"sku\": \"FJV-SLP-0069\", \"qty\": 36, \"unit_price\": \"112.50\", \"pallet\": 1}",
       "shipment_number": "SH-2026-007802",
       "shipment_id": 12956,
-      "carrier": "Nordfrakt",
+      "carrier": "Kalottfrakt",
       "shipped_at": "2026-08-31 12:31:04",
       "delivered_at": "2026-09-01 13:29:33",
       "pallet_count": 2,
       "package_count": 24,
       "tuesday": "2026-09-01",
       "needed_by": "2026-09-11",
-      "pallet_2_lines": "Fjellvind Kaamos Lite Tent 4P Midnight Blue; Fjellvind Hav Lite Sleeping Mat Forest",
-      "pallet_1_lines": "Fjellvind Polar Pro Tent 4P Lichen; Fjellvind Skog Plus Camp Pillow Moss Green; Fjellvind Hav 2.0 Sleeping Mat Sunset Yellow",
+      "pallet_2_lines": "Skarvind Kaamos Lite Tent 4P Midnight Blue; Skarvind Hav Lite Sleeping Mat Forest",
+      "pallet_1_lines": "Skarvind Polar Pro Tent 4P Lichen; Skarvind Skog Plus Camp Pillow Moss Green; Skarvind Hav 2.0 Sleeping Mat Sunset Yellow",
       "as_of": "2026-09-07",
       "as_of_rfc": "Mon, 07 Sep 2026",
       "yesterday_rfc": "Sun, 06 Sep 2026",
@@ -407,13 +421,13 @@
       "contact_first": "Elina",
       "placed_date": "2026-08-25",
       "delivered_date": "2026-09-01",
-      "lines_block": ">    24 x Fjellvind Kaamos Lite Tent 4P Midnight Blue  (FJV-TNT-0045)  @ 238.90 EUR\n>    18 x Fjellvind Polar Pro Tent 4P Lichen  (FJV-TNT-0083)  @ 278.90 EUR\n>    30 x Fjellvind Skog Plus Camp Pillow Moss Green  (FJV-SLP-0052)  @ 62.90 EUR\n>    24 x Fjellvind Hav Lite Sleeping Mat Forest  (FJV-SLP-0064)  @ 152.00 EUR\n>    36 x Fjellvind Hav 2.0 Sleeping Mat Sunset Yellow  (FJV-SLP-0069)  @ 112.50 EUR",
-      "first_product": "Fjellvind Kaamos Lite Tent 4P Midnight Blue",
+      "lines_block": ">    24 x Skarvind Kaamos Lite Tent 4P Midnight Blue  (FJV-TNT-0045)  @ 238.90 EUR\n>    18 x Skarvind Polar Pro Tent 4P Lichen  (FJV-TNT-0083)  @ 278.90 EUR\n>    30 x Skarvind Skog Plus Camp Pillow Moss Green  (FJV-SLP-0052)  @ 62.90 EUR\n>    24 x Skarvind Hav Lite Sleeping Mat Forest  (FJV-SLP-0064)  @ 152.00 EUR\n>    36 x Skarvind Hav 2.0 Sleeping Mat Sunset Yellow  (FJV-SLP-0069)  @ 112.50 EUR",
+      "first_product": "Skarvind Kaamos Lite Tent 4P Midnight Blue",
       "first_qty": 24,
       "first_sku": "FJV-TNT-0045",
-      "first_brand": "Fjellvind",
-      "pallet2_tents": "Fjellvind Kaamos Lite Tent 4P Midnight Blue",
-      "first_pallet2_line": "Fjellvind Kaamos Lite Tent 4P Midnight Blue"
+      "first_brand": "Skarvind",
+      "pallet2_tents": "Skarvind Kaamos Lite Tent 4P Midnight Blue",
+      "first_pallet2_line": "Skarvind Kaamos Lite Tent 4P Midnight Blue"
     },
     "A2_missing_cartons": {
       "order_number": "SO-2026-007366",
@@ -543,7 +557,7 @@
       "first_brand": "Nietos",
       "manager_name": "Erik Andersson",
       "late_days": 7,
-      "personal_mobile": "+46 70 173 47 85",
+      "personal_mobile": "+46 70 444 75 80",
       "account_manager_email": "lars.nygaard@nordicsupply.example"
     },
     "A5_quality_defect_sv": {
@@ -561,7 +575,7 @@
       "lines": "{\"line\": 1, \"product\": \"Nordvind Ridge Pro Softshell Jacket XXL Arctic White\", \"sku\": \"NVD-SHL-0039\", \"qty\": 24, \"unit_price\": \"247.90\", \"pallet\": null}; {\"line\": 2, \"product\": \"Skjærgård Tind Plus Fleece Jacket L Petrol\", \"sku\": \"LOF-BAS-0032\", \"qty\": 18, \"unit_price\": \"23.92\", \"pallet\": null}",
       "shipment_number": "SH-2026-007806",
       "shipment_id": 12960,
-      "carrier": "Nordfrakt",
+      "carrier": "Kalottfrakt",
       "shipped_at": "2026-08-11 09:55:03",
       "delivered_at": "2026-08-14 14:00:29",
       "pallet_count": 0,
@@ -648,62 +662,66 @@
     "users": "9cd5f41aca9da311db032e9f38fcea010f881e48f43f5bc054ca7c66d1301024",
     "warehouses": "1604d034c23ee51a425d56c03547d1871258478a8effd927b46d945f722d1676",
     "categories": "7c95e73283e5f58b3c1c4be954ac29236b5418f5bbd76985270ec2090dd32cd2",
-    "suppliers": "80315b1b26dbfc5142482862955d6bfb83566ffdacdde429e0160eedecda3e35",
-    "products": "448df171a428f24e211a58096d302a7a371e1fe4fc925f6ea9d8aa37bf54c944",
+    "suppliers": "ac7d9c5d7a20969c0a71f4739c630a92f52b04fc0e49ca6897c525254db52592",
+    "products": "d5f5e336f9de8c73d4b7055402df4ee626c809861ca5f72f960b72a22dcfed79",
     "price_history": "d362b0133218b952fc05566484323d62525f44cc079ecb657ccf7f15b5f694e8",
     "promotions": "9f09000a5962b775b0ab6471e21b20998da9ea22db6506d126724dcf0b338a29",
     "inventory": "67ba7defd3244da4a923f558618022d178b31faca85757b054b4fbf05d580d5b",
-    "customers": "558e54b0a2ad18ecf4bd747e82f014c033aa8e4f6415d25fe32883fe2d26640b",
-    "customer_contacts": "8e6afb6e644ac4e020eab0b60e2bf9d00f2551591451d039afb84a1553b9d649",
+    "customers": "4df335c37cfaf8c11f3f5656de7f649403a1cd027c80c4e581c1cb8abd98c7e9",
+    "customer_contacts": "0875214fa304c8006ce6e1220fc7f9c3361d852d167d901c99ccbf4078659b6b",
     "delivery_addresses": "2ae3303a30bffa10f0d7264f2787749e2b574eb8a765441142f50d811c7e2b57",
-    "orders": "8a8b86120cde836b670cb5adf2e926fda12e4544dc26eb4197f1916ec0fdb18e",
+    "orders": "f000c318a0dc045d720f20b670f125ee7aecd727a0796e8165cb14776ddaf92e",
     "order_lines": "236b677c75d0d0d0eead3ff46147ae6d1775eff1a3c27b21897d40e20fc59ca8",
-    "shipments": "e2b8b12fb35cf5490c13e26ce372ec08a04597dbe52c26dd0b4dd1e0d0d75b66",
+    "shipments": "3e75a2485932b49d086d8ff2dac6bd460c6d4494d67d5c359b5f6b8dc0566281",
     "shipment_lines": "c45493c3def8778fadd2115442c7992fdd916fdfcf02b0ff7e4eac86e46b06e0",
-    "delivery_events": "0e44258f945d2dd0629d9bc7f46ecf5008188cc925e0c84d363edb634b8574b1",
-    "claims": "ce6dce6528ff264505f5e6c98b6702b946af65943fc6e6236a5f66c252cd6604",
+    "delivery_events": "b9907c679b638f1c60c2d21d3a49689d8278a168d216dd588c41e90b4f17e78e",
+    "claims": "7161ba6b641355d9f4bea8d6c69483856043ea49bfcada62d07388a73b6176c8",
     "claim_lines": "641c04491dfb66738cd94f6921410971f17d1f118e9cba941bb1bc1eca080678",
+    "return_authorisations": "b0fc8fa99d12e63d13807b2508c5c5c1554b5379838b3f1a11e78ed27ccbfbf2",
+    "return_lines": "516cfaaae69ca52fa783d2618afe3f388bc54f17e196b54352a999b57f553ff4",
+    "credit_notes": "5b7f82adde655d32ff3abaf82889300f6ce4978b1b53681fee395802a3d52f1c",
+    "stock_movements": "dd87472d1bac597c8a5b788487ce77763a8eddc83057d3f62499a4326ef22047",
     "saved_widgets": "93e61d7158fb635b75391d0d5625ff80c7bbeefd668b0a82ed4f6f0a62f26e71"
   },
   "review_queue": {
-    "items": 60,
+    "items": 66,
     "demo_critical": 12,
-    "approved": 60
+    "approved": 66
   },
   "llm_estimate": {
-    "text_items": 17955,
-    "text_output_tokens": 219135,
+    "text_items": 18155,
+    "text_output_tokens": 221103,
     "images": 1,
     "cost_by_mode_usd": {
       "claude-haiku-4-5": {
         "templates_by_code (LLM writes nothing at run time)": 0.0,
         "llm_writes_templates, code expands": 0.05,
-        "llm_writes_every_item": 4.88
+        "llm_writes_every_item": 4.93
       },
       "claude-haiku-4-5 (batch API, 50%)": {
         "templates_by_code (LLM writes nothing at run time)": 0.0,
         "llm_writes_templates, code expands": 0.03,
-        "llm_writes_every_item": 2.44
+        "llm_writes_every_item": 2.46
       },
       "claude-sonnet-5": {
         "templates_by_code (LLM writes nothing at run time)": 0.0,
-        "llm_writes_templates, code expands": 0.1,
-        "llm_writes_every_item": 9.75
+        "llm_writes_templates, code expands": 0.11,
+        "llm_writes_every_item": 9.86
       },
       "claude-sonnet-5 (batch API, 50%)": {
         "templates_by_code (LLM writes nothing at run time)": 0.0,
-        "llm_writes_templates, code expands": 0.05,
-        "llm_writes_every_item": 4.88
+        "llm_writes_templates, code expands": 0.06,
+        "llm_writes_every_item": 4.93
       },
       "claude-opus-5": {
         "templates_by_code (LLM writes nothing at run time)": 0.0,
-        "llm_writes_templates, code expands": 0.24,
-        "llm_writes_every_item": 24.39
+        "llm_writes_templates, code expands": 0.27,
+        "llm_writes_every_item": 24.65
       },
       "claude-opus-5 (batch API, 50%)": {
         "templates_by_code (LLM writes nothing at run time)": 0.0,
-        "llm_writes_templates, code expands": 0.12,
-        "llm_writes_every_item": 12.2
+        "llm_writes_templates, code expands": 0.14,
+        "llm_writes_every_item": 12.32
       }
     }
   }

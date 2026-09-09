@@ -20,4 +20,8 @@
 \copy delivery_events FROM './datasets/nordic_supply/csv/delivery_events.csv' WITH (FORMAT csv, HEADER true)
 \copy claims FROM './datasets/nordic_supply/csv/claims.csv' WITH (FORMAT csv, HEADER true)
 \copy claim_lines FROM './datasets/nordic_supply/csv/claim_lines.csv' WITH (FORMAT csv, HEADER true)
+\copy return_authorisations FROM './datasets/nordic_supply/csv/return_authorisations.csv' WITH (FORMAT csv, HEADER true)
+\copy return_lines FROM './datasets/nordic_supply/csv/return_lines.csv' WITH (FORMAT csv, HEADER true)
+\copy credit_notes FROM './datasets/nordic_supply/csv/credit_notes.csv' WITH (FORMAT csv, HEADER true)
+\copy stock_movements FROM './datasets/nordic_supply/csv/stock_movements.csv' WITH (FORMAT csv, HEADER true)
 \copy saved_widgets FROM './datasets/nordic_supply/csv/saved_widgets.csv' WITH (FORMAT csv, HEADER true)

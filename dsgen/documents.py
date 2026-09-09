@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import base64
 import datetime as dt
+import io
 import json
 import os
 import urllib.request
@@ -121,17 +122,50 @@ def _openai_image(prompt: str, target: str = "") -> tuple[bytes, dict]:
 
 
 def _google_image(prompt: str, target: str = "") -> tuple[bytes, dict]:
+    """Google: a Gemini image model through generateContent (default gemini-2.5-flash-image, which has a free tier
+    with an AI Studio key), or an Imagen model through predict when DSGEN_GOOGLE_IMAGE_MODEL starts with 'imagen'."""
     key = os.environ.get("GOOGLE_API_KEY")
     if not key:
         raise RuntimeError("GOOGLE_API_KEY not set")
-    model = os.environ.get("DSGEN_GOOGLE_IMAGE_MODEL", "imagen-4.0-generate-001")
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:predict?key={key}"
-    body = {"instances": [{"prompt": prompt}], "parameters": {"sampleCount": 1, "aspectRatio": "4:3"}}
-    req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=180) as r:
-        data = json.load(r)
-    return base64.b64decode(data["predictions"][0]["bytesBase64Encoded"]), {"model": model, "provider": "google",
-                                                                            "terms_note": "Google Imagen: commercial use allowed, SynthID watermark; terms checked 2026-09-07 (docs/image-providers.md)."}
+    model = os.environ.get("DSGEN_GOOGLE_IMAGE_MODEL", "gemini-2.5-flash-image")
+    headers = {"Content-Type": "application/json", "x-goog-api-key": key}
+    if model.startswith("imagen"):
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:predict"
+        body = {"instances": [{"prompt": prompt}], "parameters": {"sampleCount": 1, "aspectRatio": "4:3"}}
+        req = urllib.request.Request(url, data=json.dumps(body).encode(), headers=headers)
+        with urllib.request.urlopen(req, timeout=180) as r:
+            data = json.load(r)
+        raw, mime = base64.b64decode(data["predictions"][0]["bytesBase64Encoded"]), data["predictions"][0].get("mimeType", "image/png")
+        note = "Google Imagen (paid tier only): commercial use allowed, SynthID watermark; terms checked 2026-09-07 (docs/image-providers.md)."
+    else:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+        body = {"contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"responseModalities": ["IMAGE"]}}
+        req = urllib.request.Request(url, data=json.dumps(body).encode(), headers=headers)
+        with urllib.request.urlopen(req, timeout=180) as r:
+            data = json.load(r)
+        part = next(p for c in data.get("candidates", []) for p in c.get("content", {}).get("parts", []) if "inlineData" in p)
+        raw, mime = base64.b64decode(part["inlineData"]["data"]), part["inlineData"].get("mimeType", "image/png")
+        note = ("Google Gemini image model: SynthID watermark; on the free (unpaid) tier Google may use prompts and outputs to improve "
+                "its services, on the paid tier it does not. Terms checked 2026-09-09 (docs/image-providers.md).")
+    raw = _convert_to_extension(raw, mime, target)
+    return raw, {"model": model, "provider": "google", "source_mime_type": mime, "terms_note": note}
+
+
+def _convert_to_extension(raw: bytes, mime: str, target: str) -> bytes:
+    """A provider that returns PNG for a .jpg target gets converted with Pillow when available; otherwise the bytes
+    are kept and the provenance records the real MIME type."""
+    ext = os.path.splitext(target)[1].lower()
+    want = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp"}.get(ext)
+    if not want or want == mime:
+        return raw
+    try:
+        from PIL import Image
+        img = Image.open(io.BytesIO(raw)).convert("RGB")
+        buf = io.BytesIO()
+        img.save(buf, {"image/jpeg": "JPEG", "image/png": "PNG", "image/webp": "WEBP"}[want], quality=90)
+        return buf.getvalue()
+    except Exception:
+        return raw
 
 
 PROVIDERS = {"openai": _openai_image, "google": _google_image}

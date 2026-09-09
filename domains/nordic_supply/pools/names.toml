@@ -77,7 +77,7 @@ contact_roles = ["Store Manager", "Purchasing", "Owner", "Warehouse", "Assistant
 # Stores the case 2 e-mails come from. Created first, stable ids 1..n.
 
 [[anchor_store]]
-chain = "Erävakka"
+chain = "Retkivakka"
 country = "FI"
 city = "Tampere"
 
@@ -105,3 +105,8 @@ city = "Aarhus"
 chain = "Suuntima Sport"
 country = "FI"
 city = "Rovaniemi"
+
+[names]
+# Real companies found in registries while checking our invented names (2026-09-09); keep them out for good.
+deny = ["fjellvind", "erävakka", "eravakka", "eräkontti", "erakontti", "nordfrakt", "vindfjell"]
+allow = []

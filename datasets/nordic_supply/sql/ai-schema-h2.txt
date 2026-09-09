@@ -5,10 +5,6 @@ The application tells you today's date. "Last month" means the previous calendar
 
 TABLES — table(columns), then what it holds and what non-obvious columns mean.
 
-users(id, username, full_name, email, role, active, created_at)
-  Nordic Supply employees.
-  - role: ADMIN, ANALYST, SUPPORT_AGENT, CATALOGUE_MANAGER, ACCOUNT_MANAGER, WAREHOUSE
-
 warehouses(id, code, name, country, city, postal_code)
   Our warehouses: VAN Vantaa (FI), GOT Göteborg (SE), OSL Oslo cross-dock (NO).
 
@@ -17,7 +13,7 @@ categories(id, code, name, season)
   - season: SPRING, SUMMER, AUTUMN, WINTER, ALL
 
 suppliers(id, code, name, country, city, contact_email, lead_time_days, active)
-  Brands/manufacturers we buy from, e.g. 'Fjellvind AS'.
+  Brands/manufacturers we buy from, e.g. 'Skarvind AS'.
 
 products(id, sku, ean, name, description, category_id, supplier_id, product_type, variant, colour, unit, case_pack, min_order_qty, weight_kg, active, discontinued_on, created_at)
   The catalogue. Prices are NOT here: see price_history / product_current_prices.
@@ -40,12 +36,12 @@ price_history(id, product_id, list_price, currency, valid_from, valid_to, reason
   - currency: always EUR
   - valid_to: NULL on the open-ended row
   - reason: 'Initial listing', 'Annual price update', 'Supplier increase', ...
-  - created_by: -> users.id
+  - created_by: -> staff.id (users)
 
 promotions(id, product_id, name, discount_pct, promo_price, starts_on, ends_on, created_by)
   Time-boxed promotional prices. A product is 'on promotion' on a date when starts_on <= date <= ends_on.
   - product_id: -> products.id
-  - created_by: -> users.id
+  - created_by: -> staff.id (users)
 
 inventory(id, product_id, warehouse_id, on_hand, reserved, reorder_point, next_inbound_date)
   Stock per product per warehouse. Free stock = on_hand - reserved; products with lines on backorder have no free stock in the shipping warehouse and a next_inbound_date.
@@ -57,12 +53,12 @@ inventory(id, product_id, warehouse_id, on_hand, reserved, reorder_point, next_i
 customers(id, customer_number, name, chain_name, segment, country, city, postal_code, street, vat_number, email_domain, phone, credit_limit, payment_terms_days, customer_discount_pct, account_manager_id, created_at, active)
   One row per retail company we sell to.
   - customer_number: business key, e.g. 'C-10001'
-  - chain_name: groups stores of the same chain (e.g. 'Erävakka'); NULL for independents
+  - chain_name: groups stores of the same chain (e.g. 'Retkivakka'); NULL for independents
   - segment: CHAIN_STORE, INDEPENDENT, ONLINE, DEPARTMENT_STORE, RENTAL_OUTFITTER, CLUB_OR_SCHOOL
   - country: ISO-2: FI, SE, NO, DK, DE, EE
   - credit_limit: EUR
   - customer_discount_pct: customer-level discount applied to every line
-  - account_manager_id: -> users.id
+  - account_manager_id: -> staff.id (users)
 
 delivery_addresses(id, customer_id, label, street, postal_code, city, country, delivery_instructions, is_default)
   Ship-to addresses of a customer (a store, a central warehouse).
@@ -81,7 +77,7 @@ orders(id, order_number, customer_id, delivery_address_id, placed_at, channel, s
   - promised_delivery_date: the delivery date we committed to
   - total_net: order value in EUR after customer discount
   - warehouse_id: -> warehouses.id, where it ships from
-  - created_by: -> users.id; NULL for EDI/portal orders
+  - created_by: -> staff.id (users); NULL for EDI/portal orders
   - customer_reference: the customer's own PO number
 
 order_lines(id, order_id, line_number, product_id, quantity, unit_price, list_price, promotion_applied, discount_pct, line_total, status, backordered_qty, expected_restock_date)
@@ -100,7 +96,7 @@ shipments(id, shipment_number, order_id, warehouse_id, delivery_address_id, carr
   - order_id: -> orders.id
   - warehouse_id: -> warehouses.id
   - delivery_address_id: -> delivery_addresses.id
-  - carrier: Nordfrakt, Polarpost, Kalott Freight, Botnia Cargo, Havnelast, Baltic Freight Line
+  - carrier: Kalottfrakt, Polarpost, Kalott Freight, Botnia Cargo, Havnelast, Baltic Freight Line
   - delivered_at: NULL while in transit
   - status: IN_TRANSIT, DELIVERED, EXCEPTION
   - pallet_count: 0 = parcel shipment
@@ -127,7 +123,7 @@ claims(id, claim_number, customer_id, order_id, shipment_id, claim_type, status,
   - status: NEW, UNDER_REVIEW, AWAITING_CUSTOMER, APPROVED, REJECTED, RESOLVED, CLOSED
   - priority: LOW, NORMAL, HIGH, URGENT
   - source: EMAIL, PORTAL, PHONE
-  - assigned_to: -> users.id; NULL = unassigned
+  - assigned_to: -> staff.id (users); NULL = unassigned
   - needed_by: date the customer needs a resolution by
   - requested_resolution: REPLACEMENT, REDELIVERY, CREDIT, REPAIR, RETURN_AUTHORISATION
   - claimed_amount: EUR
@@ -141,10 +137,50 @@ claim_lines(id, claim_id, order_line_id, product_id, quantity_affected, pallet_n
   - product_id: -> products.id
   - amount: EUR
 
+return_authorisations(id, rma_number, claim_id, customer_id, warehouse_id, status, authorised_at, received_at, inspected_at, authorised_by, notes)
+  Return merchandise authorisations (RMAs): goods a customer sends back under a claim. One per claim at most.
+  - rma_number: e.g. 'RMA-2026-00012'
+  - claim_id: -> claims.id
+  - customer_id: -> customers.id
+  - warehouse_id: -> warehouses.id, where the goods come back to
+  - status: AUTHORISED, IN_TRANSIT, RECEIVED, INSPECTED, CLOSED, CANCELLED
+  - received_at: NULL until the goods arrive
+  - inspected_at: NULL until inspected; return_lines.condition/disposition are set then
+  - authorised_by: -> staff.id (users)
+
+return_lines(id, return_id, claim_line_id, product_id, quantity, condition, disposition)
+  The products and quantities on a return authorisation, with the inspection outcome.
+  - return_id: -> return_authorisations.id
+  - claim_line_id: -> claim_lines.id
+  - product_id: -> products.id
+  - condition: RESALABLE, DAMAGED, DEFECTIVE; NULL until inspected
+  - disposition: RESTOCK (back into inventory), SCRAP, RETURN_TO_SUPPLIER; NULL until inspected
+
+credit_notes(id, credit_note_number, customer_id, claim_id, order_id, issued_at, amount, currency, reason, status, created_by)
+  Credit notes issued to customers, almost always from an approved claim. amount is what was credited (EUR).
+  - credit_note_number: e.g. 'CN-2026-00123'
+  - customer_id: -> customers.id
+  - claim_id: -> claims.id
+  - order_id: -> orders.id
+  - amount: EUR, positive
+  - currency: always EUR
+  - reason: CLAIM (damage, shortage, wrong item, defect), GOODWILL (late delivery), PRICE_CORRECTION, RETURN
+  - status: ISSUED (not yet settled), APPLIED (settled against an invoice), CANCELLED
+  - created_by: -> staff.id (users)
+
+stock_movements(id, product_id, warehouse_id, moved_at, movement_type, quantity, reference, balance_after)
+  Stock ledger per product and warehouse. Every shipment line is a SHIPMENT movement (negative quantity), supplier deliveries are RECEIPTs (positive, reference = purchase order), restocked returns are RETURNs, stock counts are ADJUSTMENTs. balance_after is the stock in that warehouse after the movement; the last balance per product and warehouse equals inventory.on_hand.
+  - product_id: -> products.id
+  - warehouse_id: -> warehouses.id
+  - movement_type: RECEIPT, SHIPMENT, RETURN, ADJUSTMENT
+  - quantity: signed: positive into the warehouse, negative out
+  - reference: shipment_number, PO number, RMA number or 'Stock count'
+
 VIEWS
 product_current_prices (product_id, sku, name, category_id, supplier_id, list_price, valid_from) — each product's price valid today.
 late_shipments (shipment_id, shipment_number, order_id, order_number, customer_id, warehouse_id, carrier, promised_ship_date, shipped_on, promised_delivery_date, delivered_on) — shipments dispatched late and/or delivered late, both date pairs side by side.
 open_claims (all claims columns + customer_name, customer_country) — claims that are still open.
+staff (id, full_name, role, active) — employees, for joining assigned_to / created_by / account_manager_id to a name and role. Roles: ADMIN, ANALYST, SUPPORT_AGENT, CATALOGUE_MANAGER, ACCOUNT_MANAGER, WAREHOUSE.
 HINTS
 - Join keys: orders.customer_id = customers.id; order_lines.order_id = orders.id; order_lines.product_id = products.id;
   products.category_id = categories.id; products.supplier_id = suppliers.id; shipments.order_id = orders.id;

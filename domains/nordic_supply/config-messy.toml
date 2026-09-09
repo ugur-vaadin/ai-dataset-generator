@@ -1,0 +1,5 @@
+# Overlay: python3 -m dsgen nordic_supply check --config domains/nordic_supply/config-messy.toml
+# Roughens master data like a real system's, for the form-correction and fuzzy-lookup demos.
+[messy]
+enabled = true
+share = 0.04

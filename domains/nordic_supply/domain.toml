@@ -6,15 +6,15 @@
 
 [domain]
 name = "nordic_supply"
-version = "1.3.1"
+version = "1.4.0"
 company = "Nordic Supply"
 description = "Wholesaler of sports, hiking and outdoor equipment selling to retail companies in the Nordics."
 business_key_examples = { customers = "C-10001", products = "FJV-TNT-0010", orders = "SO-2026-001234", shipments = "SH-2026-001234", claims = "CL-2026-00123" }
 
 [[entity]]
 name = "users"
-description = "Nordic Supply employees."
-exposed = true
+description = "Nordic Supply employees. Not exposed to the model: it sees the staff view (id, full_name, role, active) and never e-mail addresses or usernames."
+exposed = false
 columns = [
   { name = "id", type = "INT", pk = true },
   { name = "username", type = "VARCHAR(60)", not_null = true, unique = true, pii = "name" },
@@ -51,7 +51,7 @@ columns = [
 
 [[entity]]
 name = "suppliers"
-description = "Brands/manufacturers we buy from, e.g. 'Fjellvind AS'."
+description = "Brands/manufacturers we buy from, e.g. 'Skarvind AS'."
 exposed = true
 columns = [
   { name = "id", type = "INT", pk = true },
@@ -100,7 +100,7 @@ columns = [
   { name = "valid_from", type = "DATE", not_null = true },
   { name = "valid_to", type = "DATE", desc = "NULL on the open-ended row" },
   { name = "reason", type = "VARCHAR(80)", desc = "'Initial listing', 'Annual price update', 'Supplier increase', ..." },
-  { name = "created_by", type = "INT", ref = "users.id", desc = "-> users.id" },
+  { name = "created_by", type = "INT", ref = "users.id", desc = "-> staff.id (users)" },
   { name = "created_at", type = "TIMESTAMP", not_null = true },
 ]
 
@@ -116,7 +116,7 @@ columns = [
   { name = "promo_price", type = "DECIMAL(10,2)", not_null = true },
   { name = "starts_on", type = "DATE", not_null = true },
   { name = "ends_on", type = "DATE", not_null = true },
-  { name = "created_by", type = "INT", ref = "users.id", desc = "-> users.id" },
+  { name = "created_by", type = "INT", ref = "users.id", desc = "-> staff.id (users)" },
 ]
 
 [[entity]]
@@ -141,7 +141,7 @@ columns = [
   { name = "id", type = "INT", pk = true },
   { name = "customer_number", type = "VARCHAR(12)", not_null = true, unique = true, desc = "business key, e.g. 'C-10001'" },
   { name = "name", type = "VARCHAR(160)", not_null = true, text_asset = true },
-  { name = "chain_name", type = "VARCHAR(80)", desc = "groups stores of the same chain (e.g. 'Erävakka'); NULL for independents" },
+  { name = "chain_name", type = "VARCHAR(80)", desc = "groups stores of the same chain (e.g. 'Retkivakka'); NULL for independents" },
   { name = "segment", type = "VARCHAR(30)", not_null = true, desc = "CHAIN_STORE, INDEPENDENT, ONLINE, DEPARTMENT_STORE, RENTAL_OUTFITTER, CLUB_OR_SCHOOL" },
   { name = "country", type = "CHAR(2)", not_null = true, desc = "ISO-2: FI, SE, NO, DK, DE, EE" },
   { name = "city", type = "VARCHAR(80)", not_null = true },
@@ -153,7 +153,7 @@ columns = [
   { name = "credit_limit", type = "DECIMAL(12,2)", desc = "EUR" },
   { name = "payment_terms_days", type = "INT", not_null = true },
   { name = "customer_discount_pct", type = "DECIMAL(5,1)", not_null = true, desc = "customer-level discount applied to every line" },
-  { name = "account_manager_id", type = "INT", ref = "users.id", desc = "-> users.id" },
+  { name = "account_manager_id", type = "INT", ref = "users.id", desc = "-> staff.id (users)" },
   { name = "created_at", type = "DATE", not_null = true },
   { name = "active", type = "BOOLEAN", not_null = true },
 ]
@@ -211,7 +211,7 @@ columns = [
   { name = "currency", type = "CHAR(3)", not_null = true },
   { name = "total_net", type = "DECIMAL(12,2)", not_null = true, desc = "order value in EUR after customer discount" },
   { name = "warehouse_id", type = "INT", not_null = true, ref = "warehouses.id", desc = "-> warehouses.id, where it ships from" },
-  { name = "created_by", type = "INT", ref = "users.id", desc = "-> users.id; NULL for EDI/portal orders" },
+  { name = "created_by", type = "INT", ref = "users.id", desc = "-> staff.id (users); NULL for EDI/portal orders" },
   { name = "customer_reference", type = "VARCHAR(40)", desc = "the customer's own PO number", pii = "free-text" },
   { name = "notes", type = "VARCHAR(200)", pii = "free-text", text_asset = true },
 ]
@@ -246,7 +246,7 @@ columns = [
   { name = "order_id", type = "INT", not_null = true, ref = "orders.id", desc = "-> orders.id" },
   { name = "warehouse_id", type = "INT", not_null = true, ref = "warehouses.id", desc = "-> warehouses.id" },
   { name = "delivery_address_id", type = "INT", not_null = true, ref = "delivery_addresses.id", desc = "-> delivery_addresses.id" },
-  { name = "carrier", type = "VARCHAR(40)", not_null = true, desc = "Nordfrakt, Polarpost, Kalott Freight, Botnia Cargo, Havnelast, Baltic Freight Line" },
+  { name = "carrier", type = "VARCHAR(40)", not_null = true, desc = "Kalottfrakt, Polarpost, Kalott Freight, Botnia Cargo, Havnelast, Baltic Freight Line" },
   { name = "tracking_number", type = "VARCHAR(30)" },
   { name = "shipped_at", type = "TIMESTAMP", not_null = true },
   { name = "expected_delivery_date", type = "DATE", not_null = true },
@@ -297,7 +297,7 @@ columns = [
   { name = "priority", type = "VARCHAR(10)", not_null = true, desc = "LOW, NORMAL, HIGH, URGENT" },
   { name = "source", type = "VARCHAR(10)", not_null = true, desc = "EMAIL, PORTAL, PHONE" },
   { name = "reported_by_contact_id", type = "INT", ref = "customer_contacts.id", pii = "identifier" },
-  { name = "assigned_to", type = "INT", ref = "users.id", desc = "-> users.id; NULL = unassigned" },
+  { name = "assigned_to", type = "INT", ref = "users.id", desc = "-> staff.id (users); NULL = unassigned" },
   { name = "opened_at", type = "TIMESTAMP", not_null = true },
   { name = "resolved_at", type = "TIMESTAMP" },
   { name = "needed_by", type = "DATE", desc = "date the customer needs a resolution by" },
@@ -324,6 +324,71 @@ columns = [
 ]
 
 [[entity]]
+name = "return_authorisations"
+description = "Return merchandise authorisations (RMAs): goods a customer sends back under a claim. One per claim at most."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "rma_number", type = "VARCHAR(20)", not_null = true, unique = true, desc = "e.g. 'RMA-2026-00012'" },
+  { name = "claim_id", type = "INT", not_null = true, ref = "claims.id", desc = "-> claims.id" },
+  { name = "customer_id", type = "INT", not_null = true, ref = "customers.id", desc = "-> customers.id" },
+  { name = "warehouse_id", type = "INT", not_null = true, ref = "warehouses.id", desc = "-> warehouses.id, where the goods come back to" },
+  { name = "status", type = "VARCHAR(20)", not_null = true, desc = "AUTHORISED, IN_TRANSIT, RECEIVED, INSPECTED, CLOSED, CANCELLED" },
+  { name = "authorised_at", type = "TIMESTAMP", not_null = true },
+  { name = "received_at", type = "TIMESTAMP", desc = "NULL until the goods arrive" },
+  { name = "inspected_at", type = "TIMESTAMP", desc = "NULL until inspected; return_lines.condition/disposition are set then" },
+  { name = "authorised_by", type = "INT", ref = "users.id", desc = "-> staff.id (users)" },
+  { name = "notes", type = "VARCHAR(400)", pii = "free-text", text_asset = true },
+]
+
+[[entity]]
+name = "return_lines"
+description = "The products and quantities on a return authorisation, with the inspection outcome."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "return_id", type = "INT", not_null = true, ref = "return_authorisations.id", desc = "-> return_authorisations.id" },
+  { name = "claim_line_id", type = "INT", ref = "claim_lines.id", desc = "-> claim_lines.id" },
+  { name = "product_id", type = "INT", not_null = true, ref = "products.id", desc = "-> products.id" },
+  { name = "quantity", type = "INT", not_null = true },
+  { name = "condition", type = "VARCHAR(20)", desc = "RESALABLE, DAMAGED, DEFECTIVE; NULL until inspected" },
+  { name = "disposition", type = "VARCHAR(30)", desc = "RESTOCK (back into inventory), SCRAP, RETURN_TO_SUPPLIER; NULL until inspected" },
+]
+
+[[entity]]
+name = "credit_notes"
+description = "Credit notes issued to customers, almost always from an approved claim. amount is what was credited (EUR)."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "credit_note_number", type = "VARCHAR(20)", not_null = true, unique = true, desc = "e.g. 'CN-2026-00123'" },
+  { name = "customer_id", type = "INT", not_null = true, ref = "customers.id", desc = "-> customers.id" },
+  { name = "claim_id", type = "INT", ref = "claims.id", desc = "-> claims.id" },
+  { name = "order_id", type = "INT", ref = "orders.id", desc = "-> orders.id" },
+  { name = "issued_at", type = "TIMESTAMP", not_null = true },
+  { name = "amount", type = "DECIMAL(12,2)", not_null = true, desc = "EUR, positive" },
+  { name = "currency", type = "CHAR(3)", not_null = true, desc = "always EUR" },
+  { name = "reason", type = "VARCHAR(20)", not_null = true, desc = "CLAIM (damage, shortage, wrong item, defect), GOODWILL (late delivery), PRICE_CORRECTION, RETURN" },
+  { name = "status", type = "VARCHAR(20)", not_null = true, desc = "ISSUED (not yet settled), APPLIED (settled against an invoice), CANCELLED" },
+  { name = "created_by", type = "INT", ref = "users.id", desc = "-> staff.id (users)" },
+]
+
+[[entity]]
+name = "stock_movements"
+description = "Stock ledger per product and warehouse. Every shipment line is a SHIPMENT movement (negative quantity), supplier deliveries are RECEIPTs (positive, reference = purchase order), restocked returns are RETURNs, stock counts are ADJUSTMENTs. balance_after is the stock in that warehouse after the movement; the last balance per product and warehouse equals inventory.on_hand."
+exposed = true
+columns = [
+  { name = "id", type = "INT", pk = true },
+  { name = "product_id", type = "INT", not_null = true, ref = "products.id", desc = "-> products.id" },
+  { name = "warehouse_id", type = "INT", not_null = true, ref = "warehouses.id", desc = "-> warehouses.id" },
+  { name = "moved_at", type = "TIMESTAMP", not_null = true },
+  { name = "movement_type", type = "VARCHAR(12)", not_null = true, desc = "RECEIPT, SHIPMENT, RETURN, ADJUSTMENT" },
+  { name = "quantity", type = "INT", not_null = true, desc = "signed: positive into the warehouse, negative out" },
+  { name = "reference", type = "VARCHAR(40)", desc = "shipment_number, PO number, RMA number or 'Stock count'" },
+  { name = "balance_after", type = "INT", not_null = true },
+]
+
+[[entity]]
 name = "saved_widgets"
 description = ""
 exposed = false
@@ -344,6 +409,7 @@ columns = [
 product_current_prices = "(product_id, sku, name, category_id, supplier_id, list_price, valid_from) — each product's price valid today."
 late_shipments = "(shipment_id, shipment_number, order_id, order_number, customer_id, warehouse_id, carrier, promised_ship_date, shipped_on, promised_delivery_date, delivered_on) — shipments dispatched late and/or delivered late, both date pairs side by side."
 open_claims = "(all claims columns + customer_name, customer_country) — claims that are still open."
+staff = "(id, full_name, role, active) — employees, for joining assigned_to / created_by / account_manager_id to a name and role. Roles: ADMIN, ANALYST, SUPPORT_AGENT, CATALOGUE_MANAGER, ACCOUNT_MANAGER, WAREHOUSE."
 
 [sql]
 # Raw SQL appended to the DDL. {TEXT} is replaced per dialect (H2: CLOB, PostgreSQL: TEXT).
@@ -434,6 +500,9 @@ CREATE VIEW open_claims AS
 SELECT c.*, cu.name AS customer_name, cu.country AS customer_country
 FROM claims c JOIN customers cu ON cu.id = c.customer_id
 WHERE c.status NOT IN ('RESOLVED', 'CLOSED', 'REJECTED');
+
+CREATE VIEW staff AS
+SELECT id, full_name, role, active FROM users;
 """
 
 [ai_schema]

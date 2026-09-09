@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dsgen.model import iso
 
+from .gen.aftersales import apply_messiness, gen_returns_credits, gen_stock_movements
 from .gen.anchors import gen_case2_anchors
 from .gen.catalogue import (gen_categories, gen_inventory, gen_price_history, gen_products, gen_promotions,
                             gen_suppliers, gen_users, gen_warehouses)
@@ -16,7 +17,8 @@ from . import checks as _checks, facts as _facts
 
 # inventory comes after orders so stock agrees with the backorders
 STEPS = [gen_users, gen_warehouses, gen_categories, gen_suppliers, gen_products, gen_price_history, gen_promotions,
-         gen_customers, gen_orders, gen_case2_anchors, gen_claims, gen_inventory, gen_saved_widgets]
+         gen_customers, gen_orders, gen_case2_anchors, gen_claims, gen_inventory, gen_saved_widgets,
+         gen_returns_credits, gen_stock_movements, apply_messiness]   # after-sales, ledger and the optional messy pass run last
 
 
 def make_ctx(rng, as_of, scale, months) -> Ctx:

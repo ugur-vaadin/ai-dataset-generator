@@ -1,48 +1,48 @@
 id,customer_number,name,chain_name,segment,country,city,postal_code,street,vat_number,email_domain,phone,credit_limit,payment_terms_days,customer_discount_pct,account_manager_id,created_at,active
-1,C-10001,Erävakka Tampere,Erävakka,CHAIN_STORE,FI,Tampere,33100,Puistokatu 33,FI35133467,eravakka.example,+358 40 235 1401,100000.00,60,0.0,8,2018-07-15,true
+1,C-10001,Retkivakka Tampere,Retkivakka,CHAIN_STORE,FI,Tampere,33100,Puistokatu 33,FI35133467,retkivakka.example,+358 40 235 1401,100000.00,60,0.0,8,2018-07-15,true
 2,C-10002,Vidderna Sport Kiruna,Vidderna Sport,CHAIN_STORE,SE,Kiruna,981 31,Hamngatan 78,SE753826555201,vidderna.sport.example,+46 70 978 57 07,5000.00,45,0.0,8,2023-01-08,true
 3,C-10003,Stigfinnare Umeå,Stigfinnare,CHAIN_STORE,SE,Umeå,903 26,Järnvägsgatan 21,SE386689456601,stigfinnare.example,+46 70 978 64 14,5000.00,30,10.0,8,2017-05-03,true
 4,C-10004,Fjellkroken Sport Tromsø,Fjellkroken Sport,CHAIN_STORE,NO,Tromsø,9008,Havnegata 96,NO727104771MVA,fjellkroken.sport.example,+47 912 20 076,40000.00,30,0.0,9,2024-06-08,true
 5,C-10005,Kystlinje Sport Aarhus,Kystlinje Sport,CHAIN_STORE,DK,Aarhus,8000,Vestergade 69,DK18856964,kystlinje.sport.example,+45 70 74 05 33,10000.00,30,0.0,8,2018-02-01,true
 6,C-10006,Suuntima Sport Rovaniemi,Suuntima Sport,CHAIN_STORE,FI,Rovaniemi,96100,Rantatie 86,FI10251416,suuntima.sport.example,+358 40 705 3535,10000.00,30,12.0,9,2026-07-20,true
-7,C-10007,Erävakka Vaasa,Erävakka,CHAIN_STORE,FI,Vaasa,65100,Kauppakatu 38,FI94452890,eravakka.example,+358 40 111 9558,10000.00,30,7.5,9,2020-08-18,true
-8,C-10008,Erävakka Espoo,Erävakka,CHAIN_STORE,FI,Espoo,02100,Torikatu 42,FI97867412,eravakka.example,+358 40 817 6937,5000.00,30,5.0,9,2019-11-03,true
-9,C-10009,Erävakka Vaasa Hämeenkatu,Erävakka,CHAIN_STORE,FI,Vaasa,65100,Teollisuustie 52,FI03020051,eravakka.example,+358 40 204 7583,100000.00,30,5.0,10,2022-01-03,true
-10,C-10010,Erävakka Hämeenlinna,Erävakka,CHAIN_STORE,FI,Hämeenlinna,13100,Teollisuustie 19,FI05430629,eravakka.example,+358 40 593 1022,25000.00,45,10.0,8,2026-08-08,true
-11,C-10011,Erävakka Jyväskylä,Erävakka,CHAIN_STORE,FI,Jyväskylä,40100,Teollisuustie 51,FI93499529,eravakka.example,+358 40 879 8773,15000.00,30,5.0,10,2017-06-08,true
-12,C-10012,Erävakka Helsinki,Erävakka,CHAIN_STORE,FI,Helsinki,00100,Keskuskatu 10,FI38940317,eravakka.example,+358 40 584 0653,5000.00,30,5.0,8,2022-03-10,true
-13,C-10013,Erävakka Lahti,Erävakka,CHAIN_STORE,FI,Lahti,15100,Torikatu 81,FI49557274,eravakka.example,+358 40 045 2936,5000.00,30,12.0,9,2019-11-06,true
-14,C-10014,Erävakka Vaasa Yliopistonkatu,Erävakka,CHAIN_STORE,FI,Vaasa,65100,Torikatu 95,FI70100282,eravakka.example,+358 40 171 5731,15000.00,30,10.0,9,2021-12-30,false
-15,C-10015,Erävakka Kuopio,Erävakka,CHAIN_STORE,FI,Kuopio,70100,Teollisuustie 15,FI57723773,eravakka.example,+358 40 725 6679,10000.00,60,5.0,8,2023-12-22,true
-16,C-10016,Erävakka Joensuu,Erävakka,CHAIN_STORE,FI,Joensuu,80100,Kauppakatu 102,FI88718390,eravakka.example,+358 40 602 9692,40000.00,30,0.0,8,2017-10-19,true
-17,C-10017,Erävakka Turku,Erävakka,CHAIN_STORE,FI,Turku,20100,Yliopistonkatu 53,FI22207531,eravakka.example,+358 40 579 7890,15000.00,14,7.5,9,2025-12-17,true
-18,C-10018,Erävakka Joensuu Yliopistonkatu,Erävakka,CHAIN_STORE,FI,Joensuu,80100,Rantatie 2,FI23030402,eravakka.example,+358 40 257 6229,10000.00,14,12.0,9,2023-11-09,true
-19,C-10019,Erävakka Rovaniemi,Erävakka,CHAIN_STORE,FI,Rovaniemi,96100,Yliopistonkatu 21,FI16499900,eravakka.example,+358 40 765 2697,10000.00,30,5.0,9,2025-01-18,true
-20,C-10020,Erävakka Kuopio Hämeenkatu,Erävakka,CHAIN_STORE,FI,Kuopio,70100,Kauppakatu 31,FI13033677,eravakka.example,+358 40 366 7241,60000.00,30,5.0,10,2024-03-13,true
-21,C-10021,Erävakka Oulu,Erävakka,CHAIN_STORE,FI,Oulu,90100,Yliopistonkatu 117,FI53758559,eravakka.example,+358 40 824 4652,5000.00,30,5.0,9,2018-06-06,true
-22,C-10022,Erävakka Vaasa Mannerheimintie,Erävakka,CHAIN_STORE,FI,Vaasa,65100,Yliopistonkatu 42,FI67019840,eravakka.example,+358 40 848 4176,25000.00,30,3.0,8,2022-05-03,true
-23,C-10023,Erävakka Hämeenlinna Rantatie,Erävakka,CHAIN_STORE,FI,Hämeenlinna,13100,Kauppakatu 87,FI35081142,eravakka.example,+358 40 056 3598,25000.00,45,3.0,10,2017-06-19,true
-24,C-10024,Erävakka Tampere Puistokatu,Erävakka,CHAIN_STORE,FI,Tampere,33100,Rantatie 65,FI83633066,eravakka.example,+358 40 834 5985,40000.00,60,0.0,8,2026-06-11,true
-25,C-10025,Erävakka Turku Rantatie,Erävakka,CHAIN_STORE,FI,Turku,20100,Yliopistonkatu 81,FI73684619,eravakka.example,+358 40 752 9660,100000.00,30,2.0,10,2025-06-16,true
-26,C-10026,Erävakka Helsinki Keskuskatu,Erävakka,CHAIN_STORE,FI,Helsinki,00100,Mannerheimintie 11,FI13228417,eravakka.example,+358 40 695 3225,5000.00,30,10.0,9,2024-02-25,true
-27,C-10027,Erävakka Kokkola,Erävakka,CHAIN_STORE,FI,Kokkola,67100,Teollisuustie 34,FI91324608,eravakka.example,+358 40 872 4450,5000.00,14,10.0,9,2016-06-26,true
-28,C-10028,Erävakka Kittilä,Erävakka,CHAIN_STORE,FI,Kittilä,99100,Puistokatu 107,FI39211555,eravakka.example,+358 40 576 1059,60000.00,60,3.0,8,2020-10-07,true
-29,C-10029,Erävakka Kittilä Puistokatu,Erävakka,CHAIN_STORE,FI,Kittilä,99100,Yliopistonkatu 107,FI79702262,eravakka.example,+358 40 512 5773,10000.00,30,5.0,8,2015-03-07,true
-30,C-10030,Erävakka Kokkola Puistokatu,Erävakka,CHAIN_STORE,FI,Kokkola,67100,Hämeenkatu 32,FI65697415,eravakka.example,+358 40 465 1583,15000.00,45,0.0,8,2019-01-01,true
-31,C-10031,Erävakka Vaasa Asemakatu,Erävakka,CHAIN_STORE,FI,Vaasa,65100,Hämeenkatu 16,FI97401400,eravakka.example,+358 40 966 9399,5000.00,14,5.0,8,2019-02-02,true
-32,C-10032,Erävakka Hämeenlinna Puistokatu,Erävakka,CHAIN_STORE,FI,Hämeenlinna,13100,Hämeenkatu 23,FI32414102,eravakka.example,+358 40 692 6675,25000.00,30,10.0,10,2016-08-03,true
-33,C-10033,Erävakka Jyväskylä Hämeenkatu,Erävakka,CHAIN_STORE,FI,Jyväskylä,40100,Torikatu 27,FI25609198,eravakka.example,+358 40 350 5140,15000.00,30,0.0,10,2015-03-02,true
-34,C-10034,Erävakka Joensuu Kauppakatu,Erävakka,CHAIN_STORE,FI,Joensuu,80100,Yliopistonkatu 31,FI98922647,eravakka.example,+358 40 357 3843,10000.00,14,7.5,8,2015-03-06,true
-35,C-10035,Erävakka Vaasa Keskuskatu,Erävakka,CHAIN_STORE,FI,Vaasa,65100,Teollisuustie 38,FI30441859,eravakka.example,+358 40 385 3206,100000.00,30,0.0,10,2024-02-28,true
-36,C-10036,Erävakka Oulu Keskuskatu,Erävakka,CHAIN_STORE,FI,Oulu,90100,Mannerheimintie 92,FI05213752,eravakka.example,+358 40 195 9026,10000.00,45,2.0,9,2015-09-20,true
-37,C-10037,Erävakka Kuusamo,Erävakka,CHAIN_STORE,FI,Kuusamo,93600,Kauppakatu 110,FI92387190,eravakka.example,+358 40 161 8031,5000.00,30,0.0,10,2017-12-03,true
-38,C-10038,Erävakka Vaasa Kauppakatu,Erävakka,CHAIN_STORE,FI,Vaasa,65100,Hämeenkatu 90,FI62329304,eravakka.example,+358 40 534 8279,60000.00,60,10.0,10,2018-08-17,true
-39,C-10039,Erävakka Espoo Asemakatu,Erävakka,CHAIN_STORE,FI,Espoo,02100,Puistokatu 84,FI85364539,eravakka.example,+358 40 299 2092,10000.00,30,2.0,8,2018-12-25,true
-40,C-10040,Erävakka Hämeenlinna Torikatu,Erävakka,CHAIN_STORE,FI,Hämeenlinna,13100,Mannerheimintie 104,FI91908944,eravakka.example,+358 40 216 2307,25000.00,30,7.5,9,2024-05-08,true
-41,C-10041,Erävakka Rovaniemi Torikatu,Erävakka,CHAIN_STORE,FI,Rovaniemi,96100,Asemakatu 112,FI62451132,eravakka.example,+358 40 683 6195,40000.00,14,12.0,8,2018-11-23,true
-42,C-10042,Erävakka Rovaniemi Mannerheimintie,Erävakka,CHAIN_STORE,FI,Rovaniemi,96100,Teollisuustie 57,FI95978907,eravakka.example,+358 40 938 2948,10000.00,14,3.0,10,2023-03-08,true
-43,C-10043,Erävakka Lahti Keskuskatu,Erävakka,CHAIN_STORE,FI,Lahti,15100,Keskuskatu 1,FI04967580,eravakka.example,+358 40 612 4494,40000.00,45,0.0,10,2016-08-07,true
-44,C-10044,Erävakka Hämeenlinna Kauppakatu,Erävakka,CHAIN_STORE,FI,Hämeenlinna,13100,Torikatu 70,FI95928210,eravakka.example,+358 40 143 8872,15000.00,30,12.0,9,2025-06-10,false
+7,C-10007,Retkivakka Vaasa,Retkivakka,CHAIN_STORE,FI,Vaasa,65100,Kauppakatu 38,FI94452890,retkivakka.example,+358 40 111 9558,10000.00,30,7.5,9,2020-08-18,true
+8,C-10008,Retkivakka Espoo,Retkivakka,CHAIN_STORE,FI,Espoo,02100,Torikatu 42,FI97867412,retkivakka.example,+358 40 817 6937,5000.00,30,5.0,9,2019-11-03,true
+9,C-10009,Retkivakka Vaasa Hämeenkatu,Retkivakka,CHAIN_STORE,FI,Vaasa,65100,Teollisuustie 52,FI03020051,retkivakka.example,+358 40 204 7583,100000.00,30,5.0,10,2022-01-03,true
+10,C-10010,Retkivakka Hämeenlinna,Retkivakka,CHAIN_STORE,FI,Hämeenlinna,13100,Teollisuustie 19,FI05430629,retkivakka.example,+358 40 593 1022,25000.00,45,10.0,8,2026-08-08,true
+11,C-10011,Retkivakka Jyväskylä,Retkivakka,CHAIN_STORE,FI,Jyväskylä,40100,Teollisuustie 51,FI93499529,retkivakka.example,+358 40 879 8773,15000.00,30,5.0,10,2017-06-08,true
+12,C-10012,Retkivakka Helsinki,Retkivakka,CHAIN_STORE,FI,Helsinki,00100,Keskuskatu 10,FI38940317,retkivakka.example,+358 40 584 0653,5000.00,30,5.0,8,2022-03-10,true
+13,C-10013,Retkivakka Lahti,Retkivakka,CHAIN_STORE,FI,Lahti,15100,Torikatu 81,FI49557274,retkivakka.example,+358 40 045 2936,5000.00,30,12.0,9,2019-11-06,true
+14,C-10014,Retkivakka Vaasa Yliopistonkatu,Retkivakka,CHAIN_STORE,FI,Vaasa,65100,Torikatu 95,FI70100282,retkivakka.example,+358 40 171 5731,15000.00,30,10.0,9,2021-12-30,false
+15,C-10015,Retkivakka Kuopio,Retkivakka,CHAIN_STORE,FI,Kuopio,70100,Teollisuustie 15,FI57723773,retkivakka.example,+358 40 725 6679,10000.00,60,5.0,8,2023-12-22,true
+16,C-10016,Retkivakka Joensuu,Retkivakka,CHAIN_STORE,FI,Joensuu,80100,Kauppakatu 102,FI88718390,retkivakka.example,+358 40 602 9692,40000.00,30,0.0,8,2017-10-19,true
+17,C-10017,Retkivakka Turku,Retkivakka,CHAIN_STORE,FI,Turku,20100,Yliopistonkatu 53,FI22207531,retkivakka.example,+358 40 579 7890,15000.00,14,7.5,9,2025-12-17,true
+18,C-10018,Retkivakka Joensuu Yliopistonkatu,Retkivakka,CHAIN_STORE,FI,Joensuu,80100,Rantatie 2,FI23030402,retkivakka.example,+358 40 257 6229,10000.00,14,12.0,9,2023-11-09,true
+19,C-10019,Retkivakka Rovaniemi,Retkivakka,CHAIN_STORE,FI,Rovaniemi,96100,Yliopistonkatu 21,FI16499900,retkivakka.example,+358 40 765 2697,10000.00,30,5.0,9,2025-01-18,true
+20,C-10020,Retkivakka Kuopio Hämeenkatu,Retkivakka,CHAIN_STORE,FI,Kuopio,70100,Kauppakatu 31,FI13033677,retkivakka.example,+358 40 366 7241,60000.00,30,5.0,10,2024-03-13,true
+21,C-10021,Retkivakka Oulu,Retkivakka,CHAIN_STORE,FI,Oulu,90100,Yliopistonkatu 117,FI53758559,retkivakka.example,+358 40 824 4652,5000.00,30,5.0,9,2018-06-06,true
+22,C-10022,Retkivakka Vaasa Mannerheimintie,Retkivakka,CHAIN_STORE,FI,Vaasa,65100,Yliopistonkatu 42,FI67019840,retkivakka.example,+358 40 848 4176,25000.00,30,3.0,8,2022-05-03,true
+23,C-10023,Retkivakka Hämeenlinna Rantatie,Retkivakka,CHAIN_STORE,FI,Hämeenlinna,13100,Kauppakatu 87,FI35081142,retkivakka.example,+358 40 056 3598,25000.00,45,3.0,10,2017-06-19,true
+24,C-10024,Retkivakka Tampere Puistokatu,Retkivakka,CHAIN_STORE,FI,Tampere,33100,Rantatie 65,FI83633066,retkivakka.example,+358 40 834 5985,40000.00,60,0.0,8,2026-06-11,true
+25,C-10025,Retkivakka Turku Rantatie,Retkivakka,CHAIN_STORE,FI,Turku,20100,Yliopistonkatu 81,FI73684619,retkivakka.example,+358 40 752 9660,100000.00,30,2.0,10,2025-06-16,true
+26,C-10026,Retkivakka Helsinki Keskuskatu,Retkivakka,CHAIN_STORE,FI,Helsinki,00100,Mannerheimintie 11,FI13228417,retkivakka.example,+358 40 695 3225,5000.00,30,10.0,9,2024-02-25,true
+27,C-10027,Retkivakka Kokkola,Retkivakka,CHAIN_STORE,FI,Kokkola,67100,Teollisuustie 34,FI91324608,retkivakka.example,+358 40 872 4450,5000.00,14,10.0,9,2016-06-26,true
+28,C-10028,Retkivakka Kittilä,Retkivakka,CHAIN_STORE,FI,Kittilä,99100,Puistokatu 107,FI39211555,retkivakka.example,+358 40 576 1059,60000.00,60,3.0,8,2020-10-07,true
+29,C-10029,Retkivakka Kittilä Puistokatu,Retkivakka,CHAIN_STORE,FI,Kittilä,99100,Yliopistonkatu 107,FI79702262,retkivakka.example,+358 40 512 5773,10000.00,30,5.0,8,2015-03-07,true
+30,C-10030,Retkivakka Kokkola Puistokatu,Retkivakka,CHAIN_STORE,FI,Kokkola,67100,Hämeenkatu 32,FI65697415,retkivakka.example,+358 40 465 1583,15000.00,45,0.0,8,2019-01-01,true
+31,C-10031,Retkivakka Vaasa Asemakatu,Retkivakka,CHAIN_STORE,FI,Vaasa,65100,Hämeenkatu 16,FI97401400,retkivakka.example,+358 40 966 9399,5000.00,14,5.0,8,2019-02-02,true
+32,C-10032,Retkivakka Hämeenlinna Puistokatu,Retkivakka,CHAIN_STORE,FI,Hämeenlinna,13100,Hämeenkatu 23,FI32414102,retkivakka.example,+358 40 692 6675,25000.00,30,10.0,10,2016-08-03,true
+33,C-10033,Retkivakka Jyväskylä Hämeenkatu,Retkivakka,CHAIN_STORE,FI,Jyväskylä,40100,Torikatu 27,FI25609198,retkivakka.example,+358 40 350 5140,15000.00,30,0.0,10,2015-03-02,true
+34,C-10034,Retkivakka Joensuu Kauppakatu,Retkivakka,CHAIN_STORE,FI,Joensuu,80100,Yliopistonkatu 31,FI98922647,retkivakka.example,+358 40 357 3843,10000.00,14,7.5,8,2015-03-06,true
+35,C-10035,Retkivakka Vaasa Keskuskatu,Retkivakka,CHAIN_STORE,FI,Vaasa,65100,Teollisuustie 38,FI30441859,retkivakka.example,+358 40 385 3206,100000.00,30,0.0,10,2024-02-28,true
+36,C-10036,Retkivakka Oulu Keskuskatu,Retkivakka,CHAIN_STORE,FI,Oulu,90100,Mannerheimintie 92,FI05213752,retkivakka.example,+358 40 195 9026,10000.00,45,2.0,9,2015-09-20,true
+37,C-10037,Retkivakka Kuusamo,Retkivakka,CHAIN_STORE,FI,Kuusamo,93600,Kauppakatu 110,FI92387190,retkivakka.example,+358 40 161 8031,5000.00,30,0.0,10,2017-12-03,true
+38,C-10038,Retkivakka Vaasa Kauppakatu,Retkivakka,CHAIN_STORE,FI,Vaasa,65100,Hämeenkatu 90,FI62329304,retkivakka.example,+358 40 534 8279,60000.00,60,10.0,10,2018-08-17,true
+39,C-10039,Retkivakka Espoo Asemakatu,Retkivakka,CHAIN_STORE,FI,Espoo,02100,Puistokatu 84,FI85364539,retkivakka.example,+358 40 299 2092,10000.00,30,2.0,8,2018-12-25,true
+40,C-10040,Retkivakka Hämeenlinna Torikatu,Retkivakka,CHAIN_STORE,FI,Hämeenlinna,13100,Mannerheimintie 104,FI91908944,retkivakka.example,+358 40 216 2307,25000.00,30,7.5,9,2024-05-08,true
+41,C-10041,Retkivakka Rovaniemi Torikatu,Retkivakka,CHAIN_STORE,FI,Rovaniemi,96100,Asemakatu 112,FI62451132,retkivakka.example,+358 40 683 6195,40000.00,14,12.0,8,2018-11-23,true
+42,C-10042,Retkivakka Rovaniemi Mannerheimintie,Retkivakka,CHAIN_STORE,FI,Rovaniemi,96100,Teollisuustie 57,FI95978907,retkivakka.example,+358 40 938 2948,10000.00,14,3.0,10,2023-03-08,true
+43,C-10043,Retkivakka Lahti Keskuskatu,Retkivakka,CHAIN_STORE,FI,Lahti,15100,Keskuskatu 1,FI04967580,retkivakka.example,+358 40 612 4494,40000.00,45,0.0,10,2016-08-07,true
+44,C-10044,Retkivakka Hämeenlinna Kauppakatu,Retkivakka,CHAIN_STORE,FI,Hämeenlinna,13100,Torikatu 70,FI95928210,retkivakka.example,+358 40 143 8872,15000.00,30,12.0,9,2025-06-10,false
 45,C-10045,Fjellkroken Sport Kiruna,Fjellkroken Sport,CHAIN_STORE,SE,Kiruna,981 31,Norra Esplanaden 93,SE220081579801,fjellkroken.sport.example,+46 70 756 93 99,15000.00,30,0.0,9,2023-05-23,true
 46,C-10046,Fjellkroken Sport Karlstad,Fjellkroken Sport,CHAIN_STORE,SE,Karlstad,652 24,Kungsgatan 95,SE619572239301,fjellkroken.sport.example,+46 70 871 34 08,10000.00,30,2.0,10,2021-02-26,true
 47,C-10047,Fjellkroken Sport Drammen,Fjellkroken Sport,CHAIN_STORE,NO,Drammen,3015,Industriveien 65,NO006383043MVA,fjellkroken.sport.example,+47 915 34 202,100000.00,45,0.0,8,2016-10-17,true

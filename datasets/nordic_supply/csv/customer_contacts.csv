@@ -1,6 +1,6 @@
 id,customer_id,first_name,last_name,role,email,phone,is_primary,language,marketing_consent,consent_source,retention_until
-1,1,Elina,Järvinen,Store Manager,elina.jarvinen@eravakka.example,+358 40 424 0335,true,fi,true,WEBSITE,2028-09-06
-2,1,Sanna,Kallio,Assistant Manager,sanna.kallio@eravakka.example,+358 40 598 0609,false,fi,false,TRADE_FAIR,2031-09-06
+1,1,Elina,Järvinen,Store Manager,elina.jarvinen@retkivakka.example,+358 40 424 0335,true,fi,true,WEBSITE,2028-09-06
+2,1,Sanna,Kallio,Assistant Manager,sanna.kallio@retkivakka.example,+358 40 598 0609,false,fi,false,TRADE_FAIR,2031-09-06
 3,2,Gustav,Strand,Store Manager,gustav.strand@vidderna.sport.example,+46 70 210 34 00,true,sv,false,WEBSITE,2028-09-06
 4,2,Erik,Andersson,Buyer,erik.andersson@vidderna.sport.example,+46 70 313 12 41,false,sv,true,TRADE_FAIR,2029-09-06
 5,3,Sofia,Johansson,Store Manager,sofia.johansson@stigfinnare.example,+46 70 252 27 27,true,sv,false,PORTAL,2031-09-06
@@ -11,73 +11,73 @@ id,customer_id,first_name,last_name,role,email,phone,is_primary,language,marketi
 10,5,Jonas,Sørensen,Owner,jonas.sorensen@kystlinje.sport.example,+45 40 27 19 80,false,da,false,ACCOUNT_MANAGER,2029-09-06
 11,6,Katri,Kallio,Store Manager,katri.kallio@suuntima.sport.example,+358 40 583 8907,true,fi,true,WEBSITE,2029-09-06
 12,6,Laura,Salminen,Accounts Payable,laura.salminen@suuntima.sport.example,+358 40 117 5986,false,fi,true,WEBSITE,2028-09-06
-13,7,Elina,Lehto,Store Manager,elina.lehto@eravakka.example,+358 40 866 7133,true,fi,true,WEBSITE,2028-09-06
-14,7,Matti,Korhonen,Accounts Payable,matti.korhonen@eravakka.example,+358 40 767 2277,false,fi,false,WEBSITE,2028-09-06
-15,8,Eero,Nieminen,Store Manager,eero.nieminen@eravakka.example,+358 40 355 7630,true,fi,false,TRADE_FAIR,2031-09-06
-16,8,Lauri,Virtanen,Accounts Payable,lauri.virtanen@eravakka.example,+358 40 652 9556,false,fi,false,ACCOUNT_MANAGER,2029-09-06
-17,9,Elina,Lehto,Store Manager,elina.lehto.vaasa@eravakka.example,+358 40 784 1459,true,fi,false,WEBSITE,2031-09-06
-18,10,Olli,Lehtonen,Store Manager,olli.lehtonen@eravakka.example,+358 40 632 8986,true,fi,false,PORTAL,2028-09-06
-19,11,Aino,Mäkinen,Store Manager,aino.makinen@eravakka.example,+358 40 522 8927,true,fi,true,ACCOUNT_MANAGER,2028-09-06
-20,12,Tuomas,Heikkinen,Store Manager,tuomas.heikkinen@eravakka.example,+358 40 493 2923,true,fi,true,ACCOUNT_MANAGER,2028-09-06
-21,13,Riikka,Salo,Store Manager,riikka.salo@eravakka.example,+358 40 506 9146,true,fi,false,PORTAL,2031-09-06
-22,14,Timo,Salo,Store Manager,timo.salo@eravakka.example,+358 40 986 6328,true,fi,false,TRADE_FAIR,2029-09-06
-23,15,Eero,Koskinen,Store Manager,eero.koskinen@eravakka.example,+358 40 853 1358,true,fi,false,ACCOUNT_MANAGER,2029-09-06
-24,15,Venla,Nieminen,Accounts Payable,venla.nieminen@eravakka.example,+358 40 830 9492,false,fi,true,TRADE_FAIR,2028-09-06
-25,15,Juhani,Niemi,Assistant Manager,juhani.niemi@eravakka.example,+358 40 427 6421,false,fi,true,WEBSITE,2029-09-06
-26,16,Katri,Lehto,Store Manager,katri.lehto@eravakka.example,+358 40 064 8062,true,fi,true,TRADE_FAIR,2031-09-06
-27,17,Jukka,Virtanen,Store Manager,jukka.virtanen@eravakka.example,+358 40 639 0308,true,fi,false,ACCOUNT_MANAGER,2029-09-06
-28,17,Laura,Korhonen,Warehouse,laura.korhonen@eravakka.example,+358 40 446 8101,false,fi,true,ACCOUNT_MANAGER,2029-09-06
-29,18,Jukka,Nieminen,Store Manager,jukka.nieminen@eravakka.example,+358 40 483 3921,true,fi,false,ACCOUNT_MANAGER,2028-09-06
-30,18,Helmi,Lehtonen,Purchasing,helmi.lehtonen@eravakka.example,+358 40 175 9810,false,fi,false,PORTAL,2029-09-06
-31,19,Maija,Koskinen,Store Manager,maija.koskinen@eravakka.example,+358 40 715 9071,true,fi,true,ACCOUNT_MANAGER,2029-09-06
-32,20,Noora,Virtanen,Store Manager,noora.virtanen@eravakka.example,+358 40 219 5992,true,fi,false,ACCOUNT_MANAGER,2031-09-06
-33,20,Elina,Koskinen,Warehouse,elina.koskinen@eravakka.example,+358 40 019 0475,false,fi,true,ACCOUNT_MANAGER,2031-09-06
-34,21,Noora,Rantanen,Store Manager,noora.rantanen@eravakka.example,+358 40 301 9588,true,fi,true,TRADE_FAIR,2031-09-06
-35,22,Juhani,Järvinen,Store Manager,juhani.jarvinen@eravakka.example,+358 40 360 9603,true,fi,false,WEBSITE,2031-09-06
-36,23,Aino,Virtanen,Store Manager,aino.virtanen@eravakka.example,+358 40 297 6162,true,fi,true,TRADE_FAIR,2029-09-06
-37,23,Riikka,Järvinen,Buyer,riikka.jarvinen@eravakka.example,+358 40 611 3816,false,fi,false,PORTAL,2029-09-06
-38,23,Laura,Virtanen,Assistant Manager,laura.virtanen@eravakka.example,+358 40 091 0200,false,fi,true,PORTAL,2029-09-06
-39,24,Sanna,Rantanen,Store Manager,sanna.rantanen@eravakka.example,+358 40 559 0526,true,fi,true,WEBSITE,2029-09-06
-40,24,Lauri,Koskinen,Owner,lauri.koskinen@eravakka.example,+358 40 578 2657,false,fi,false,PORTAL,2031-09-06
-41,25,Laura,Koskinen,Store Manager,laura.koskinen@eravakka.example,+358 40 326 3168,true,fi,true,TRADE_FAIR,2031-09-06
-42,25,Venla,Kallio,Warehouse,venla.kallio@eravakka.example,+358 40 562 7863,false,fi,true,PORTAL,2031-09-06
-43,26,Mikko,Kallio,Store Manager,mikko.kallio@eravakka.example,+358 40 172 8280,true,fi,false,WEBSITE,2031-09-06
-44,26,Anni,Virtanen,Assistant Manager,anni.virtanen@eravakka.example,+358 40 097 6896,false,fi,true,ACCOUNT_MANAGER,2028-09-06
-45,27,Riikka,Salminen,Store Manager,riikka.salminen@eravakka.example,+358 40 970 2168,true,fi,true,ACCOUNT_MANAGER,2028-09-06
-46,27,Elina,Saarinen,Owner,elina.saarinen@eravakka.example,+358 40 523 8994,false,fi,true,PORTAL,2031-09-06
-47,28,Sanna,Lehtonen,Store Manager,sanna.lehtonen@eravakka.example,+358 40 009 3327,true,fi,false,ACCOUNT_MANAGER,2028-09-06
-48,28,Kaisa,Koskinen,Purchasing,kaisa.koskinen@eravakka.example,+358 40 979 5424,false,fi,true,TRADE_FAIR,2029-09-06
-49,28,Antti,Laine,Buyer,antti.laine@eravakka.example,+358 40 082 5775,false,fi,false,PORTAL,2031-09-06
-50,29,Jukka,Lehtonen,Store Manager,jukka.lehtonen@eravakka.example,+358 40 163 4811,true,fi,false,WEBSITE,2028-09-06
-51,29,Riikka,Niemi,Accounts Payable,riikka.niemi@eravakka.example,+358 40 206 1426,false,fi,false,TRADE_FAIR,2031-09-06
-52,30,Noora,Rantanen,Store Manager,noora.rantanen.kokkola@eravakka.example,+358 40 587 2869,true,fi,true,ACCOUNT_MANAGER,2031-09-06
-53,30,Anni,Aho,Warehouse,anni.aho@eravakka.example,+358 40 680 2138,false,fi,true,PORTAL,2028-09-06
-54,31,Pekka,Korhonen,Store Manager,pekka.korhonen@eravakka.example,+358 40 597 7255,true,fi,true,TRADE_FAIR,2028-09-06
-55,31,Katri,Nieminen,Accounts Payable,katri.nieminen@eravakka.example,+358 40 736 0540,false,fi,false,WEBSITE,2028-09-06
-56,32,Katri,Koskinen,Store Manager,katri.koskinen@eravakka.example,+358 40 926 8417,true,fi,true,WEBSITE,2028-09-06
-57,33,Sanna,Rantanen,Store Manager,sanna.rantanen.jyvaskyla@eravakka.example,+358 40 253 0807,true,fi,true,ACCOUNT_MANAGER,2031-09-06
-58,34,Eero,Salminen,Store Manager,eero.salminen@eravakka.example,+358 40 489 8304,true,fi,true,PORTAL,2031-09-06
-59,34,Matti,Hämäläinen,Warehouse,matti.hamalainen@eravakka.example,+358 40 020 0095,false,fi,true,TRADE_FAIR,2031-09-06
-60,35,Helmi,Mäkinen,Store Manager,helmi.makinen@eravakka.example,+358 40 093 0247,true,fi,true,WEBSITE,2029-09-06
-61,35,Ville,Aho,Purchasing,ville.aho@eravakka.example,+358 40 733 6258,false,fi,true,WEBSITE,2031-09-06
-62,36,Mikko,Lehto,Store Manager,mikko.lehto@eravakka.example,+358 40 139 1931,true,fi,false,ACCOUNT_MANAGER,2031-09-06
-63,37,Juhani,Korhonen,Store Manager,juhani.korhonen@eravakka.example,+358 40 301 7999,true,fi,true,ACCOUNT_MANAGER,2031-09-06
-64,37,Anni,Virtanen,Assistant Manager,anni.virtanen.kuusamo@eravakka.example,+358 40 330 7780,false,fi,true,WEBSITE,2028-09-06
-65,38,Jukka,Niemi,Store Manager,jukka.niemi@eravakka.example,+358 40 997 3780,true,fi,true,TRADE_FAIR,2029-09-06
-66,38,Laura,Heikkinen,Purchasing,laura.heikkinen@eravakka.example,+358 40 236 2005,false,fi,false,WEBSITE,2028-09-06
-67,38,Katri,Lehto,Buyer,katri.lehto.vaasa@eravakka.example,+358 40 955 9056,false,fi,true,PORTAL,2028-09-06
-68,39,Kaisa,Mäkinen,Store Manager,kaisa.makinen@eravakka.example,+358 40 315 0022,true,fi,true,TRADE_FAIR,2029-09-06
-69,39,Aino,Koskinen,Purchasing,aino.koskinen@eravakka.example,+358 40 615 3414,false,fi,true,WEBSITE,2031-09-06
-70,40,Matti,Lehto,Store Manager,matti.lehto@eravakka.example,+358 40 240 9139,true,fi,true,TRADE_FAIR,2031-09-06
-71,41,Anni,Hämäläinen,Store Manager,anni.hamalainen@eravakka.example,+358 40 080 9317,true,fi,false,PORTAL,2029-09-06
-72,41,Tuomas,Saarinen,Assistant Manager,tuomas.saarinen@eravakka.example,+358 40 402 1726,false,fi,true,ACCOUNT_MANAGER,2028-09-06
-73,42,Jukka,Salminen,Store Manager,jukka.salminen@eravakka.example,+358 40 582 4438,true,fi,false,WEBSITE,2028-09-06
-74,43,Juhani,Virtanen,Store Manager,juhani.virtanen@eravakka.example,+358 40 522 6377,true,fi,true,WEBSITE,2029-09-06
-75,43,Riikka,Heikkinen,Buyer,riikka.heikkinen@eravakka.example,+358 40 289 0983,false,fi,true,PORTAL,2028-09-06
-76,43,Sanna,Mäkinen,Accounts Payable,sanna.makinen@eravakka.example,+358 40 381 4149,false,fi,false,WEBSITE,2031-09-06
-77,44,Jukka,Rantanen,Store Manager,jukka.rantanen@eravakka.example,+358 40 144 6049,true,fi,false,WEBSITE,2028-09-06
-78,44,Elina,Järvinen,Purchasing,elina.jarvinen.hameenlinna@eravakka.example,+358 40 785 7339,false,fi,false,PORTAL,2029-09-06
-79,44,Tuomas,Korhonen,Assistant Manager,tuomas.korhonen@eravakka.example,+358 40 366 7122,false,fi,true,WEBSITE,2028-09-06
+13,7,Elina,Lehto,Store Manager,elina.lehto@retkivakka.example,+358 40 866 7133,true,fi,true,WEBSITE,2028-09-06
+14,7,Matti,Korhonen,Accounts Payable,matti.korhonen@retkivakka.example,+358 40 767 2277,false,fi,false,WEBSITE,2028-09-06
+15,8,Eero,Nieminen,Store Manager,eero.nieminen@retkivakka.example,+358 40 355 7630,true,fi,false,TRADE_FAIR,2031-09-06
+16,8,Lauri,Virtanen,Accounts Payable,lauri.virtanen@retkivakka.example,+358 40 652 9556,false,fi,false,ACCOUNT_MANAGER,2029-09-06
+17,9,Elina,Lehto,Store Manager,elina.lehto.vaasa@retkivakka.example,+358 40 784 1459,true,fi,false,WEBSITE,2031-09-06
+18,10,Olli,Lehtonen,Store Manager,olli.lehtonen@retkivakka.example,+358 40 632 8986,true,fi,false,PORTAL,2028-09-06
+19,11,Aino,Mäkinen,Store Manager,aino.makinen@retkivakka.example,+358 40 522 8927,true,fi,true,ACCOUNT_MANAGER,2028-09-06
+20,12,Tuomas,Heikkinen,Store Manager,tuomas.heikkinen@retkivakka.example,+358 40 493 2923,true,fi,true,ACCOUNT_MANAGER,2028-09-06
+21,13,Riikka,Salo,Store Manager,riikka.salo@retkivakka.example,+358 40 506 9146,true,fi,false,PORTAL,2031-09-06
+22,14,Timo,Salo,Store Manager,timo.salo@retkivakka.example,+358 40 986 6328,true,fi,false,TRADE_FAIR,2029-09-06
+23,15,Eero,Koskinen,Store Manager,eero.koskinen@retkivakka.example,+358 40 853 1358,true,fi,false,ACCOUNT_MANAGER,2029-09-06
+24,15,Venla,Nieminen,Accounts Payable,venla.nieminen@retkivakka.example,+358 40 830 9492,false,fi,true,TRADE_FAIR,2028-09-06
+25,15,Juhani,Niemi,Assistant Manager,juhani.niemi@retkivakka.example,+358 40 427 6421,false,fi,true,WEBSITE,2029-09-06
+26,16,Katri,Lehto,Store Manager,katri.lehto@retkivakka.example,+358 40 064 8062,true,fi,true,TRADE_FAIR,2031-09-06
+27,17,Jukka,Virtanen,Store Manager,jukka.virtanen@retkivakka.example,+358 40 639 0308,true,fi,false,ACCOUNT_MANAGER,2029-09-06
+28,17,Laura,Korhonen,Warehouse,laura.korhonen@retkivakka.example,+358 40 446 8101,false,fi,true,ACCOUNT_MANAGER,2029-09-06
+29,18,Jukka,Nieminen,Store Manager,jukka.nieminen@retkivakka.example,+358 40 483 3921,true,fi,false,ACCOUNT_MANAGER,2028-09-06
+30,18,Helmi,Lehtonen,Purchasing,helmi.lehtonen@retkivakka.example,+358 40 175 9810,false,fi,false,PORTAL,2029-09-06
+31,19,Maija,Koskinen,Store Manager,maija.koskinen@retkivakka.example,+358 40 715 9071,true,fi,true,ACCOUNT_MANAGER,2029-09-06
+32,20,Noora,Virtanen,Store Manager,noora.virtanen@retkivakka.example,+358 40 219 5992,true,fi,false,ACCOUNT_MANAGER,2031-09-06
+33,20,Elina,Koskinen,Warehouse,elina.koskinen@retkivakka.example,+358 40 019 0475,false,fi,true,ACCOUNT_MANAGER,2031-09-06
+34,21,Noora,Rantanen,Store Manager,noora.rantanen@retkivakka.example,+358 40 301 9588,true,fi,true,TRADE_FAIR,2031-09-06
+35,22,Juhani,Järvinen,Store Manager,juhani.jarvinen@retkivakka.example,+358 40 360 9603,true,fi,false,WEBSITE,2031-09-06
+36,23,Aino,Virtanen,Store Manager,aino.virtanen@retkivakka.example,+358 40 297 6162,true,fi,true,TRADE_FAIR,2029-09-06
+37,23,Riikka,Järvinen,Buyer,riikka.jarvinen@retkivakka.example,+358 40 611 3816,false,fi,false,PORTAL,2029-09-06
+38,23,Laura,Virtanen,Assistant Manager,laura.virtanen@retkivakka.example,+358 40 091 0200,false,fi,true,PORTAL,2029-09-06
+39,24,Sanna,Rantanen,Store Manager,sanna.rantanen@retkivakka.example,+358 40 559 0526,true,fi,true,WEBSITE,2029-09-06
+40,24,Lauri,Koskinen,Owner,lauri.koskinen@retkivakka.example,+358 40 578 2657,false,fi,false,PORTAL,2031-09-06
+41,25,Laura,Koskinen,Store Manager,laura.koskinen@retkivakka.example,+358 40 326 3168,true,fi,true,TRADE_FAIR,2031-09-06
+42,25,Venla,Kallio,Warehouse,venla.kallio@retkivakka.example,+358 40 562 7863,false,fi,true,PORTAL,2031-09-06
+43,26,Mikko,Kallio,Store Manager,mikko.kallio@retkivakka.example,+358 40 172 8280,true,fi,false,WEBSITE,2031-09-06
+44,26,Anni,Virtanen,Assistant Manager,anni.virtanen@retkivakka.example,+358 40 097 6896,false,fi,true,ACCOUNT_MANAGER,2028-09-06
+45,27,Riikka,Salminen,Store Manager,riikka.salminen@retkivakka.example,+358 40 970 2168,true,fi,true,ACCOUNT_MANAGER,2028-09-06
+46,27,Elina,Saarinen,Owner,elina.saarinen@retkivakka.example,+358 40 523 8994,false,fi,true,PORTAL,2031-09-06
+47,28,Sanna,Lehtonen,Store Manager,sanna.lehtonen@retkivakka.example,+358 40 009 3327,true,fi,false,ACCOUNT_MANAGER,2028-09-06
+48,28,Kaisa,Koskinen,Purchasing,kaisa.koskinen@retkivakka.example,+358 40 979 5424,false,fi,true,TRADE_FAIR,2029-09-06
+49,28,Antti,Laine,Buyer,antti.laine@retkivakka.example,+358 40 082 5775,false,fi,false,PORTAL,2031-09-06
+50,29,Jukka,Lehtonen,Store Manager,jukka.lehtonen@retkivakka.example,+358 40 163 4811,true,fi,false,WEBSITE,2028-09-06
+51,29,Riikka,Niemi,Accounts Payable,riikka.niemi@retkivakka.example,+358 40 206 1426,false,fi,false,TRADE_FAIR,2031-09-06
+52,30,Noora,Rantanen,Store Manager,noora.rantanen.kokkola@retkivakka.example,+358 40 587 2869,true,fi,true,ACCOUNT_MANAGER,2031-09-06
+53,30,Anni,Aho,Warehouse,anni.aho@retkivakka.example,+358 40 680 2138,false,fi,true,PORTAL,2028-09-06
+54,31,Pekka,Korhonen,Store Manager,pekka.korhonen@retkivakka.example,+358 40 597 7255,true,fi,true,TRADE_FAIR,2028-09-06
+55,31,Katri,Nieminen,Accounts Payable,katri.nieminen@retkivakka.example,+358 40 736 0540,false,fi,false,WEBSITE,2028-09-06
+56,32,Katri,Koskinen,Store Manager,katri.koskinen@retkivakka.example,+358 40 926 8417,true,fi,true,WEBSITE,2028-09-06
+57,33,Sanna,Rantanen,Store Manager,sanna.rantanen.jyvaskyla@retkivakka.example,+358 40 253 0807,true,fi,true,ACCOUNT_MANAGER,2031-09-06
+58,34,Eero,Salminen,Store Manager,eero.salminen@retkivakka.example,+358 40 489 8304,true,fi,true,PORTAL,2031-09-06
+59,34,Matti,Hämäläinen,Warehouse,matti.hamalainen@retkivakka.example,+358 40 020 0095,false,fi,true,TRADE_FAIR,2031-09-06
+60,35,Helmi,Mäkinen,Store Manager,helmi.makinen@retkivakka.example,+358 40 093 0247,true,fi,true,WEBSITE,2029-09-06
+61,35,Ville,Aho,Purchasing,ville.aho@retkivakka.example,+358 40 733 6258,false,fi,true,WEBSITE,2031-09-06
+62,36,Mikko,Lehto,Store Manager,mikko.lehto@retkivakka.example,+358 40 139 1931,true,fi,false,ACCOUNT_MANAGER,2031-09-06
+63,37,Juhani,Korhonen,Store Manager,juhani.korhonen@retkivakka.example,+358 40 301 7999,true,fi,true,ACCOUNT_MANAGER,2031-09-06
+64,37,Anni,Virtanen,Assistant Manager,anni.virtanen.kuusamo@retkivakka.example,+358 40 330 7780,false,fi,true,WEBSITE,2028-09-06
+65,38,Jukka,Niemi,Store Manager,jukka.niemi@retkivakka.example,+358 40 997 3780,true,fi,true,TRADE_FAIR,2029-09-06
+66,38,Laura,Heikkinen,Purchasing,laura.heikkinen@retkivakka.example,+358 40 236 2005,false,fi,false,WEBSITE,2028-09-06
+67,38,Katri,Lehto,Buyer,katri.lehto.vaasa@retkivakka.example,+358 40 955 9056,false,fi,true,PORTAL,2028-09-06
+68,39,Kaisa,Mäkinen,Store Manager,kaisa.makinen@retkivakka.example,+358 40 315 0022,true,fi,true,TRADE_FAIR,2029-09-06
+69,39,Aino,Koskinen,Purchasing,aino.koskinen@retkivakka.example,+358 40 615 3414,false,fi,true,WEBSITE,2031-09-06
+70,40,Matti,Lehto,Store Manager,matti.lehto@retkivakka.example,+358 40 240 9139,true,fi,true,TRADE_FAIR,2031-09-06
+71,41,Anni,Hämäläinen,Store Manager,anni.hamalainen@retkivakka.example,+358 40 080 9317,true,fi,false,PORTAL,2029-09-06
+72,41,Tuomas,Saarinen,Assistant Manager,tuomas.saarinen@retkivakka.example,+358 40 402 1726,false,fi,true,ACCOUNT_MANAGER,2028-09-06
+73,42,Jukka,Salminen,Store Manager,jukka.salminen@retkivakka.example,+358 40 582 4438,true,fi,false,WEBSITE,2028-09-06
+74,43,Juhani,Virtanen,Store Manager,juhani.virtanen@retkivakka.example,+358 40 522 6377,true,fi,true,WEBSITE,2029-09-06
+75,43,Riikka,Heikkinen,Buyer,riikka.heikkinen@retkivakka.example,+358 40 289 0983,false,fi,true,PORTAL,2028-09-06
+76,43,Sanna,Mäkinen,Accounts Payable,sanna.makinen@retkivakka.example,+358 40 381 4149,false,fi,false,WEBSITE,2031-09-06
+77,44,Jukka,Rantanen,Store Manager,jukka.rantanen@retkivakka.example,+358 40 144 6049,true,fi,false,WEBSITE,2028-09-06
+78,44,Elina,Järvinen,Purchasing,elina.jarvinen.hameenlinna@retkivakka.example,+358 40 785 7339,false,fi,false,PORTAL,2029-09-06
+79,44,Tuomas,Korhonen,Assistant Manager,tuomas.korhonen@retkivakka.example,+358 40 366 7122,false,fi,true,WEBSITE,2028-09-06
 80,45,Johan,Johansson,Store Manager,johan.johansson@fjellkroken.sport.example,+46 70 457 91 01,true,sv,false,WEBSITE,2031-09-06
 81,45,Hanna,Larsson,Buyer,hanna.larsson@fjellkroken.sport.example,+46 70 894 93 64,false,sv,true,WEBSITE,2029-09-06
 82,46,Hanna,Svensson,Store Manager,hanna.svensson@fjellkroken.sport.example,+46 70 701 70 99,true,sv,false,ACCOUNT_MANAGER,2029-09-06

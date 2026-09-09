@@ -1,5 +1,5 @@
 id,code,name,country,city,contact_email,lead_time_days,active
-1,FJV,Fjellvind AS,NO,Stavanger,orders@fjellvind.example,21,true
+1,FJV,Skarvind AS,NO,Stavanger,orders@skarvind.example,21,true
 2,AUR,Aurora Gear AB,SE,Falun,orders@aurora.example,10,true
 3,SIS,Jäkälä Outdoor Oy,FI,Kuopio,orders@jakala.example,12,true
 4,TUN,Tundra Works ApS,DK,Aalborg,orders@tundra.example,14,true

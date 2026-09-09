@@ -154,7 +154,7 @@ def gen_products(ctx: Ctx):
                     ctx.products_by_cat[ccode].append(row)
                     made += 1
     ctx.anchors["case3_supplier"] = {
-        "supplier_id": sup_ids["FJV"], "code": "FJV", "name": "Fjellvind AS",
+        "supplier_id": sup_ids["FJV"], "code": "FJV", "name": "Skarvind AS",
         "categories": ["Tents & Shelters", "Sleeping Bags & Mats", "Backpacks & Bags"],
         "active_products": sum(1 for p in ctx.products if p["_sup"] == "FJV" and p["active"] == "true"),
     }

@@ -30,7 +30,7 @@ file = "photos/pallet2-damage.jpg"
 caption = "Pallet 2 of {shipment_number}, delivered {tuesday} to {customer}"
 prompt = """Realistic smartphone photo taken inside a small sports shop's back room in Finland. A wooden EUR pallet
 with cardboard cartons of camping tents; the stretch wrap is torn open and the bottom cartons are crushed and
-dented, one carton split showing a green tent bag. Cartons carry a plain fictional brand label 'Fjellvind'
+dented, one carton split showing a green tent bag. Cartons carry a plain fictional brand label 'Skarvind'
 and no other readable text or logos. Fluorescent lighting, slightly tilted framing, no people."""
 
 [[scenario]]

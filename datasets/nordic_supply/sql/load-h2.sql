@@ -19,4 +19,8 @@ INSERT INTO shipment_lines SELECT * FROM CSVREAD('./datasets/nordic_supply/csv/s
 INSERT INTO delivery_events SELECT * FROM CSVREAD('./datasets/nordic_supply/csv/delivery_events.csv', NULL, 'charset=UTF-8');
 INSERT INTO claims SELECT * FROM CSVREAD('./datasets/nordic_supply/csv/claims.csv', NULL, 'charset=UTF-8');
 INSERT INTO claim_lines SELECT * FROM CSVREAD('./datasets/nordic_supply/csv/claim_lines.csv', NULL, 'charset=UTF-8');
+INSERT INTO return_authorisations SELECT * FROM CSVREAD('./datasets/nordic_supply/csv/return_authorisations.csv', NULL, 'charset=UTF-8');
+INSERT INTO return_lines SELECT * FROM CSVREAD('./datasets/nordic_supply/csv/return_lines.csv', NULL, 'charset=UTF-8');
+INSERT INTO credit_notes SELECT * FROM CSVREAD('./datasets/nordic_supply/csv/credit_notes.csv', NULL, 'charset=UTF-8');
+INSERT INTO stock_movements SELECT * FROM CSVREAD('./datasets/nordic_supply/csv/stock_movements.csv', NULL, 'charset=UTF-8');
 INSERT INTO saved_widgets SELECT * FROM CSVREAD('./datasets/nordic_supply/csv/saved_widgets.csv', NULL, 'charset=UTF-8');

@@ -173,14 +173,20 @@ asked for; it exists in the AI core module). `sql/pii-columns.json` lists the co
 
 ## 6. Freezing "today"
 
-Everything in the data is relative to `manifest.json → as_of`. Two ways to keep the story valid:
+Everything in the data is relative to `manifest.json → as_of`. The decision (2026-09-09) is to **regenerate
+before each demo or release**: `scripts/snapshot.sh nordic_supply --as-of <today>` (or `python3 -m dsgen
+nordic_supply check --as-of <today>`), then load the new snapshot. Ten seconds, tested for arbitrary dates, and
+`FACTS.md` always describes the data on screen. The application therefore uses the real clock and passes today's
+date to the model. The alternative, kept here as the fallback if a demo must run on stale data:
 
-* **Regenerate** before each demo/release: `python3 -m dsgen nordic_supply check --as-of <today>`
-  and copy `out/` again. Cheap and honest; the numbers in `FACTS.md` change.
 * **Freeze the clock**: `@Bean Clock demoClock(@Value("${demo.as-of}") LocalDate d) { return Clock.fixed(d.atStartOfDay(ZoneId.of("Europe/Helsinki")).toInstant(), ZoneId.of("Europe/Helsinki")); }`
   and use it in the provider (section 3), in the claim form's date defaults, and in the activity
   log. Append `Today is <date>.` to the schema text and add the hint "use this date instead of
   CURRENT_DATE" so the model's SQL follows the frozen clock.
+
+Employees: the `users` table is not exposed to the AI account. Join `assigned_to`, `created_by` and
+`account_manager_id` to the `staff` view (id, full_name, role, active); e-mail addresses and usernames stay
+on the application's own connection.
 
 ## 7. Case 3: applying a bulk price change
 

@@ -34,6 +34,12 @@ erDiagram
     order_lines ||--o{ claim_lines : disputed
     users ||--o{ saved_widgets : owns
     users ||--o{ claims : "assigned to"
+    claims ||--o| return_authorisations : "goods back via"
+    return_authorisations ||--|{ return_lines : lists
+    claim_lines ||--o{ return_lines : returned
+    claims ||--o| credit_notes : "credited by"
+    products ||--o{ stock_movements : moves
+    warehouses ||--o{ stock_movements : "in / out of"
 ```
 
 ## Conventions
@@ -58,16 +64,16 @@ erDiagram
 | `users` | 12 | Nordic Supply employees. `role`: ADMIN, ANALYST, SUPPORT_AGENT, CATALOGUE_MANAGER, ACCOUNT_MANAGER, WAREHOUSE. `test.user` (ADMIN) is the demo login and matches the design mock-up. |
 | `warehouses` | 3 | VAN Vantaa (FI), GOT Göteborg (SE), OSL Oslo cross-dock (NO). FI/EE orders ship from VAN, SE/DK/DE from GOT, NO 60/40 from GOT/OSL. |
 | `categories` | 14 | Flat list: Tents & Shelters, Sleeping Bags & Mats, Backpacks & Bags, Footwear, Shell & Insulated Apparel, Base & Mid Layers, Climbing, Camp Kitchen, Navigation & Electronics, Winter Sports, Water Sports, Cycling & Bikepacking, Trail Running, Accessories & Maintenance. `season` drives demand seasonality. |
-| `suppliers` | 36 | Fictional brands with a home country, 1–3 categories each and a lead time. **Fjellvind AS** is the case 3 anchor. |
+| `suppliers` | 36 | Fictional brands with a home country, 1–3 categories each and a lead time. **Skarvind AS** is the case 3 anchor. |
 
 ### Catalogue
 
 **`products`** (~3,200) — `sku`, `ean` (valid EAN-13, GS1 prefix 640), `name` (brand + model +
-type + variant + colour, e.g. *Fjellvind Boreal XT Tent 2P Black*), `description` (short
+type + variant + colour, e.g. *Skarvind Boreal XT Tent 2P Black*), `description` (short
 marketing text), `category_id`, `supplier_id`, `product_type` (Tent, Hiking Boot, Headlamp …),
 `variant` (size, capacity, temperature rating, length …), `colour`, `unit`, `case_pack` (units
 per carton), `min_order_qty`, `weight_kg`, `active`, `discontinued_on`, `created_at`.
-About 7% are discontinued (never for Fjellvind). There is **no price column**.
+About 7% are discontinued (never for Skarvind). There is **no price column**.
 
 **`price_history`** (~14,000) — wholesale list price per product over time: `list_price`,
 `currency`, `valid_from`, `valid_to` (NULL on the current row), `reason` (Initial listing,
@@ -78,7 +84,7 @@ future-dated row, close the current one the day before) is visible in the data.
 
 **`promotions`** (~250) — `product_id`, `name` (Autumn Trail Sale, Season Opener …),
 `discount_pct`, `promo_price`, `starts_on`, `ends_on`, `created_by`. A product is "on promotion"
-on a date when `starts_on <= date <= ends_on`. Fjellvind's promotions are laid out around the
+on a date when `starts_on <= date <= ends_on`. Skarvind's promotions are laid out around the
 as-of date and the first of next month on purpose (see demo-scenarios.md).
 
 **`inventory`** (~7,700) — `on_hand`, `reserved`, `reorder_point`, `next_inbound_date` per
@@ -89,7 +95,7 @@ order's warehouse and a `next_inbound_date`; "short stock" products run low ever
 ### Customers
 
 **`customers`** (2,400) — retail companies. `customer_number`, `name`, `chain_name` (e.g.
-Erävakka, Fjellkroken Sport, Stigfinnare; NULL for independents), `segment` (CHAIN_STORE,
+Retkivakka, Fjellkroken Sport, Stigfinnare; NULL for independents), `segment` (CHAIN_STORE,
 INDEPENDENT, ONLINE, DEPARTMENT_STORE, RENTAL_OUTFITTER, CLUB_OR_SCHOOL), address, `vat_number`,
 `email_domain`, `phone`, `credit_limit`, `payment_terms_days`, `customer_discount_pct`,
 `account_manager_id`, `created_at`, `active`. Roughly FI 34%, SE 30%, NO 20%, DK 9%, DE 4%, EE 3%.
@@ -119,7 +125,7 @@ charged), `list_price` (the price-history price that day), `promotion_applied`, 
 two backorder columns stay filled on lines that were backordered and later shipped.
 
 **`shipments`** (~13,000) — `shipment_number`, `order_id`, `warehouse_id`, `delivery_address_id`,
-`carrier` (Nordfrakt, Polarpost, Kalott Freight, Botnia Cargo, Havnelast, Baltic Freight Line — all fictional),
+`carrier` (Kalottfrakt, Polarpost, Kalott Freight, Botnia Cargo, Havnelast, Baltic Freight Line — all fictional),
 `tracking_number`, `shipped_at`, `expected_delivery_date`, `delivered_at` (NULL while in
 transit), `status` (IN_TRANSIT, DELIVERED, EXCEPTION), `pallet_count` (0 = parcel shipment),
 `package_count`, `weight_kg`. An order with backordered lines gets a second shipment when the
@@ -148,6 +154,19 @@ in business language), `resolution_note`. A claim is *open* when
 **`claim_lines`** (~900) — the order lines a claim is about: `quantity_affected`,
 `pallet_number`, `amount`, `issue_note`.
 
+### After-sales and stock
+
+| Table | Rows | Purpose |
+|---|---:|---|
+| `return_authorisations` | ~300 | RMAs for claims that send goods back (RETURN_REQUEST, WRONG_ITEM, QUALITY_DEFECT, DAMAGED). `status`: AUTHORISED, IN_TRANSIT, RECEIVED, INSPECTED, CLOSED, CANCELLED; `authorised_at` ≥ claim opened, `received_at` ≥ authorised, `inspected_at` ≥ received. One per claim at most. |
+| `return_lines` | ~330 | Products and quantities on an RMA (≤ the claim line's quantity). After inspection: `condition` RESALABLE / DAMAGED / DEFECTIVE and `disposition` RESTOCK / SCRAP / RETURN_TO_SUPPLIER. Restocked lines appear in the stock ledger as RETURN movements. |
+| `credit_notes` | ~700 | One per claim with an approved amount; `amount` equals the claim's `approved_amount`; issued after resolution. `reason`: CLAIM, GOODWILL (late delivery), PRICE_CORRECTION, RETURN. `status`: ISSUED, APPLIED, CANCELLED. |
+| `stock_movements` | ~77,000 | Ledger per product and warehouse: every shipment line is a SHIPMENT (negative), supplier deliveries are RECEIPTs with a PO reference, restocked returns are RETURNs, a handful of stock-count ADJUSTMENTs. `balance_after` never goes negative and the last balance per product and warehouse equals `inventory.on_hand`. |
+
+Optional **messy-data pass** (`config-messy.toml`, off by default): inconsistent casing and spacing in customer names,
+mixed phone formats, mixed-case e-mail local parts, a few duplicate (inactive) customer records, typos in order notes.
+Anchor customers stay clean. For the fuzzy-lookup and form-correction demos.
+
 ### Application tables
 
 **`saved_widgets`** (2 seeded) — a personal dashboard widget: `user_id`, `title`,
@@ -165,6 +184,7 @@ proposed, what a person approved or rejected and by which rule; case 3's review 
 * `late_shipments` — shipments dispatched after `promised_ship_date` and/or delivered after
   `promised_delivery_date`, with both date pairs side by side.
 * `open_claims` — claims still open, joined with customer name and country.
+* `staff` — id, full name, role, active flag of employees; the `users` table itself (usernames, e-mails) is hidden.
 
 ## Business rules the data follows
 
@@ -191,6 +211,6 @@ deliberately pessimistic (`config.toml → [late]`) and spikes in the outage mon
 
 `sql/ai-schema-h2.txt` / `ai-schema-postgres.txt` are generated from `domain.toml` (entities, columns, `desc`, `pii`). It lists every exposed table with all its columns, the meaning of
 non-obvious columns, the status vocabularies, the definitions of late / open / backorder / current
-price / on promotion, the join keys and H2 idioms. `customer_contacts`, `saved_widgets` and the
+price / on promotion, the join keys and H2 idioms. `users` (seen only through the `staff` view: id, name, role, active), `customer_contacts`, `saved_widgets` and the
 runtime tables are not exposed, and the `ai_reader` database user cannot read them either
 (`sql/readonly-user-h2.sql`, `sql/readonly-user-postgres.sql`). The verifier fails if an exposed column has no description.

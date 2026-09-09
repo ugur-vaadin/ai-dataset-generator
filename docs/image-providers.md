@@ -22,7 +22,13 @@ The `openai` provider with `gpt-image-1.5`, quality `medium`, 1024×1024 (overri
 Supply pallet photo: about $0.011 at `low`, $0.04 at `medium`; `high` costs about four times `medium` for detail
 a demo screen does not show. Draft at `low`, finalise at `medium`. Output rights are assigned to the customer
 and images carry C2PA Content Credentials. A failed call falls back to the labelled placeholder and says so in
-the provenance file. The `google` provider (Imagen) is implemented as the alternative and has not been run live.
+the provenance file.
+
+**Free option.** The `google` provider defaults to `gemini-2.5-flash-image`, which the Gemini API offers on its free tier
+with an AI Studio key (no card; a few hundred images a day at 1024 px, SynthID-watermarked). The catch is in the terms:
+on the unpaid tier Google may use prompts and outputs to improve its services, so use it for drafts and for packs whose
+prompts hold nothing sensitive, and generate finals on a paid provider. Set `DSGEN_GOOGLE_IMAGE_MODEL=imagen-4.0-generate-001`
+for Imagen (paid tier only). Neither Google path has been run live yet.
 
 The person runs the paid command, never the assistant (`AGENTS.md`). The key comes from the environment
 (`.env.example`).
@@ -33,7 +39,8 @@ The person runs the paid command, never the assistant (`AGENTS.md`). The key com
 |---|---|---|---|---|---|
 | **OpenAI GPT Image 1.5** (in use) | ≈ $0.01 low · $0.04 medium · $0.17 high | Assigned to the user; redistribution allowed | C2PA | Not used for training by default on the API | Best prompt adherence for legible text; what we run |
 | OpenAI GPT Image 1 Mini | $0.005 | As above | C2PA | As above | Cheapest for drafts |
-| **Google Imagen 4** (Gemini API / Vertex AI) | Fast $0.01–0.02 · Standard $0.04 · Ultra $0.06 | Allowed; Google claims no ownership of outputs | SynthID invisible watermark | Paid tier: not used | Strong photorealism; the implemented alternative |
+| **Google Gemini 2.5 Flash Image** (free tier) | $0 on the free tier; ≈ $0.04 paid | Allowed | SynthID | Free tier: may be used to improve services; paid: not used | Implemented as the `google` default; drafts and non-sensitive packs |
+| **Google Imagen 4** (Gemini API / Vertex AI) | Fast $0.01–0.02 · Standard $0.04 · Ultra $0.06; no free tier | Allowed; Google claims no ownership of outputs | SynthID invisible watermark | Paid tier: not used | Strong photorealism; `DSGEN_GOOGLE_IMAGE_MODEL=imagen-…` |
 | Black Forest Labs FLUX.2 Pro | $0.05–0.055 | Allowed; BFL claims no rights to outputs | None | Depends on host | FLUX *dev* weights are non-commercial: do not use |
 | FLUX schnell (open weights, hosted) | ≈ $0.003 | Apache-2.0 | None | Depends on host | Nearly free; lower fidelity |
 | Ideogram 3.0 | $0.08 | Paid plans | None | — | Best legible in-image text; expensive |

@@ -23,6 +23,9 @@ what changed the mind.
 | **Generated photos, run by a person** | The one photo the message-to-claim case needs is generated from the anchor record (gpt-image-1.5, about $0.04) with a provenance file, then stored in the pack and reused. Default is a labelled placeholder; the paid command is run by a human, never by the assistant. | Stock photos (licensing, never matching the record); asking the assistant to spend money on its own. |
 | **Committed snapshot and a page** | `datasets/nordic_supply/` holds the published build the app team works from, produced only by `scripts/snapshot.sh`; the test suite fails when it is stale. The one-page `summary.html` is served by GitHub Pages. The 28 MB H2 file is rebuilt, not committed. | Committing every output including binaries (history bloat); committing nothing (the app team has to run Python). |
 | **Names checked, not hoped** | A reviewer found chain and supplier names too close to real companies (a real Finnish brand as a stem, a generic shop word next to a real town) and real carriers shown with invented late rates. Now every company-like name is checked offline against a denylist of real Nordic and outdoor brands, retailers and carriers, generic-word-plus-town names fail, and `REVIEW.md` lists every name for a human pass. All carriers are fictional. | Trusting invented-sounding names; a web check by the assistant alone (still required, as the second layer). |
+| **Regenerate before demos, no frozen clock** | Everything derives from the as-of date, and `check --as-of <today>` takes ten seconds and is tested for arbitrary dates. Regenerating keeps the story fresh and FACTS.md honest; a frozen clock would need every date default and the schema hint to follow it. Decided 2026-09-09. | A fixed `Clock` bean in the application (still documented in the integration guide as the fallback). |
+| **Employees are visible by name and role, never by e-mail** | The `users` table is hidden from the model and the read-only account; a `staff` view exposes id, full name, role and active flag, which is what "claims assigned to Lars" needs. Usernames and e-mail addresses never reach the provider. Decided 2026-09-09. | Exposing `users` whole (e-mails leave the network) or hiding staff entirely (assignment questions become ids). |
+| **A domain-generic demo application** | Decided to proceed 2026-09-09: the application should adapt to any pack so a prospect's own domain can be generated and shown. Plan and open questions in [generic-demo-app.md](generic-demo-app.md). | Keeping the app bound to the order-desk schema. |
 
 ## The process, end to end
 
@@ -31,10 +34,8 @@ The workflow these decisions produce is drawn once, in [generation-model.md](gen
 
 ## Open decisions
 
-- **Domain-generic demo application.** Today the claim form and catalogue views are built for the order desk
-  schema. If the application learns to adapt to any pack, a sales engineer could generate a prospect's domain
-  in a meeting, and an authoring UI inside the app becomes worth building. Parked until the app team decides.
 - **Where the video lives.** The quickstart video is produced from real output but not committed (binary,
   re-rendered often). A GitHub Release asset is the leading option.
 - **Swedish review.** The Swedish e-mail in Nordic Supply was reviewed by the author, not a native speaker.
-- **Clock strategy and employee visibility.** Whether the demo app freezes its clock to the snapshot's as-of date, and whether the `users` table (employee names and e-mails) should stay visible to the model, are the application team's calls.
+- **Registry-backed name check.** Free company registries (Norway, Finland) found three collisions the denylist missed; an opt-in `names --online` command is designed but not built. Revisit after the current round.
+- **Where the denylist lives.** Whether a list of real company names belongs in the public repository, or the check should stay heuristic plus registry lookups. Under discussion.

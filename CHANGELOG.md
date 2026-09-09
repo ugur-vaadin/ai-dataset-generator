@@ -3,6 +3,28 @@
 Framework (`dsgen`) and domain packs are versioned separately: `dsgen.VERSION` and `[domain].version`
 in each `domain.toml`; both are written to `manifest.json`.
 
+## dsgen 2.5.0 / nordic_supply 1.4.0 — 2026-09-09
+
+Decisions (see docs/design-decisions.md): regenerate before demos instead of freezing the clock; employees reach the model
+only through a `staff` view (id, name, role, active), the `users` table is hidden; a domain-generic demo application is the
+direction, plan in `docs/generic-demo-app.md`.
+
+Nordic Supply:
+* Three names found in company registries renamed: supplier Fjellvind AS → Skarvind AS (the kept photo still shows the old
+  label until regenerated), chain Erävakka → Retkivakka, carrier Nordfrakt → Kalottfrakt; all five names seen in registries are
+  on the pack's denylist.
+* Four new tables: `return_authorisations`, `return_lines` (RMAs with inspection outcome), `credit_notes` (one per approved claim,
+  amount = approved amount) and `stock_movements` (a ledger per product and warehouse: shipments, PO receipts, restocked returns,
+  rare stock-count adjustments; balances never negative and the last balance equals `inventory.on_hand`). 39 new checks.
+* Optional messy-data pass (`config-messy.toml`): roughened customer names, phone formats and e-mail casing, duplicate inactive
+  customer records, typos in order notes; anchors stay clean. `scripts/test.sh` runs every `config-*.toml` overlay of a pack.
+* FACTS.md gains an "After-sales and stock" section.
+
+Framework:
+* Google image provider defaults to `gemini-2.5-flash-image` through generateContent (free tier with an AI Studio key; Google may
+  use free-tier data to improve its services), Imagen through predict when the model name starts with `imagen`; PNG output is
+  converted to the target extension when Pillow is present. Neither Google path has run live yet.
+
 ## dsgen 2.4.1 / nordic_supply 1.3.1 — 2026-09-08
 
 * Review overrides can approve a whole kind (`kind = "outlier" | "template" | "pii-free-text"`, optionally `table`/`column`)

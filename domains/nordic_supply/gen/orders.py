@@ -273,7 +273,7 @@ def gen_orders(ctx: Ctx):
     for p in ctx.products:
         r = rng.random()
         if (p["_cat"] == "WIN" and r < B["winter_sports_short_share"]) or \
-           (p["_sup"] == "FJV" and p["_cat"] == "TNT" and r < B["fjellvind_tents_short_share"]) or r < B["short_stock_share"]:
+           (p["_sup"] == "FJV" and p["_cat"] == "TNT" and r < B["skarvind_tents_short_share"]) or r < B["short_stock_share"]:
             short.add(p["id"])
     ctx.anchors["short_stock_products"] = len(short)
     ctx.anchors["_short_ids"] = short

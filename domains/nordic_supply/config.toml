@@ -40,7 +40,7 @@ EE = 3
 
 # Retail chains; each gets `stores` store customers named "<chain> <city>".
 [[chains]]
-name = "Erävakka"
+name = "Retkivakka"
 countries = ["FI"]
 stores = 38
 [[chains]]
@@ -73,7 +73,7 @@ countries = ["FI"]
 stores = 12
 
 [carriers]
-names = ["Nordfrakt", "Polarpost", "Kalott Freight", "Botnia Cargo", "Havnelast", "Baltic Freight Line"]   # all fictional; real carriers must not be shown with invented late rates
+names = ["Kalottfrakt", "Polarpost", "Kalott Freight", "Botnia Cargo", "Havnelast", "Baltic Freight Line"]   # all fictional; real carriers must not be shown with invented late rates
 weights = [30, 22, 18, 14, 10, 6]
 bad_carrier = "Baltic Freight Line"     # transit delays since last month (case 1 second cause)
 bad_carrier_delay_prob = 0.6
@@ -90,11 +90,11 @@ outage_late_prob = 0.8          # Göteborg outage week (second full week of las
 outage_delay_min = 3
 outage_delay_max = 6
 
-# Backorders. A "short stock" set of products drives them (plus Winter Sports pre-season and Fjellvind tents).
+# Backorders. A "short stock" set of products drives them (plus Winter Sports pre-season and Skarvind tents).
 [backorder]
 short_stock_share = 0.05
 winter_sports_short_share = 0.30
-fjellvind_tents_short_share = 0.25
+skarvind_tents_short_share = 0.25
 short_recent_prob = 0.55        # a recent line of a short product is backordered with this probability
 short_old_prob = 0.12
 normal_recent_prob = 0.03
@@ -111,3 +111,10 @@ cancel_rate = 0.02              # share of orders cancelled
 [pii]
 free_text_share = 0.06          # share of orders.notes / claims.description mentioning a contact's name or phone
 marketing_consent_share = 0.55  # share of contacts who consented to marketing
+
+# Optional "messy data" pass, off by default: inconsistent casing and spacing in customer names, mixed phone
+# formats, a few duplicate customers, typos in order notes. For the form-correction and lookup demos. Anchor
+# customers stay clean. Enable with --config domains/nordic_supply/config-messy.toml (or set enabled = true).
+[messy]
+enabled = false
+share = 0.04                    # share of non-anchor customers / contacts / notes that get roughened

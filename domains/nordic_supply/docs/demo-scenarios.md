@@ -17,9 +17,12 @@ widget only. Prompts from the design chips and the business-case document:
 | "Same thing as a chart, by week" | One ISO week stands out (FACTS → *Late dispatches by ISO week*) | Column chart. The spike is the Göteborg outage: dispatches planned for the outage week left 3–6 days late, in the following week. Clicking the bar should list those orders. |
 | "Late shipments last month" (chip) | Seeded widget #1 (`saved_widgets`) | Shows the intended shape: title, plain-English description, SQL. |
 | "Claims open over 7 days" / "Show me open claims that have been open over a week" (chip) | A few dozen claims (FACTS → *Claims open for more than 7 days*); nothing older than 120 days is open | Grid, oldest first. Seeded widget #2. |
-| "Backorder lines by category" (chip) | Lines in most categories, led by Tents & Shelters (Fjellvind, short stock) and Winter Sports (pre-season) (FACTS → *Backorder lines by category*) | `inventory` agrees: those products have no free stock and a `next_inbound_date`. |
+| "Backorder lines by category" (chip) | Lines in most categories, led by Tents & Shelters (Skarvind, short stock) and Winter Sports (pre-season) (FACTS → *Backorder lines by category*) | `inventory` agrees: those products have no free stock and a `next_inbound_date`. |
 | "Which carrier delivered late most often last month?" | Baltic Freight Line, at roughly double the others' rate (FACTS → *Late deliveries by carrier*) | A second, findable cause beside the outage. `delivery_events` of type `DELAYED` carry reasons. |
 | "Which warehouse caused the spike?" | GOT, in the week after the outage | Answerable from `shipments.warehouse_id`; the schema text also states the outage window. |
+| "Credit notes issued last month, by reason" | Hundreds of credit notes in total; last month's split by CLAIM / GOODWILL / RETURN / PRICE_CORRECTION (FACTS → *After-sales and stock*) | `credit_notes`; a money question the order desk actually asks. |
+| "Returns received but not yet inspected" | A few RMAs in RECEIVED status | `return_authorisations` joined to `claims`; shows the after-sales queue. |
+| "Stock received per warehouse last month" / "Which products were restocked from returns?" | Receipts with PO references; ~900 units restocked (FACTS → *After-sales and stock*) | `stock_movements`; the ledger reconciles to `inventory.on_hand`, so "current stock" can be asked either way. |
 
 Ambiguity the AI should resolve out loud: "late" can mean dispatched after `promised_ship_date`
 or delivered after `promised_delivery_date` (the `late_shipments` view exposes both); "last
@@ -47,15 +50,15 @@ promised vs. actual dates only for LATE_DELIVERY, price fields only for PRICING_
 ## Case 3 — Supervised bulk change (catalogue manager)
 
 Prompt: *"raise prices 4% on everything from this supplier from the first of next month, except
-products already on promotion"* with **Fjellvind AS** selected or named.
+products already on promotion"* with **Skarvind AS** selected or named.
 
-* Fjellvind has exactly **240** active products in three categories (FACTS → *Case 3*).
+* Skarvind has exactly **240** active products in three categories (FACTS → *Case 3*).
 * "Already on promotion" has two defensible readings: on promotion **today** or on promotion **on
   the first of next month**. The promotions are laid out so the two differ by a few products
   (FACTS gives both counts and the resulting row counts). The AI should say which reading it used;
   the review list lets the manager remove the borderline rows either way.
 * Effective date: insert `price_history` rows with `valid_from` = first of next month and close
-  the current rows the day before (docs/integration-guide.md, section 7). Fjellvind has no scheduled
+  the current rows the day before (docs/integration-guide.md, section 7). Skarvind has no scheduled
   future price, so the happy path has no conflicts; 25 products of other suppliers do, which is
   the edge case to show if asked.
 * Rounding: current prices end in .00/.50/.90; show current → new per row and let the manager

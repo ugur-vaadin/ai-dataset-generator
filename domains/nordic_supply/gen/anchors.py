@@ -49,7 +49,7 @@ def gen_case2_anchors(ctx: Ctx):
     as_of = ctx.as_of
 
     # A1: "the second pallet from Tuesday's delivery arrived damaged, we need replacements before Friday"
-    cust = find_customer(ctx, "Erävakka Tampere")
+    cust = find_customer(ctx, "Retkivakka Tampere")
     tuesday = last_weekday_before(as_of, 1)
     tents = find_products(ctx, sup="FJV", cat="TNT", ptype="Tent", n=2)
     bags = find_products(ctx, sup="FJV", cat="SLP", n=2)
@@ -60,7 +60,7 @@ def gen_case2_anchors(ctx: Ctx):
     ship_date = add_business_days(tuesday, -1)  # Monday
     order = build_order(ctx, cust, placed, specs, {
         "promised_ship": promised_ship, "ship_delay": (ship_date - promised_ship).days,
-        "transit_extra": 0, "carrier": "Nordfrakt", "warehouse_id": 1, "channel": "PORTAL",
+        "transit_extra": 0, "carrier": "Kalottfrakt", "warehouse_id": 1, "channel": "PORTAL",
         "force_pallets": 2, "price_mode": None, "no_claim": True})
     # make sure the delivery landed exactly on Tuesday: FI transit is 1-2 days; fix the shipment row
     ship = ctx.tables["shipments"][-1]
@@ -149,7 +149,7 @@ def gen_case2_anchors(ctx: Ctx):
     placed = ts_on(rng, add_business_days(deliv, -5), 8, 16)
     promised_ship = add_business_days(placed.date(), 2)
     order = build_order(ctx, cust, placed, specs, {"promised_ship": promised_ship, "ship_delay": 0, "transit_extra": 0,
-                                                    "carrier": "Nordfrakt", "warehouse_id": 2, "channel": "PORTAL", "no_claim": True})
+                                                    "carrier": "Kalottfrakt", "warehouse_id": 2, "channel": "PORTAL", "no_claim": True})
     ship = ctx.tables["shipments"][-1]
     _force_delivery_date(ctx, ship, deliv)
     A["A5_quality_defect_sv"] = _anchor_info(ctx, order, ship, extra={"defective_qty": 6})

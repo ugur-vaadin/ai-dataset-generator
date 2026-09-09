@@ -242,6 +242,82 @@
       "ok": true,
       "detail": "0 dangling"
     },
+    "unique return_authorisations.id": {
+      "ok": true,
+      "detail": "0 duplicates"
+    },
+    "unique return_authorisations.rma_number": {
+      "ok": true,
+      "detail": "0 duplicates"
+    },
+    "fk return_authorisations.claim_id -> claims.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "fk return_authorisations.customer_id -> customers.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "fk return_authorisations.warehouse_id -> warehouses.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "fk return_authorisations.authorised_by -> users.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "unique return_lines.id": {
+      "ok": true,
+      "detail": "0 duplicates"
+    },
+    "fk return_lines.return_id -> return_authorisations.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "fk return_lines.claim_line_id -> claim_lines.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "fk return_lines.product_id -> products.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "unique credit_notes.id": {
+      "ok": true,
+      "detail": "0 duplicates"
+    },
+    "unique credit_notes.credit_note_number": {
+      "ok": true,
+      "detail": "0 duplicates"
+    },
+    "fk credit_notes.customer_id -> customers.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "fk credit_notes.claim_id -> claims.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "fk credit_notes.order_id -> orders.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "fk credit_notes.created_by -> users.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "unique stock_movements.id": {
+      "ok": true,
+      "detail": "0 duplicates"
+    },
+    "fk stock_movements.product_id -> products.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
+    "fk stock_movements.warehouse_id -> warehouses.id": {
+      "ok": true,
+      "detail": "0 dangling"
+    },
     "unique saved_widgets.id": {
       "ok": true,
       "detail": "0 duplicates"
@@ -261,10 +337,6 @@
     "every exposed column is described for the model": {
       "ok": true,
       "detail": "[]"
-    },
-    "schema text lists all columns of users": {
-      "ok": true,
-      "detail": ""
     },
     "schema text lists all columns of warehouses": {
       "ok": true,
@@ -327,6 +399,26 @@
       "detail": ""
     },
     "schema text lists all columns of claim_lines": {
+      "ok": true,
+      "detail": ""
+    },
+    "schema text lists all columns of return_authorisations": {
+      "ok": true,
+      "detail": ""
+    },
+    "schema text lists all columns of return_lines": {
+      "ok": true,
+      "detail": ""
+    },
+    "schema text lists all columns of credit_notes": {
+      "ok": true,
+      "detail": ""
+    },
+    "schema text lists all columns of stock_movements": {
+      "ok": true,
+      "detail": ""
+    },
+    "schema text hides users": {
       "ok": true,
       "detail": ""
     },
@@ -662,7 +754,7 @@
       "ok": true,
       "detail": ""
     },
-    "case 3: Fjellvind has 240 active products": {
+    "case 3: Skarvind has 240 active products": {
       "ok": true,
       "detail": "[('Backpacks & Bags', 70), ('Sleeping Bags & Mats', 80), ('Tents & Shelters', 90)]"
     },
@@ -670,11 +762,11 @@
       "ok": true,
       "detail": ""
     },
-    "case 3: Fjellvind promotions active today = 22": {
+    "case 3: Skarvind promotions active today = 22": {
       "ok": true,
       "detail": "22"
     },
-    "case 3: Fjellvind promotions active on 1st of next month = 21": {
+    "case 3: Skarvind promotions active on 1st of next month = 21": {
       "ok": true,
       "detail": "21"
     },
@@ -682,7 +774,7 @@
       "ok": true,
       "detail": ""
     },
-    "case 3: Fjellvind has no scheduled future price": {
+    "case 3: Skarvind has no scheduled future price": {
       "ok": true,
       "detail": ""
     },
@@ -719,6 +811,70 @@
       "detail": ""
     },
     "e-mail 06: the promotion it names covered the order date": {
+      "ok": true,
+      "detail": ""
+    },
+    "RMA authorised after the claim was opened": {
+      "ok": true,
+      "detail": ""
+    },
+    "RMA received after authorised, inspected after received": {
+      "ok": true,
+      "detail": ""
+    },
+    "RMA status agrees with its dates": {
+      "ok": true,
+      "detail": ""
+    },
+    "RMAs only for claim types that send goods back": {
+      "ok": true,
+      "detail": ""
+    },
+    "return line quantity <= claimed quantity": {
+      "ok": true,
+      "detail": ""
+    },
+    "inspection outcome only on inspected RMAs": {
+      "ok": true,
+      "detail": ""
+    },
+    "credit note issued after the claim was resolved": {
+      "ok": true,
+      "detail": ""
+    },
+    "credit note amount = the claim's approved amount": {
+      "ok": true,
+      "detail": ""
+    },
+    "every approved claim amount has one credit note": {
+      "ok": true,
+      "detail": ""
+    },
+    "nothing after as_of in after-sales tables": {
+      "ok": true,
+      "detail": ""
+    },
+    "stock balance never negative": {
+      "ok": true,
+      "detail": ""
+    },
+    "ledger ends at inventory.on_hand for every stocked product": {
+      "ok": true,
+      "detail": ""
+    },
+    "ledger runs to zero where no inventory row exists": {
+      "ok": true,
+      "detail": ""
+    },
+    "every shipment line is a SHIPMENT movement of the same quantity": {
+      "ok": true,
+      "detail": ""
+    },
+    "ledger balances are consistent in time order": {
+      "ok": true,
+      "detail": ""
+    },
+    "stock-count adjustments are rare": {
       "ok": true,
       "detail": ""
     }
@@ -825,6 +981,32 @@
         "Water Sports": 2
       }
     },
+    "aftersales": {
+      "rma_by_status": {
+        "CLOSED": 239,
+        "INSPECTED": 36,
+        "CANCELLED": 17,
+        "RECEIVED": 1,
+        "AUTHORISED": 1
+      },
+      "credit_notes_last_month_by_reason": {
+        "CLAIM": 17520.52,
+        "GOODWILL": 6861.35,
+        "RETURN": 1305.29,
+        "PRICE_CORRECTION": 74.59
+      },
+      "credit_notes_total": 687,
+      "movements_by_type": {
+        "SHIPMENT": 49486,
+        "RECEIPT": 27496,
+        "RETURN": 95,
+        "ADJUSTMENT": 4
+      },
+      "restocked_units": 901,
+      "messy": {
+        "enabled": false
+      }
+    },
     "distributions": {
       "order_status": {
         "DELIVERED": 11924,
@@ -887,7 +1069,7 @@
         "2026-09": 0.308
       },
       "late_delivery_rate_by_carrier_last_month": {
-        "Nordfrakt": [
+        "Kalottfrakt": [
           348,
           0.385
         ],

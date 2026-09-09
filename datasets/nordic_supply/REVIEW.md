@@ -1,16 +1,16 @@
 # Review queue — Nordic Supply
 
-60 items, 12 demo-critical (score ≥ 80), 60 approved, 0 overridden. Answer in `domains/nordic_supply/review/overrides.toml` (approve | reject | replace by id, or approve a whole kind); overrides apply on the next generation.
+66 items, 12 demo-critical (score ≥ 80), 66 approved, 0 overridden. Answer in `domains/nordic_supply/review/overrides.toml` (approve | reject | replace by id, or approve a whole kind); overrides apply on the next generation.
 
 | Score | Status | Id | Why | Sample |
 |---:|---|---|---|---|
 | 100 | approve | `doc:emails/05-quality-defect-sv.eml` | per-item document the demo reads aloud; language sv, needs a native reader | From: Sofia Johansson <sofia.johansson@stigfinnare.example> To: orders@nordicsupply.example Date: Mon, 07 Sep 2026 11:38:21 +0200 Subject: R |
-| 90 | approve | `doc:emails/01-damaged-pallet.eml` | per-item document the demo reads aloud | From: "Elina Järvinen" <elina.jarvinen@eravakka.example> To: Nordic Supply Order Desk <orders@nordicsupply.example> Date: Mon, 07 Sep 2026 0 |
+| 90 | approve | `doc:emails/01-damaged-pallet.eml` | per-item document the demo reads aloud | From: "Elina Järvinen" <elina.jarvinen@retkivakka.example> To: Nordic Supply Order Desk <orders@nordicsupply.example> Date: Mon, 07 Sep 2026 |
 | 90 | approve | `doc:emails/02-missing-cartons.eml` | per-item document the demo reads aloud | From: Sofia Johansson <sofia.johansson@stigfinnare.example> To: orders@nordicsupply.example Date: Mon, 07 Sep 2026 10:15:40 +0200 Subject: s |
 | 90 | approve | `doc:emails/03-wrong-colour-portal.txt` | per-item document the demo reads aloud | Channel: CUSTOMER PORTAL message Customer: Fjellkroken Sport Tromsø (C-10004) Sent by: Vegard Olsen <vegard.olsen@fjellkroken.sport.example> |
 | 90 | approve | `doc:emails/04-late-delivery.eml` | per-item document the demo reads aloud | From: Gustav Strand <gustav.strand@vidderna.sport.example> To: orders@nordicsupply.example; lars.nygaard@nordicsupply.example Date: Sun, 06  |
 | 90 | approve | `doc:emails/06-pricing-dispute.eml` | per-item document the demo reads aloud | From: Jonas Sørensen <jonas.sorensen@kystlinje.sport.example> To: orders@nordicsupply.example Date: Mon, 07 Sep 2026 13:05:55 +0200 Subject: |
-| 80 | approve | `anchor:case2.A1_damaged_pallet` | demo anchor record; a wrong detail breaks the script | {"order_number": "SO-2026-007365", "order_id": 12421, "customer": "Erävakka Tampere", "customer_number": "C-10001", "customer_id": 1, "conta |
+| 80 | approve | `anchor:case2.A1_damaged_pallet` | demo anchor record; a wrong detail breaks the script | {"order_number": "SO-2026-007365", "order_id": 12421, "customer": "Retkivakka Tampere", "customer_number": "C-10001", "customer_id": 1, "con |
 | 80 | approve | `anchor:case2.A2_missing_cartons` | demo anchor record; a wrong detail breaks the script | {"order_number": "SO-2026-007366", "order_id": 12422, "customer": "Stigfinnare Umeå", "customer_number": "C-10003", "customer_id": 3, "conta |
 | 80 | approve | `anchor:case2.A3_wrong_colour` | demo anchor record; a wrong detail breaks the script | {"order_number": "SO-2026-007367", "order_id": 12423, "customer": "Fjellkroken Sport Tromsø", "customer_number": "C-10004", "customer_id": 4 |
 | 80 | approve | `anchor:case2.A4_late_delivery` | demo anchor record; a wrong detail breaks the script | {"order_number": "SO-2026-007368", "order_id": 12424, "customer": "Vidderna Sport Kiruna", "customer_number": "C-10002", "customer_id": 2, " |
@@ -31,6 +31,9 @@
 | 50 | approve | `template:orders.notes:4a810b3a` | template text repeated 1444 times; one bad sentence repeats 1444 times | Deliver before store opening |
 | 50 | approve | `template:orders.notes:b7f8ca4a` | template text repeated 1505 times; one bad sentence repeats 1505 times | Part of annual pre-order |
 | 50 | approve | `template:orders.notes:deb031d3` | template text repeated 1505 times; one bad sentence repeats 1505 times | Season opener stock |
+| 50 | approve | `template:return_authorisations.notes:36c5d537` | template text repeated 54 times; one bad sentence repeats 54 times | Photos received, return authorised without inspection. |
+| 50 | approve | `template:return_authorisations.notes:387f51f2` | template text repeated 49 times; one bad sentence repeats 49 times | Return label sent to the store. |
+| 50 | approve | `template:return_authorisations.notes:865e0ff8` | template text repeated 50 times; one bad sentence repeats 50 times | Customer returns with next scheduled pickup. |
 | 40 | approve | `row:claim_lines.205.amount` | outlier: 16128.00 vs median 168.80 | 16128.0 |
 | 40 | approve | `row:claim_lines.810.amount` | outlier: 17275.20 vs median 168.80 | 17275.2 |
 | 40 | approve | `row:claim_lines.900.amount` | outlier: 17275.20 vs median 168.80 | 17275.2 |
@@ -40,6 +43,9 @@
 | 40 | approve | `row:claims.CL-2026-00411.approved_amount` | outlier: 17275.20 vs median 172.32 | 17275.2 |
 | 40 | approve | `row:claims.CL-2026-00411.claimed_amount` | outlier: 17275.20 vs median 319.78 | 17275.2 |
 | 40 | approve | `row:claims.CL-2026-00496.claimed_amount` | outlier: 17925.16 vs median 319.78 | 17925.16 |
+| 40 | approve | `row:credit_notes.CN-2025-00180.amount` | outlier: 12772.50 vs median 246.19 | 12772.5 |
+| 40 | approve | `row:credit_notes.CN-2026-00026.amount` | outlier: 10857.11 vs median 246.19 | 10857.11 |
+| 40 | approve | `row:credit_notes.CN-2026-00374.amount` | outlier: 17275.20 vs median 246.19 | 17275.2 |
 | 40 | approve | `row:order_lines.16318.line_total` | outlier: 70269.60 vs median 433.20 | 70269.6 |
 | 40 | approve | `row:order_lines.17837.list_price` | outlier: 1134.00 vs median 61.00 | 1134.0 |
 | 40 | approve | `row:order_lines.17837.unit_price` | outlier: 1134.00 vs median 61.00 | 1134.0 |
@@ -72,13 +78,13 @@ Scores: 100 non-English document · 90 document · 80 anchor record · 60 person
 Every company-like name in the pack and the data, by source. All must be fictional: no real brand, retailer or carrier, not even as a stem, and no generic shop word next to a real town. The offline denylist check ran in `verify`; search the web for the ones you do not recognise and add real ones to `[names] deny` in a pools file.
 
 * **pools/catalogue.toml [naming.model_names]** (52): Aapa, Alpine, Arctic, Bre, Elv, Fjell, Fjord, Glacier, Hav, Hyrsky, Inari, Joki, Kaamos, Kaira, Kaldo, Kallio, Kero, Kilpis, Kulku, Kuru, Loiste, Myrsky, Nietos, Nordic, Nordvik, Nuten, Pallas, Palsa, Polar, Rauk, Revontuli, Ridge, Ruska, Selja, Selkä, Skare, Skog, Storm, Summit, Suvanto, Sylarna, Tind, Trail, Tundra, Tuuli, Ultra, Varanger, Vinter, Vuoma, Vuori, Ylläs, Åreskutan
-* **pools/catalogue.toml [[supplier]].name** (36): Aurora Gear AB, Baltic Trail OÜ, Bergtatt Packs AS, Brenner Gas GmbH, Fjellvind AS, Fjord Paddle AS, Gråsten Boots AB, Halla Textiles Oy, Hygge Camp ApS, Isbre Winter AS, Isvidde Alpine AB, Jäkälä Outdoor Oy, Kaamos Outdoor Oy, Kajakk & Co AS, Kelo Kitchen Oy, Loimu Optics AB, Myrsky Rainwear Oy, Nietos Ski Oy, Nordvind Apparel AB, Nordwald Trek GmbH, Peak Hütte GmbH, Peilung Navigation GmbH, Polarlys Electronics AS, Rondane Sleep Systems AS, Ruska Footwear Oy, Saimaa Water Gear Oy, Skarv Climbing AS, Skjærgård Wool AS, Stig Trail Running AB, Suvanto Hardware AB, Taiga Merino Oy, Tundra Works ApS, Velo Nord ApS, Vuoma Equipment AS, Älv Outdoor AB, Øresund Cycle A/S
+* **pools/catalogue.toml [[supplier]].name** (36): Aurora Gear AB, Baltic Trail OÜ, Bergtatt Packs AS, Brenner Gas GmbH, Fjord Paddle AS, Gråsten Boots AB, Halla Textiles Oy, Hygge Camp ApS, Isbre Winter AS, Isvidde Alpine AB, Jäkälä Outdoor Oy, Kaamos Outdoor Oy, Kajakk & Co AS, Kelo Kitchen Oy, Loimu Optics AB, Myrsky Rainwear Oy, Nietos Ski Oy, Nordvind Apparel AB, Nordwald Trek GmbH, Peak Hütte GmbH, Peilung Navigation GmbH, Polarlys Electronics AS, Rondane Sleep Systems AS, Ruska Footwear Oy, Saimaa Water Gear Oy, Skarv Climbing AS, Skarvind AS, Skjærgård Wool AS, Stig Trail Running AB, Suvanto Hardware AB, Taiga Merino Oy, Tundra Works ApS, Velo Nord ApS, Vuoma Equipment AS, Älv Outdoor AB, Øresund Cycle A/S
 * **pools/names.toml [customers.independent_words]** (33): Aapa, Arctic, Aurora, Basecamp, Compass, Erä, Fjord, Fjäll, Forest, Hiker's, Kaamos, Kaira, Kalotti, Kayak, Kero, Lake, Loiste, Metsä, Nietos, Nordlys, Polar, Rakka, Ridge, Ruska, Selkä, Skog, Summit, Suvanto, Trail, Vaara, Vidde, Vinter, Vuoma
 * **pools/names.toml [customers.independent_suffix]** (13): Adventure, Camping, Friluft, Fritid, Outdoor, Outfitters, Retki, Sport, Sport & Fritid, Sports, Trekking, Turutstyr, Urheilu
-* **config.toml [[chains]].name** (8): Brevidde Friluft, Erävakka, Fjellkroken Sport, Kairankulma, Kystlinje Sport, Stigfinnare, Suuntima Sport, Vidderna Sport
-* **config.toml [carriers].names** (6): Baltic Freight Line, Botnia Cargo, Havnelast, Kalott Freight, Nordfrakt, Polarpost
+* **config.toml [[chains]].name** (8): Brevidde Friluft, Fjellkroken Sport, Kairankulma, Kystlinje Sport, Retkivakka, Stigfinnare, Suuntima Sport, Vidderna Sport
+* **config.toml [carriers].names** (6): Baltic Freight Line, Botnia Cargo, Havnelast, Kalott Freight, Kalottfrakt, Polarpost
 * **warehouses.name** (3): Göteborg Distribution Centre, Oslo Cross-dock, Vantaa Central Warehouse
-* **suppliers.name** (36): Aurora Gear AB, Baltic Trail OÜ, Bergtatt Packs AS, Brenner Gas GmbH, Fjellvind AS, Fjord Paddle AS, Gråsten Boots AB, Halla Textiles Oy, Hygge Camp ApS, Isbre Winter AS, Isvidde Alpine AB, Jäkälä Outdoor Oy, Kaamos Outdoor Oy, Kajakk & Co AS, Kelo Kitchen Oy, Loimu Optics AB, Myrsky Rainwear Oy, Nietos Ski Oy, Nordvind Apparel AB, Nordwald Trek GmbH, Peak Hütte GmbH, Peilung Navigation GmbH, Polarlys Electronics AS, Rondane Sleep Systems AS, Ruska Footwear Oy, Saimaa Water Gear Oy, Skarv Climbing AS, Skjærgård Wool AS, Stig Trail Running AB, Suvanto Hardware AB, Taiga Merino Oy, Tundra Works ApS, Velo Nord ApS, Vuoma Equipment AS, Älv Outdoor AB, Øresund Cycle A/S
+* **suppliers.name** (36): Aurora Gear AB, Baltic Trail OÜ, Bergtatt Packs AS, Brenner Gas GmbH, Fjord Paddle AS, Gråsten Boots AB, Halla Textiles Oy, Hygge Camp ApS, Isbre Winter AS, Isvidde Alpine AB, Jäkälä Outdoor Oy, Kaamos Outdoor Oy, Kajakk & Co AS, Kelo Kitchen Oy, Loimu Optics AB, Myrsky Rainwear Oy, Nietos Ski Oy, Nordvind Apparel AB, Nordwald Trek GmbH, Peak Hütte GmbH, Peilung Navigation GmbH, Polarlys Electronics AS, Rondane Sleep Systems AS, Ruska Footwear Oy, Saimaa Water Gear Oy, Skarv Climbing AS, Skarvind AS, Skjærgård Wool AS, Stig Trail Running AB, Suvanto Hardware AB, Taiga Merino Oy, Tundra Works ApS, Velo Nord ApS, Vuoma Equipment AS, Älv Outdoor AB, Øresund Cycle A/S
 * **customers.name** — 2,400 distinct values, built from the pools above
-* **customers.chain_name** (8): Brevidde Friluft, Erävakka, Fjellkroken Sport, Kairankulma, Kystlinje Sport, Stigfinnare, Suuntima Sport, Vidderna Sport
-* **shipments.carrier** (6): Baltic Freight Line, Botnia Cargo, Havnelast, Kalott Freight, Nordfrakt, Polarpost
+* **customers.chain_name** (8): Brevidde Friluft, Fjellkroken Sport, Kairankulma, Kystlinje Sport, Retkivakka, Stigfinnare, Suuntima Sport, Vidderna Sport
+* **shipments.carrier** (6): Baltic Freight Line, Botnia Cargo, Havnelast, Kalott Freight, Kalottfrakt, Polarpost

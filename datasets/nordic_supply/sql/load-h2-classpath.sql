@@ -18,4 +18,8 @@ INSERT INTO shipment_lines SELECT * FROM CSVREAD('classpath:/data/shipment_lines
 INSERT INTO delivery_events SELECT * FROM CSVREAD('classpath:/data/delivery_events.csv', NULL, 'charset=UTF-8');
 INSERT INTO claims SELECT * FROM CSVREAD('classpath:/data/claims.csv', NULL, 'charset=UTF-8');
 INSERT INTO claim_lines SELECT * FROM CSVREAD('classpath:/data/claim_lines.csv', NULL, 'charset=UTF-8');
+INSERT INTO return_authorisations SELECT * FROM CSVREAD('classpath:/data/return_authorisations.csv', NULL, 'charset=UTF-8');
+INSERT INTO return_lines SELECT * FROM CSVREAD('classpath:/data/return_lines.csv', NULL, 'charset=UTF-8');
+INSERT INTO credit_notes SELECT * FROM CSVREAD('classpath:/data/credit_notes.csv', NULL, 'charset=UTF-8');
+INSERT INTO stock_movements SELECT * FROM CSVREAD('classpath:/data/stock_movements.csv', NULL, 'charset=UTF-8');
 INSERT INTO saved_widgets SELECT * FROM CSVREAD('classpath:/data/saved_widgets.csv', NULL, 'charset=UTF-8');

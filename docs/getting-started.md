@@ -42,7 +42,7 @@ open out/nordic_supply/FACTS.md
    `python3 -m dsgen <name> check --images openai` once. Generated images are kept across later runs.
 
 Measured: the property-maintenance pack (eight tables, one document) took the assistant 3 min 43 s from the
-paragraph to a green check. A rich pack like Nordic Supply (nineteen tables, six documents, three business
+paragraph to a green check. A rich pack like Nordic Supply (twenty-three tables, six documents, three business
 cases) takes longer, mostly in the review of texts and anchors, not in generation.
 
 ## 4. Hand the output to the application

@@ -28,14 +28,15 @@
     "claims.description": "free-text",
     "claims.resolution_note": "free-text",
     "claim_lines.issue_note": "free-text",
+    "return_authorisations.notes": "free-text",
     "saved_widgets.description": "free-text"
   },
   "hidden_from_ai": [
+    "users",
     "customer_contacts",
     "saved_widgets"
   ],
   "exposed_to_ai": [
-    "users",
     "warehouses",
     "categories",
     "suppliers",
@@ -51,6 +52,10 @@
     "shipment_lines",
     "delivery_events",
     "claims",
-    "claim_lines"
+    "claim_lines",
+    "return_authorisations",
+    "return_lines",
+    "credit_notes",
+    "stock_movements"
   ]
 }
