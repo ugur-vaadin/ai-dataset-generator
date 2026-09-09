@@ -2,6 +2,7 @@
 # Run validate + check on every domain pack, including the hidden engine smoke pack. Add --pg to include PostgreSQL.
 set -e
 cd "$(dirname "$0")/.."
+mkdir -p out          # a fresh clone has no out/ yet; the per-pack log below is written there
 status=0
 for d in domains/*/; do
   name=$(basename "$d")
