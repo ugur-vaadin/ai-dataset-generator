@@ -74,3 +74,11 @@ rejection_reasons = ["Damage predates the policy start", "Deductible exceeds the
 premium_by_product = { MOTOR = [380, 1400], HOME = [220, 900], TRAVEL = [60, 240] }
 second_policy = { HOME = 70, TRAVEL = 30 }
 
+
+[names]
+# Real Nordic insurers and brokers this pack must not resemble; matched at word start by `verify` (see DOMAIN_GUIDE.md, "Names").
+deny = ["if p&c", "if skadeförsäkring", "tryg", "gjensidige", "lähitapiola", "lahitapiola", "fennia", "pohjola", "op vakuutus", "turva",
+        "folksam", "länsförsäkringar", "lansforsakringar", "trygg-hansa", "trygg hansa", "moderna försäkringar", "storebrand", "fremtind",
+        "sparebank 1", "alm. brand", "alm brand", "topdanmark", "codan", "sampo", "protector", "ergo", "allianz", "axa", "zurich",
+        "nordea", "danske bank", "dnb", "seb", "swedbank", "handelsbanken", "kbc", "söderberg", "howden", "marsh", "aon", "willis"]
+allow = []

@@ -649,7 +649,7 @@
     "warehouses": "1604d034c23ee51a425d56c03547d1871258478a8effd927b46d945f722d1676",
     "categories": "7c95e73283e5f58b3c1c4be954ac29236b5418f5bbd76985270ec2090dd32cd2",
     "suppliers": "80315b1b26dbfc5142482862955d6bfb83566ffdacdde429e0160eedecda3e35",
-    "products": "31882960c484b69b4180a6197526792dbce9ec705fa764ee7dec2f84bb2310de",
+    "products": "448df171a428f24e211a58096d302a7a371e1fe4fc925f6ea9d8aa37bf54c944",
     "price_history": "d362b0133218b952fc05566484323d62525f44cc079ecb657ccf7f15b5f694e8",
     "promotions": "9f09000a5962b775b0ab6471e21b20998da9ea22db6506d126724dcf0b338a29",
     "inventory": "67ba7defd3244da4a923f558618022d178b31faca85757b054b4fbf05d580d5b",
@@ -668,11 +668,11 @@
   "review_queue": {
     "items": 60,
     "demo_critical": 12,
-    "approved": 12
+    "approved": 60
   },
   "llm_estimate": {
     "text_items": 17955,
-    "text_output_tokens": 219131,
+    "text_output_tokens": 219135,
     "images": 1,
     "cost_by_mode_usd": {
       "claude-haiku-4-5": {

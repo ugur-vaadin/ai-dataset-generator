@@ -578,6 +578,10 @@
       "ok": true,
       "detail": ""
     },
+    "product names are unique": {
+      "ok": true,
+      "detail": ""
+    },
     "no order line after the product was discontinued": {
       "ok": true,
       "detail": ""
@@ -916,6 +920,7 @@
         "DE": 133,
         "EE": 84
       },
+      "customers_without_orders": 269,
       "products_by_category": {
         "Accessories & Maintenance": 520,
         "Base & Mid Layers": 338,

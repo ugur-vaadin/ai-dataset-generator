@@ -59,7 +59,7 @@ GENERIC_TOKENS = {"sport", "sports", "outdoor", "outdoors", "store", "shop", "bu
 GENERIC_SUFFIXES = ("butiken", "butikken", "butik", "kauppa", "shop", "store", "magasinet", "sport", "sports", "center", "centre")
 POOL_KEY_HINTS = ("word", "name", "brand", "model", "suffix", "chain", "carrier", "supplier", "company")
 POOL_KEY_SKIP = ("first_name", "last_name", "country_name", "cities", "streets", "hubs", "contact_role", "segment", "legal_form",
-                 "channel", "categor", "status", "role", "type", "kind", "reason", "season")
+                 "channel", "categor", "status", "role", "type", "kind", "reason", "season", "names.deny", "names.allow")
 
 
 def _fold(s: str) -> str:

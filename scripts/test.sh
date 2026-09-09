@@ -8,8 +8,10 @@ for d in domains/*/; do
   [ -f "$d/domain.toml" ] || continue
   echo "== $name"
   python3 -m dsgen "$name" validate || status=1
-  python3 -m dsgen "$name" check --quiet "$@" 2>&1 | grep -E "checks passed|ALL CHECKS|CHECK FAILED|FAIL|Traceback" || true
-  python3 -m dsgen "$name" check --quiet "$@" >/dev/null 2>&1 || status=1
+  log="out/_test_$name.log"
+  if python3 -m dsgen "$name" check --quiet "$@" >"$log" 2>&1; then :; else status=1; fi
+  grep -E "checks passed|ALL CHECKS|CHECK FAILED|FAIL|Traceback" "$log" || true
+  rm -f "$log"
   python3 scripts/snapshot_check.py "$name" || status=1   # committed snapshot must match the pack
   # regeneration must hold on any "today": first working day, month end, and a first-of-month after a weekend
   for d in 2026-10-01 2026-10-30 2027-03-01; do

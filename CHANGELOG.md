@@ -3,6 +3,17 @@
 Framework (`dsgen`) and domain packs are versioned separately: `dsgen.VERSION` and `[domain].version`
 in each `domain.toml`; both are written to `manifest.json`.
 
+## dsgen 2.4.1 / nordic_supply 1.3.1 — 2026-09-08
+
+* Review overrides can approve a whole kind (`kind = "outlier" | "template" | "pii-free-text"`, optionally `table`/`column`)
+  with a reason; Nordic Supply's 46 intended items (wholesale outliers, repeated order notes, masking targets) are
+  approved that way, so REVIEW.md reads as done. The validator accepts the form.
+* Product names are unique (a colliding name takes another colour, else "Mk II"); new check.
+* FACTS.md states the number of customers without orders (dormant accounts, intended).
+* `scripts/test.sh` runs each pack's check once instead of twice (about half the runtime).
+* Per-pack denylists for the insurance and property packs; the scaffold writes an empty `[names]` section and the guide
+  says a new domain brings its own list.
+
 ## dsgen 2.4.0 / nordic_supply 1.3.0 — 2026-09-08
 
 Response to the independent audit (AUDIT.md) and to a reviewer's list of company names too close to real ones.

@@ -211,8 +211,14 @@ def validate(path: str) -> list[str]:
     ov = _toml(os.path.join(path, "review", "overrides.toml"), P, required=False)
     if ov:
         for o in ov.get("override", []):
+            if o.get("kind") and not o.get("id"):     # blanket answer for a whole kind (optionally table/column)
+                if o["kind"] not in ("document", "anchor", "pii-free-text", "template", "outlier"):
+                    P.append(f"review/overrides.toml: kind '{o['kind']}' must be document, anchor, pii-free-text, template or outlier")
+                if o.get("action", "approve") != "approve":
+                    P.append(f"review/overrides.toml: kind '{o['kind']}': a blanket answer can only approve; reject or replace by id")
+                continue
             if not re.match(r"^(doc|anchor|row|template):", o.get("id", "")):
-                P.append(f"review/overrides.toml: id '{o.get('id')}' must start with doc:, anchor:, row: or template:")
+                P.append(f"review/overrides.toml: id '{o.get('id')}' must start with doc:, anchor:, row: or template: (or give a kind)")
             if o.get("action") not in ("approve", "reject", "replace"):
                 P.append(f"review/overrides.toml: {o.get('id')}: action must be approve, reject or replace")
             if o.get("action") == "replace" and "value" not in o:

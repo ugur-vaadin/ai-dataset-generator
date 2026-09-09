@@ -146,7 +146,9 @@ H2 and PostgreSQL (`sql_postgres` overrides the dialect). Anything complex goes 
 Tag columns an LLM could author with `text_asset = true` (names, descriptions, notes); `estimate`
 prices them. Mark non-English documents with `language = "sv"` on the scenario; the review queue puts
 them first. After a run, read `out/<name>/REVIEW.md` and answer in `review/overrides.toml`:
-`approve` (a human looked), `reject` (blank the field), `replace` (set `value`). Overrides apply on the
+`approve` (a human looked), `reject` (blank the field), `replace` (set `value`); an entry with `kind = "outlier"`
+(or `template`, `pii-free-text`) and no id approves every item of that kind, optionally narrowed by `table` and
+`column`, with the reason in `note`. Overrides apply on the
 next generation, before files are written, and the manifest lists what was applied.
 
 ## Running
@@ -166,7 +168,9 @@ Every company, brand, chain, carrier and person in a pack is invented. Three rul
 
 1. **Denylist (`verify`).** `dsgen/names.py` holds real Nordic and outdoor brands, retailers and carriers; a pack adds
    its own under `[names] deny = [...]` in any `pools/*.toml` and exempts deliberate values with `[names] allow`
-   (the demo company itself is always allowed). Matching is at word start, so "Haltigear" fails on "halti".
+   (the demo company itself is always allowed). Matching is at word start, so "Haltigear" fails on "halti". The
+   built-in list covers Nordic outdoor brands, retailers and carriers; **a new domain brings its own** `[names] deny`
+   for its sector (the scaffold creates the empty section; the insurance and property packs show filled ones).
 2. **Heuristic (`verify`).** A business name whose non-town words are all generic shop words ("Fjällbutiken Östersund",
    "Sportmagasinet Aarhus") reads as a real local shop and fails.
 3. **Inventory (`REVIEW.md`).** Every company-like name, by source, for a person to scan. Search the web for the ones

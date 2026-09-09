@@ -72,11 +72,25 @@ def apply_overrides(domain, ctx) -> list:
 def build_queue(domain, ctx, out, manifest) -> list:
     spec = domain.spec
     items = []
-    overrides = {o["id"]: o for o in load_overrides(domain)}
+    all_overrides = load_overrides(domain)
+    overrides = {o["id"]: o for o in all_overrides if o.get("id")}
+    # blanket answers: [[override]] kind = "outlier" (optionally table = "...", column = "...") action = "approve"
+    blanket = [o for o in all_overrides if o.get("kind") and not o.get("id")]
     group = domain.scenarios.get("scenarios", {}).get("anchors_group")
 
     def add(id_, score, reason, sample, kind):
-        st = overrides.get(id_, {}).get("action", "open")
+        st = overrides.get(id_, {}).get("action")
+        if st is None:
+            for o in blanket:
+                if o["kind"] != kind:
+                    continue
+                if o.get("table") and f":{o['table']}." not in id_ + ".":
+                    continue
+                if o.get("column") and not (id_.endswith(f".{o['column']}") or f".{o['column']}:" in id_):
+                    continue
+                st = o.get("action", "approve")
+                break
+        st = st or "open"
         items.append({"id": id_, "score": score, "kind": kind, "reason": reason, "sample": sample[:300], "status": st})
 
     # 1. documents and anchors (demo-critical)
@@ -134,7 +148,7 @@ def _render(items, out, domain, names=None):
     L = [f"# Review queue — {domain.spec.company}\n",
          f"{total} items, {len(high)} demo-critical (score ≥ 80), {len(approved)} approved, "
          f"{sum(1 for i in items if i['status'] in ('replace', 'reject'))} overridden. "
-         "Answer in `domains/" + domain.name + "/review/overrides.toml` (approve | reject | replace by id); overrides apply on the next generation.\n",
+         "Answer in `domains/" + domain.name + "/review/overrides.toml` (approve | reject | replace by id, or approve a whole kind); overrides apply on the next generation.\n",
          "| Score | Status | Id | Why | Sample |", "|---:|---|---|---|---|"]
     for i in items:
         sample = i["sample"].replace("|", "\\|").replace("\n", " ")[:140]

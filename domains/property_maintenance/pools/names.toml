@@ -1,3 +1,11 @@
 # Name pools. Edit freely; order matters for reproducibility.
 first_names = ["Anna", "Ben", "Chloe", "David", "Eva", "Finn", "Greta", "Hugo", "Ida", "Jon"]
 last_names = ["Andersen", "Berg", "Carlsson", "Dahl", "Eriksen", "Falk", "Gran", "Holm", "Isaksen", "Juhl"]
+
+[names]
+# Real Nordic property owners, facility-service and construction companies this pack must not resemble (see DOMAIN_GUIDE.md, "Names").
+deny = ["kojamo", "lumo", "sato", "heimstaden", "balder", "wallenstam", "castellum", "vasakronan", "akelius", "obos", "selvaag",
+        "entra", "olav thon", "rikshem", "willhem", "hembla", "victoria park", "fabege", "hufvudstaden", "citycon", "sponda",
+        "iss", "coor", "sodexo", "caverion", "are oy", "bravida", "assemblin", "lassila", "l&t", "anticimex", "securitas",
+        "ramirent", "cramo", "kone", "yit", "skanska", "ncc", "peab", "veidekke", "af gruppen", "bonava", "jm ab", "hsb", "riksbyggen"]
+allow = []

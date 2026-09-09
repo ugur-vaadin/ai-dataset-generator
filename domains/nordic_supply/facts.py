@@ -70,6 +70,7 @@ def sections(m, v) -> str:
     L.append("\nClaim status: " + ", ".join(f"{k} {n}" for k, n in d["claim_status"].items()))
     L.append("\nClaim type: " + ", ".join(f"{k} {n}" for k, n in d["claim_type"].items()))
     L.append("\nLate-dispatch rate per month: " + ", ".join(f"{k} {r:.0%}" for k, r in d["late_ship_rate_per_month"].items()))
-    L.append(f"\nCustomers by country: " + ", ".join(f"{k} {n}" for k, n in d["customers_by_country"].items()))
+    L.append(f"\nCustomers by country: " + ", ".join(f"{k} {n}" for k, n in d["customers_by_country"].items())
+             + f". Customers with no order in the history: {d['customers_without_orders']} (dormant accounts, intended: a Customers view should show them).")
     L.append(f"\nAverage lines per order {d['avg_lines_per_order']}; orders with several shipments {d['orders_with_multiple_shipments']}; pallet shipments {d['pallet_shipments']}.")
     return "\n".join(L)

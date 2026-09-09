@@ -65,6 +65,7 @@ def gen_products(ctx: Ctx):
             counts[s.code] = s.product_count
 
     pid = 0
+    used_names = set()
     seq_by_supcat = Counter()
     for s in SUPPLIERS:
         n = counts[s.code]
@@ -110,6 +111,14 @@ def gen_products(ctx: Ctx):
                     if colour and kind not in ("COLOR",):
                         parts.append(colour)
                     name = " ".join(parts)
+                    if name in used_names:                     # same brand+model+type+variant twice: another colour, else a mark
+                        alt = [c for c in COLORS if c != colour and " ".join(parts[:-1] + [c]) not in used_names] if colour and kind not in ("COLOR",) else []
+                        if alt:
+                            colour = alt[0]; parts[-1] = colour        # deterministic, no RNG draw: the rest of the data stays as it was
+                        else:
+                            parts.insert(2, "Mk II")
+                        name = " ".join(parts)
+                    used_names.add(name)
                     weight = round(rng.uniform(*cat.weight_range) * (mult if mult > 0.3 else 0.3), 3)
                     created = D(2019, 1, 1) + dt.timedelta(days=rng.randint(0, (ctx.as_of - D(2019, 1, 1)).days - 120))
                     # ~7% of catalogue discontinued (not for the anchor supplier: its 240 are all active)

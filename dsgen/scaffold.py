@@ -120,6 +120,12 @@ sql = "SELECT status, COUNT(*) FROM cases GROUP BY status ORDER BY status"
 POOLS_TOML = '''# Name pools. Edit freely; order matters for reproducibility.
 first_names = ["Anna", "Ben", "Chloe", "David", "Eva", "Finn", "Greta", "Hugo", "Ida", "Jon"]
 last_names = ["Andersen", "Berg", "Carlsson", "Dahl", "Eriksen", "Falk", "Gran", "Holm", "Isaksen", "Juhl"]
+
+[names]
+# Real companies in this domain's sector and region that the pack must not resemble, matched at word start by `verify`
+# (a shared list of Nordic outdoor brands, retailers and carriers is built in; see DOMAIN_GUIDE.md, "Names").
+deny = []
+allow = []
 '''
 
 TEMPLATE = '''From: {{person}} <{{person_email}}>

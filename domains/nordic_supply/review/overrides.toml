@@ -74,3 +74,20 @@ note = "See e-mail 05."
 id = "anchor:case2.A6_pricing_dispute"
 action = "approve"
 note = "See e-mail 06."
+
+# Blanket answers (by kind; a later entry with an explicit id still wins for that item).
+
+[[override]]
+kind = "outlier"
+action = "approve"
+note = "Wholesale data: a touring kayak at 1,100 EUR and pre-season orders above 100,000 EUR are plausible; the outlier detector flags them because the median line is a sock."
+
+[[override]]
+kind = "template"
+action = "approve"
+note = "Order notes and claim texts repeat by design (EDI orders carry the same handful of instructions); each repeated sentence was read once."
+
+[[override]]
+kind = "pii-free-text"
+action = "approve"
+note = "Names and phone numbers in order notes and claim descriptions are the masking demo's targets; their share is bounded by a check (config [pii].free_text_share)."
